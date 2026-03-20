@@ -18,7 +18,7 @@ bash scripts/setup.sh
 `scripts/setup.sh` は以下を実行します:
 
 1. mise 未インストール時の自動インストール
-2. `mise trust` + `mise install`（全開発ツール）
+1. `mise trust` + `mise install`（全開発ツール）
 <!-- SECTION:SETUP_STEPS -->
 
 ## ディレクトリ構成

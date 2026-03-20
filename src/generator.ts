@@ -130,11 +130,23 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     allFiles.set(filePath, replaceVariables(merged, vars));
   }
 
-  // 2.5. Build lint:all script dynamically from merged package.json
+  // 2.5. Post-merge cleanup & lint:all generation for package.json
   const pkgContent = allFiles.get("package.json");
   if (pkgContent) {
     const pkg = JSON.parse(pkgContent) as Record<string, Record<string, string>>;
     const scripts = pkg.scripts ?? {};
+
+    // Remove devDependencies not referenced by any script (e.g. tsdown when React overrides build)
+    const conditionalDeps = presets.flatMap((p) => p.conditionalDevDeps ?? []);
+    const devDeps = (pkg.devDependencies ?? {}) as Record<string, string>;
+    const scriptValues = Object.values(scripts).join(" ");
+    for (const dep of conditionalDeps) {
+      if (dep in devDeps && !scriptValues.includes(dep)) {
+        delete devDeps[dep];
+      }
+    }
+
+    // Build lint:all dynamically
     const lintParts: string[] = [];
     // Biome lint (if present)
     if (scripts.lint) lintParts.push("pnpm run lint");

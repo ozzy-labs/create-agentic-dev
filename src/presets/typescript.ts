@@ -75,7 +75,7 @@ export const typescriptPreset: Preset = {
       {
         placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
         content:
-          '- TypeScript: ESM (`"type": "module"`), strict mode, NodeNext module resolution\n- Use `import type` for type-only imports (verbatimModuleSyntax enabled)\n- Max line width: 100 (Biome)',
+          '- TypeScript: ESM (`"type": "module"`), strict mode\n- Use `import type` for type-only imports (verbatimModuleSyntax enabled)\n- Max line width: 100 (Biome)',
       },
       {
         placeholder: "<!-- SECTION:PRE_PUSH_HOOKS -->",
@@ -152,4 +152,5 @@ export const typescriptPreset: Preset = {
     testSteps: [{ name: "Test", run: "pnpm test" }],
     buildSteps: [{ name: "Build", run: "pnpm run build" }],
   },
+  conditionalDevDeps: ["tsdown"],
 };

@@ -187,6 +187,23 @@ describe("generate (typescript)", () => {
     expect(devDeps.tsdown).toBeDefined();
   });
 
+  it("tsconfig includes both src and tests", () => {
+    const tsconfig = result.readJson("tsconfig.json") as Record<string, unknown>;
+    const include = tsconfig.include as string[];
+    expect(include).toContain("src");
+    expect(include).toContain("tests");
+  });
+
+  it("tsconfig does not have build output options", () => {
+    const tsconfig = result.readJson("tsconfig.json") as Record<string, unknown>;
+    const compilerOptions = tsconfig.compilerOptions as Record<string, unknown>;
+    expect(compilerOptions.declaration).toBeUndefined();
+    expect(compilerOptions.declarationMap).toBeUndefined();
+    expect(compilerOptions.sourceMap).toBeUndefined();
+    expect(compilerOptions.outDir).toBeUndefined();
+    expect(compilerOptions.rootDir).toBeUndefined();
+  });
+
   it("merges TypeScript scripts into package.json", () => {
     const pkg = result.readJson("package.json") as Record<string, unknown>;
     const scripts = pkg.scripts as Record<string, string>;
@@ -323,6 +340,12 @@ describe("generate (python)", () => {
     expect(setup).toContain("uv sync");
   });
 
+  it("pyproject.toml includes pytest in dependency-groups", () => {
+    const pyproject = result.readText("pyproject.toml");
+    expect(pyproject).toContain("[dependency-groups]");
+    expect(pyproject).toContain("pytest");
+  });
+
   it("expands CLAUDE.md with Python sections", () => {
     const claude = result.readText("CLAUDE.md");
     expect(claude).toContain("Python");
@@ -445,6 +468,25 @@ describe("generate (react)", () => {
     expect(scripts.preview).toBe("vite preview");
   });
 
+  it("removes tsdown from devDependencies when not used in scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const devDeps = pkg.devDependencies as Record<string, string>;
+    expect(devDeps.tsdown).toBeUndefined();
+  });
+
+  it("overrides tsconfig module resolution to bundler for Vite", () => {
+    const tsconfig = result.readJson("tsconfig.json") as Record<string, unknown>;
+    const compilerOptions = tsconfig.compilerOptions as Record<string, unknown>;
+    expect(compilerOptions.module).toBe("ESNext");
+    expect(compilerOptions.moduleResolution).toBe("bundler");
+    expect(compilerOptions.jsx).toBe("react-jsx");
+  });
+
+  it("App.tsx imports App.css", () => {
+    const appTsx = result.readText("src/App.tsx");
+    expect(appTsx).toContain("./App.css");
+  });
+
   it("has TypeScript CI steps (React uses TS build step via script override)", () => {
     const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
     const jobs = ci.jobs as Record<string, Record<string, unknown>>;
@@ -550,6 +592,23 @@ describe("generate (cdk)", () => {
     const infraPkg = result.readText("infra/package.json");
     expect(infraPkg).toContain("test-app-infra");
     expect(infraPkg).not.toContain("{{projectName}}");
+  });
+
+  it("infra/package.json does not include source-map-support", () => {
+    const infraPkg = result.readJson("infra/package.json") as Record<string, unknown>;
+    const deps = infraPkg.dependencies as Record<string, string>;
+    expect(deps["source-map-support"]).toBeUndefined();
+  });
+
+  it("infra/package.json vitest matches root version", () => {
+    const infraPkg = result.readJson("infra/package.json") as Record<string, unknown>;
+    const devDeps = infraPkg.devDependencies as Record<string, string>;
+    expect(devDeps.vitest).toBe("^4.0.0");
+  });
+
+  it("infra/bin/app.ts does not import source-map-support", () => {
+    const appTs = result.readText("infra/bin/app.ts");
+    expect(appTs).not.toContain("source-map-support");
   });
 
   it("expands CLAUDE.md with CDK sections", () => {
