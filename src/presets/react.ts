@@ -8,6 +8,8 @@ export const reactPreset: Preset = {
   merge: {
     "tsconfig.json": {
       compilerOptions: {
+        module: "ESNext",
+        moduleResolution: "bundler",
         jsx: "react-jsx",
       },
     },
