@@ -139,4 +139,299 @@ describe("generate (base only)", () => {
     expect(claude).not.toContain("<!-- SECTION:PRE_PUSH_HOOKS -->");
     expect(claude).not.toContain("<!-- SECTION:GIT_WORKFLOW -->");
   });
+
+  it("base only has no TypeScript/Python specific files", () => {
+    expect(result.hasFile("biome.json")).toBe(false);
+    expect(result.hasFile("tsconfig.json")).toBe(false);
+    expect(result.hasFile("pyproject.toml")).toBe(false);
+    expect(result.hasFile("uv.lock")).toBe(false);
+  });
+});
+
+// --- Pattern 1: Minimal TypeScript ---
+describe("generate (typescript)", () => {
+  const answers = makeAnswers({ languages: ["typescript"] });
+  const result = generate(answers);
+
+  it("includes TypeScript owned files", () => {
+    expect(result.hasFile("biome.json")).toBe(true);
+    expect(result.hasFile("tsconfig.json")).toBe(true);
+    expect(result.hasFile("src/index.ts")).toBe(true);
+    expect(result.hasFile("tests/index.test.ts")).toBe(true);
+  });
+
+  it("merges TypeScript devDependencies into package.json", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const devDeps = pkg.devDependencies as Record<string, string>;
+    expect(devDeps.typescript).toBeDefined();
+    expect(devDeps["@types/node"]).toBeDefined();
+    expect(devDeps.vitest).toBeDefined();
+    expect(devDeps.tsdown).toBeDefined();
+  });
+
+  it("merges TypeScript scripts into package.json", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts.build).toBe("tsdown");
+    expect(scripts.typecheck).toBe("tsc --noEmit");
+    expect(scripts.test).toBe("vitest run");
+    expect(scripts.lint).toBe("biome check");
+    // lint:all dynamically generated with all lint scripts
+    expect(scripts["lint:all"]).toContain("pnpm run lint");
+    expect(scripts["lint:all"]).toContain("pnpm run typecheck");
+    expect(scripts["lint:all"]).toContain("pnpm run lint:yaml");
+    expect(scripts["lint:all"]).toContain("pnpm run lint:secrets");
+    // base scripts still present
+    expect(scripts.prepare).toBe("lefthook install");
+    expect(scripts["lint:yaml"]).toContain("yamllint");
+  });
+
+  it("merges Biome into .mise.toml", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    // base tools still present
+    expect(toml.tools.node).toBe("24");
+  });
+
+  it("merges biome and typecheck hooks into lefthook.yaml", () => {
+    const hook = result.readYaml("lefthook.yaml") as Record<string, unknown>;
+    const preCommit = hook["pre-commit"] as Record<string, unknown>;
+    const preCommitCmds = preCommit.commands as Record<string, unknown>;
+    expect(preCommitCmds.biome).toBeDefined();
+    // base hooks still present
+    expect(preCommitCmds.shellcheck).toBeDefined();
+
+    const prePush = hook["pre-push"] as Record<string, unknown>;
+    const prePushCmds = prePush.commands as Record<string, unknown>;
+    expect(prePushCmds.typecheck).toBeDefined();
+  });
+
+  it("adds TypeScript CI steps", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Biome)");
+    expect(stepNames).toContain("Test");
+    expect(stepNames).toContain("Typecheck");
+    expect(stepNames).toContain("Build");
+    // base steps still present
+    expect(stepNames).toContain("Lint (Markdown)");
+  });
+
+  it("expands CLAUDE.md with TypeScript sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("TypeScript");
+    expect(claude).toContain("Biome");
+    expect(claude).toContain("typecheck (tsc)");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("does not include Python files", () => {
+    expect(result.hasFile("pyproject.toml")).toBe(false);
+    expect(result.hasFile("uv.lock")).toBe(false);
+  });
+});
+
+// --- Pattern 2: Minimal Python ---
+describe("generate (python)", () => {
+  const answers = makeAnswers({ languages: ["python"] });
+  const result = generate(answers);
+
+  it("includes Python owned files", () => {
+    expect(result.hasFile("pyproject.toml")).toBe(true);
+    expect(result.hasFile("uv.lock")).toBe(true);
+    expect(result.hasFile("tests/__init__.py")).toBe(true);
+    expect(result.hasFile("tests/test_placeholder.py")).toBe(true);
+  });
+
+  it("merges Python tools into .mise.toml", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools.python).toBe("3.12");
+    expect(toml.tools.uv).toBe("0.7");
+    expect(toml.tools["pipx:ruff"]).toBe("0.11");
+    expect(toml.tools["pipx:mypy"]).toBe("1");
+  });
+
+  it("merges Python scripts into package.json", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["lint:python"]).toContain("ruff");
+    expect(scripts["lint:mypy"]).toContain("mypy");
+  });
+
+  it("merges ruff and mypy hooks into lefthook.yaml", () => {
+    const hook = result.readYaml("lefthook.yaml") as Record<string, unknown>;
+    const preCommit = hook["pre-commit"] as Record<string, unknown>;
+    const preCommitCmds = preCommit.commands as Record<string, unknown>;
+    expect(preCommitCmds["ruff-format"]).toBeDefined();
+    expect(preCommitCmds["ruff-check"]).toBeDefined();
+
+    const prePush = hook["pre-push"] as Record<string, unknown>;
+    const prePushCmds = prePush.commands as Record<string, unknown>;
+    expect(prePushCmds.mypy).toBeDefined();
+  });
+
+  it("adds Python CI steps", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Ruff)");
+    expect(stepNames).toContain("Typecheck (mypy)");
+    expect(stepNames).toContain("Test (pytest)");
+    expect(stepNames).toContain("Install Python dependencies");
+  });
+
+  it("adds uv sync to setup.sh", () => {
+    const setup = result.readText("scripts/setup.sh");
+    expect(setup).toContain("uv sync");
+  });
+
+  it("expands CLAUDE.md with Python sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Python");
+    expect(claude).toContain("Ruff");
+    expect(claude).toContain("mypy");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("does not include TypeScript files", () => {
+    expect(result.hasFile("biome.json")).toBe(false);
+    expect(result.hasFile("tsconfig.json")).toBe(false);
+  });
+});
+
+// --- Pattern 3: TypeScript + Python ---
+describe("generate (typescript + python)", () => {
+  const answers = makeAnswers({ languages: ["typescript", "python"] });
+  const result = generate(answers);
+
+  it("includes both TypeScript and Python files", () => {
+    expect(result.hasFile("biome.json")).toBe(true);
+    expect(result.hasFile("tsconfig.json")).toBe(true);
+    expect(result.hasFile("pyproject.toml")).toBe(true);
+    expect(result.hasFile("uv.lock")).toBe(true);
+  });
+
+  it("merges both language tools into .mise.toml", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    expect(toml.tools.python).toBe("3.12");
+    expect(toml.tools.uv).toBe("0.7");
+  });
+
+  it("merges both language hooks into lefthook.yaml", () => {
+    const hook = result.readYaml("lefthook.yaml") as Record<string, unknown>;
+    const preCommit = hook["pre-commit"] as Record<string, unknown>;
+    const cmds = preCommit.commands as Record<string, unknown>;
+    expect(cmds.biome).toBeDefined();
+    expect(cmds["ruff-format"]).toBeDefined();
+  });
+
+  it("has CI steps from both presets", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Biome)");
+    expect(stepNames).toContain("Lint (Ruff)");
+    expect(stepNames).toContain("Test");
+    expect(stepNames).toContain("Test (pytest)");
+  });
+
+  it("expands CLAUDE.md with both language sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("TypeScript");
+    expect(claude).toContain("Python");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("lint:all includes both TypeScript and Python lint scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["lint:all"]).toContain("pnpm run lint");
+    expect(scripts["lint:all"]).toContain("pnpm run typecheck");
+    expect(scripts["lint:all"]).toContain("pnpm run lint:python");
+    expect(scripts["lint:all"]).toContain("pnpm run lint:mypy");
+    expect(scripts["lint:all"]).toContain("pnpm run lint:secrets");
+  });
+});
+
+// --- Pattern 4: TypeScript + React ---
+describe("generate (react)", () => {
+  const answers = makeAnswers({ frontend: "react" });
+  const result = generate(answers);
+
+  it("forces TypeScript preset inclusion", () => {
+    // React requires TypeScript — TypeScript files should be present
+    expect(result.hasFile("biome.json")).toBe(true);
+    expect(result.hasFile("tsconfig.json")).toBe(true);
+  });
+
+  it("includes React owned files", () => {
+    expect(result.hasFile("vite.config.ts")).toBe(true);
+    expect(result.hasFile("index.html")).toBe(true);
+    expect(result.hasFile("src/main.tsx")).toBe(true);
+    expect(result.hasFile("src/App.tsx")).toBe(true);
+    expect(result.hasFile("src/App.css")).toBe(true);
+    expect(result.hasFile("src/vite-env.d.ts")).toBe(true);
+  });
+
+  it("merges React dependencies into package.json", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const deps = pkg.dependencies as Record<string, string>;
+    expect(deps.react).toBeDefined();
+    expect(deps["react-dom"]).toBeDefined();
+    const devDeps = pkg.devDependencies as Record<string, string>;
+    expect(devDeps.vite).toBeDefined();
+    expect(devDeps["@vitejs/plugin-react"]).toBeDefined();
+    expect(devDeps["@types/react"]).toBeDefined();
+    expect(devDeps["@types/react-dom"]).toBeDefined();
+    // TypeScript devDeps also present
+    expect(devDeps.typescript).toBeDefined();
+  });
+
+  it("React overrides TypeScript build script with vite", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    // React preset's build/dev override TypeScript's (applied later in order)
+    expect(scripts.build).toBe("vite build");
+    expect(scripts.dev).toBe("vite");
+    expect(scripts.preview).toBe("vite preview");
+  });
+
+  it("has TypeScript CI steps (React uses TS build step via script override)", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Biome)");
+    expect(stepNames).toContain("Typecheck");
+    expect(stepNames).toContain("Build");
+    // No duplicate "Build (Vite)" — React overrides the build script instead
+    expect(stepNames).not.toContain("Build (Vite)");
+  });
+
+  it("overrides TypeScript sample files with React-appropriate versions", () => {
+    const indexTs = result.readText("src/index.ts");
+    expect(indexTs).toContain("App");
+    expect(indexTs).not.toContain("hello");
+
+    const testFile = result.readText("tests/index.test.ts");
+    expect(testFile).toContain("App");
+  });
+
+  it("expands CLAUDE.md with React sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("React");
+    expect(claude).toContain("Vite");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("replaces {{projectName}} in React templates", () => {
+    const html = result.readText("index.html");
+    expect(html).toContain("test-app");
+    expect(html).not.toContain("{{projectName}}");
+  });
 });

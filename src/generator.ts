@@ -2,8 +2,10 @@ import { parse as parseToml } from "smol-toml";
 import { parse as parseYaml } from "yaml";
 import { buildCiWorkflow } from "./ci.js";
 import { expandMarkdown, mergeFile } from "./merge.js";
-// Preset modules — only base is available now; others will be added in later phases
 import { basePreset } from "./presets/base.js";
+import { pythonPreset } from "./presets/python.js";
+import { reactPreset } from "./presets/react.js";
+import { typescriptPreset } from "./presets/typescript.js";
 import { expandSetupScript } from "./setup.js";
 import type {
   FileWriter,
@@ -15,6 +17,9 @@ import type {
 
 const ALL_PRESETS: Record<string, Preset> = {
   base: basePreset,
+  typescript: typescriptPreset,
+  python: pythonPreset,
+  react: reactPreset,
 };
 
 /** Canonical application order for presets. */
@@ -118,6 +123,29 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     const base = allFiles.get(filePath) ?? defaultBase;
     const merged = mergeFile(filePath, base, patches);
     allFiles.set(filePath, replaceVariables(merged, vars));
+  }
+
+  // 2.5. Build lint:all script dynamically from merged package.json
+  const pkgContent = allFiles.get("package.json");
+  if (pkgContent) {
+    const pkg = JSON.parse(pkgContent) as Record<string, Record<string, string>>;
+    const scripts = pkg.scripts ?? {};
+    const lintParts: string[] = [];
+    // Biome lint (if present)
+    if (scripts.lint) lintParts.push("pnpm run lint");
+    // TypeScript typecheck (if present)
+    if (scripts.typecheck) lintParts.push("pnpm run typecheck");
+    // All lint:* scripts in sorted order (except lint:all and lint:fix)
+    for (const key of Object.keys(scripts).sort()) {
+      if (key.startsWith("lint:") && key !== "lint:all" && key !== "lint:fix") {
+        lintParts.push(`pnpm run ${key}`);
+      }
+    }
+    if (lintParts.length > 0) {
+      scripts["lint:all"] = lintParts.join(" && ");
+      pkg.scripts = scripts;
+      allFiles.set("package.json", `${JSON.stringify(pkg, null, 2)}\n`);
+    }
   }
 
   // 3. Expand Markdown templates
