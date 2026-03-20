@@ -50,12 +50,7 @@ Every generated project includes:
 
 ## Development
 
-```bash
-pnpm install
-pnpm run dev          # Watch mode build
-pnpm test             # Run tests
-pnpm run lint:all     # All linters + typecheck
-```
+See [docs/development.md](docs/development.md) for setup instructions, commands, and testing guide.
 
 ## Architecture
 
@@ -68,7 +63,7 @@ See [docs/design.md](docs/design.md) for the full design document.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 To add a new preset, see [docs/preset-authoring.md](docs/preset-authoring.md).
 
