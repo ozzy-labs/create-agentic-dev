@@ -82,6 +82,12 @@ export const pythonPreset: Preset = {
         content: "- Lefthook `pre-push` runs mypy type check (`uv run mypy tests/`)",
       },
     ],
+    ".claude/rules/git-workflow.md": [
+      {
+        placeholder: "<!-- SECTION:PRE_COMMIT_TOOLS -->",
+        content: ", Ruff",
+      },
+    ],
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",

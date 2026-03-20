@@ -86,6 +86,12 @@ export const typescriptPreset: Preset = {
         content: "- Lefthook `pre-push` runs TypeScript typecheck (`tsc --noEmit`)",
       },
     ],
+    ".claude/rules/git-workflow.md": [
+      {
+        placeholder: "<!-- SECTION:PRE_COMMIT_TOOLS -->",
+        content: ", Biome",
+      },
+    ],
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",

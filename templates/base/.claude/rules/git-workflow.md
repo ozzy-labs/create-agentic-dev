@@ -29,7 +29,7 @@ Conventional Commits 形式を使用する:
 3段構成で品質を担保:
 
 1. **commit-msg**: commitlint でメッセージ形式を検証
-2. **pre-commit**: 各リンター・フォーマッター + セキュリティが並列実行（Biome, Ruff, markdownlint, yamlfmt, yamllint, shellcheck, shfmt, taplo, dockerfmt, hadolint, actionlint, gitleaks）
+2. **pre-commit**: 各リンター・フォーマッター + セキュリティが並列実行（markdownlint, yamlfmt, yamllint, shellcheck, shfmt, taplo, dockerfmt, hadolint, actionlint, gitleaks<!-- SECTION:PRE_COMMIT_TOOLS -->）
 3. **pre-push**: TypeScript typecheck + mypy
 
 ## 禁止事項

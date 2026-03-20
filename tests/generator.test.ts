@@ -140,6 +140,14 @@ describe("generate (base only)", () => {
     expect(claude).not.toContain("<!-- SECTION:GIT_WORKFLOW -->");
   });
 
+  it("generates git-workflow.md without leftover placeholders", () => {
+    const gw = result.readText(".claude/rules/git-workflow.md");
+    expect(gw).not.toContain("<!-- SECTION:");
+    // base only should not mention Biome or Ruff
+    expect(gw).not.toContain("Biome");
+    expect(gw).not.toContain("Ruff");
+  });
+
   it("base only has no TypeScript/Python specific files", () => {
     expect(result.hasFile("biome.json")).toBe(false);
     expect(result.hasFile("tsconfig.json")).toBe(false);
@@ -225,6 +233,13 @@ describe("generate (typescript)", () => {
     expect(claude).toContain("Biome");
     expect(claude).toContain("typecheck (tsc)");
     expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("expands git-workflow.md with Biome in pre-commit tools", () => {
+    const gw = result.readText(".claude/rules/git-workflow.md");
+    expect(gw).toContain("Biome");
+    expect(gw).not.toContain("Ruff");
+    expect(gw).not.toContain("<!-- SECTION:");
   });
 
   it("does not include Python files", () => {
@@ -345,6 +360,13 @@ describe("generate (typescript + python)", () => {
     expect(claude).toContain("TypeScript");
     expect(claude).toContain("Python");
     expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("expands git-workflow.md with both Biome and Ruff in pre-commit tools", () => {
+    const gw = result.readText(".claude/rules/git-workflow.md");
+    expect(gw).toContain("Biome");
+    expect(gw).toContain("Ruff");
+    expect(gw).not.toContain("<!-- SECTION:");
   });
 
   it("lint:all includes both TypeScript and Python lint scripts", () => {
