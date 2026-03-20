@@ -56,7 +56,7 @@ export const typescriptPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
-        content: "src/          -> TypeScript source code\ntests/        -> Test files (vitest)",
+        content: "src/          -> Source code\ntests/        -> Tests",
       },
       {
         placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
@@ -89,8 +89,7 @@ export const typescriptPreset: Preset = {
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
-        content:
-          "├── src/                 # TypeScript ソースコード\n├── tests/               # テスト（vitest）",
+        content: "├── src/                 # ソースコード\n├── tests/               # テスト",
       },
       {
         placeholder: "<!-- SECTION:ROOT_FILES -->",
@@ -99,7 +98,7 @@ export const typescriptPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:SETUP_STEPS -->",
-        content: "3. `pnpm install`（Node.js 依存パッケージ）",
+        content: "1. `pnpm install`（Node.js 依存パッケージ）",
       },
       {
         placeholder: "<!-- SECTION:SETUP_COMMANDS -->",

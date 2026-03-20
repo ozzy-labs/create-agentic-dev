@@ -120,6 +120,24 @@ describe("expandMarkdown", () => {
     expect(result).toBe("- TypeScript\n- Python");
   });
 
+  it("deduplicates identical lines from multiple presets", () => {
+    const template = "<!-- SECTION:DIRS -->";
+    const result = expandMarkdown(template, [
+      { placeholder: "<!-- SECTION:DIRS -->", content: "src/\ntests/" },
+      { placeholder: "<!-- SECTION:DIRS -->", content: "tests/" },
+    ]);
+    expect(result).toBe("src/\ntests/");
+  });
+
+  it("joins with comma-space for inline placeholders", () => {
+    const template = "pre-push: <!-- SECTION:HOOKS -->)";
+    const result = expandMarkdown(template, [
+      { placeholder: "<!-- SECTION:HOOKS -->", content: "typecheck" },
+      { placeholder: "<!-- SECTION:HOOKS -->", content: "mypy" },
+    ]);
+    expect(result).toBe("pre-push: typecheck, mypy)");
+  });
+
   it("leaves unmatched placeholders unchanged", () => {
     const template = "<!-- SECTION:UNKNOWN -->";
     const result = expandMarkdown(template, [

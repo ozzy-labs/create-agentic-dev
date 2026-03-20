@@ -53,7 +53,7 @@ export const pythonPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
-        content: "tests/        -> Python tests (pytest)",
+        content: "tests/        -> Tests",
       },
       {
         placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
@@ -85,7 +85,7 @@ export const pythonPreset: Preset = {
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
-        content: "├── tests/               # Python テスト（pytest）",
+        content: "├── tests/               # テスト",
       },
       {
         placeholder: "<!-- SECTION:ROOT_FILES -->",
@@ -94,7 +94,7 @@ export const pythonPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:SETUP_STEPS -->",
-        content: "3. `uv sync`（Python 依存パッケージ）",
+        content: "1. `uv sync`（Python 依存パッケージ）",
       },
       {
         placeholder: "<!-- SECTION:SETUP_COMMANDS -->",

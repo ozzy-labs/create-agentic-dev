@@ -56,7 +56,20 @@ export function expandMarkdown(template: string, sections: MarkdownSection[]): s
     grouped.set(placeholder, list);
   }
   for (const [placeholder, contents] of grouped) {
-    result = result.replaceAll(placeholder, contents.join("\n"));
+    // Deduplicate identical lines across preset contributions
+    const allLines = contents.flatMap((c) => c.split("\n"));
+    const unique = [...new Map(allLines.map((l) => [l, l])).values()];
+
+    // Detect inline placeholder (preceded by non-whitespace on same line) → join with ", "
+    const idx = result.indexOf(placeholder);
+    let separator = "\n";
+    if (idx > 0) {
+      const lineStart = result.lastIndexOf("\n", idx - 1) + 1;
+      const prefix = result.slice(lineStart, idx);
+      if (prefix.trim().length > 0) separator = ", ";
+    }
+
+    result = result.replaceAll(placeholder, unique.join(separator));
   }
   return result;
 }

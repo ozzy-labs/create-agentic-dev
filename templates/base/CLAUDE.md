@@ -25,8 +25,7 @@
 <!-- SECTION:TECH_STACK_LINTING -->
 - **Security scanning**: Gitleaks (secrets)
 <!-- SECTION:TECH_STACK_SECURITY -->
-- **MCP servers**: Context7 (docs), Fetch (web) — configured in `.mcp.json`
-<!-- SECTION:TECH_STACK_MCP -->
+- **MCP servers**: Context7 (docs), Fetch (web)<!-- SECTION:TECH_STACK_MCP --> — configured in `.mcp.json`
 - **Git hooks**: lefthook (commit-msg: commitlint, pre-commit: linters + gitleaks, pre-push: <!-- SECTION:PRE_PUSH_HOOKS -->)
 
 ## Project Structure

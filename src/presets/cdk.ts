@@ -43,7 +43,7 @@ export const cdkPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TECH_STACK_MCP -->",
-        content: "- **MCP servers**: AWS IaC — configured in `.mcp.json`",
+        content: "AWS IaC",
       },
       {
         placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
@@ -78,7 +78,7 @@ export const cdkPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:SETUP_STEPS -->",
-        content: "4. `cd infra && pnpm install`（CDK 依存パッケージ）",
+        content: "1. `cd infra && pnpm install`（CDK 依存パッケージ）",
       },
       {
         placeholder: "<!-- SECTION:SETUP_COMMANDS -->",

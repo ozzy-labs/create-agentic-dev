@@ -32,13 +32,13 @@ export const reactPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
-        content: "src/          -> React application source",
+        content: "src/          -> Source code",
       },
     ],
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
-        content: "├── src/                 # React アプリケーション",
+        content: "├── src/                 # ソースコード",
       },
       {
         placeholder: "<!-- SECTION:ROOT_FILES -->",
