@@ -8,14 +8,17 @@ import { generate } from "./generator.js";
 import { createDiskWriter } from "./utils.js";
 
 async function main(): Promise<void> {
-  const defaultName = process.argv[2];
+  const arg = process.argv[2];
+  const defaultName = arg ? path.basename(arg) : undefined;
+  const parentDir = arg ? path.resolve(process.cwd(), path.dirname(arg)) : process.cwd();
   const answers = await runWizard(defaultName);
 
-  const outDir = path.resolve(process.cwd(), answers.projectName);
+  const outDir = path.resolve(parentDir, answers.projectName);
+  const relPath = path.relative(process.cwd(), outDir) || ".";
 
   if (fs.existsSync(outDir) && fs.readdirSync(outDir).length > 0) {
     const overwrite = await p.confirm({
-      message: `Directory "${answers.projectName}" already exists and is not empty. Overwrite?`,
+      message: `Directory "${relPath}" already exists and is not empty. Overwrite?`,
     });
     if (p.isCancel(overwrite) || !overwrite) {
       p.cancel("Operation cancelled.");
@@ -31,7 +34,7 @@ async function main(): Promise<void> {
 
   s.stop(`Generated ${result.fileList().length} files`);
 
-  p.note([`cd ${answers.projectName}`, "bash scripts/setup.sh"].join("\n"), "Next steps");
+  p.note([`cd ${relPath}`, "bash scripts/setup.sh"].join("\n"), "Next steps");
 
   p.outro(pc.green("Done! Happy coding."));
 }
