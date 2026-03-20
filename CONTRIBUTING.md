@@ -2,22 +2,9 @@
 
 Thank you for your interest in contributing to `create-agentic-dev`!
 
-## Development Setup
+## Getting Started
 
-```bash
-git clone https://github.com/ozzy-3/create-agentic-dev.git
-cd create-agentic-dev
-mise install
-pnpm install
-```
-
-## Development Workflow
-
-```bash
-pnpm run dev          # Watch mode build
-pnpm test             # Run tests
-pnpm run lint:all     # All linters + typecheck
-```
+For development setup, commands, and testing guide, see [docs/development.md](docs/development.md).
 
 ## Branch & Commit Conventions
 

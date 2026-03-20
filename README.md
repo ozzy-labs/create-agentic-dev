@@ -50,12 +50,7 @@ Every generated project includes:
 
 ## Development
 
-```bash
-pnpm install
-pnpm run dev          # Watch mode build
-pnpm test             # Run tests
-pnpm run lint:all     # All linters + typecheck
-```
+See [docs/development.md](docs/development.md) for setup instructions, commands, and testing guide.
 
 ## Architecture
 
