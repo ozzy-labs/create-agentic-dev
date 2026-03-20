@@ -86,6 +86,17 @@ export const typescriptPreset: Preset = {
         content: "- Lefthook `pre-push` runs TypeScript typecheck (`tsc --noEmit`)",
       },
     ],
+    ".claude/skills/lint-rules/SKILL.md": [
+      {
+        placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
+        content:
+          "| `.ts`, `.tsx`, `.js`, `.jsx`, `.json`, `.jsonc` | `biome check --write <files>` |\n| `.html`, `.css` | `biome check --write <files>` |",
+      },
+      {
+        placeholder: "<!-- SECTION:LINT_RULES_TYPECHECK -->",
+        content: "- 変更ファイルに TypeScript/JavaScript を含む場合は `tsc --noEmit` も実行する",
+      },
+    ],
     ".claude/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
@@ -133,11 +144,11 @@ export const typescriptPreset: Preset = {
     ],
   },
   ciSteps: {
-    lintSteps: [{ name: "Lint (Biome)", run: "biome check ." }],
-    testSteps: [{ name: "Test", run: "pnpm test" }],
-    buildSteps: [
+    lintSteps: [
+      { name: "Lint (Biome)", run: "biome check ." },
       { name: "Typecheck (TypeScript)", run: "tsc --noEmit" },
-      { name: "Build", run: "pnpm run build" },
     ],
+    testSteps: [{ name: "Test", run: "pnpm test" }],
+    buildSteps: [{ name: "Build", run: "pnpm run build" }],
   },
 };

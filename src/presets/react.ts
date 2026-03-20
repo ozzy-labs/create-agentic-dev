@@ -6,6 +6,11 @@ export const reactPreset: Preset = {
   requires: ["typescript"],
   files: readTemplateFiles("react"),
   merge: {
+    "tsconfig.json": {
+      compilerOptions: {
+        jsx: "react-jsx",
+      },
+    },
     "package.json": {
       scripts: {
         dev: "vite",
