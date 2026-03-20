@@ -733,3 +733,30 @@ describe("generate (python + cloudformation)", () => {
     expect(template).not.toContain("{{projectName}}");
   });
 });
+
+// --- File list snapshots for all patterns ---
+describe("file list snapshots", () => {
+  const patterns: Array<{ name: string; answers: Partial<WizardAnswers> }> = [
+    { name: "base only", answers: {} },
+    { name: "typescript", answers: { languages: ["typescript"] } },
+    { name: "python", answers: { languages: ["python"] } },
+    { name: "typescript + python", answers: { languages: ["typescript", "python"] } },
+    { name: "react", answers: { frontend: "react" } },
+    { name: "cdk", answers: { iac: "cdk" } },
+    { name: "cloudformation (ts)", answers: { languages: ["typescript"], iac: "cloudformation" } },
+    { name: "terraform (ts)", answers: { languages: ["typescript"], iac: "terraform" } },
+    {
+      name: "full config",
+      answers: { languages: ["typescript", "python"], frontend: "react", iac: "cdk" },
+    },
+    { name: "python + terraform", answers: { languages: ["python"], iac: "terraform" } },
+    { name: "python + cloudformation", answers: { languages: ["python"], iac: "cloudformation" } },
+  ];
+
+  for (const { name, answers } of patterns) {
+    it(`${name}`, () => {
+      const result = generate(makeAnswers(answers));
+      expect(result.fileList()).toMatchSnapshot();
+    });
+  }
+});
