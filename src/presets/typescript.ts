@@ -86,10 +86,20 @@ export const typescriptPreset: Preset = {
         content: "- Lefthook `pre-push` runs TypeScript typecheck (`tsc --noEmit`)",
       },
     ],
+    ".claude/skills/test/SKILL.md": [
+      {
+        placeholder: "<!-- SECTION:TEST_STEPS -->",
+        content: "1. `pnpm test` で TypeScript テスト実行（vitest）",
+      },
+    ],
     ".claude/rules/git-workflow.md": [
       {
         placeholder: "<!-- SECTION:PRE_COMMIT_TOOLS -->",
         content: ", Biome",
+      },
+      {
+        placeholder: "<!-- SECTION:GIT_WORKFLOW_PRE_PUSH -->",
+        content: "typecheck",
       },
     ],
     "README.md": [

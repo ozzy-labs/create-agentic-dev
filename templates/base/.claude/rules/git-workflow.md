@@ -30,7 +30,7 @@ Conventional Commits 形式を使用する:
 
 1. **commit-msg**: commitlint でメッセージ形式を検証
 2. **pre-commit**: 各リンター・フォーマッター + セキュリティが並列実行（markdownlint, yamlfmt, yamllint, shellcheck, shfmt, taplo, dockerfmt, hadolint, actionlint, gitleaks<!-- SECTION:PRE_COMMIT_TOOLS -->）
-3. **pre-push**: TypeScript typecheck + mypy
+3. **pre-push**: <!-- SECTION:GIT_WORKFLOW_PRE_PUSH -->
 
 ## 禁止事項
 

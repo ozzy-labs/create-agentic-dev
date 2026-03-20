@@ -146,6 +146,16 @@ describe("generate (base only)", () => {
     // base only should not mention Biome or Ruff
     expect(gw).not.toContain("Biome");
     expect(gw).not.toContain("Ruff");
+    // base only has no pre-push hooks, so the line should be removed
+    expect(gw).not.toContain("pre-push");
+  });
+
+  it("generates test skill without preset-specific steps", () => {
+    const skill = result.readText(".claude/skills/test/SKILL.md");
+    expect(skill).not.toContain("<!-- SECTION:");
+    expect(skill).not.toContain("vitest");
+    expect(skill).not.toContain("pytest");
+    expect(skill).not.toContain("infra");
   });
 
   it("base only has no TypeScript/Python specific files", () => {
@@ -235,11 +245,21 @@ describe("generate (typescript)", () => {
     expect(claude).not.toContain("<!-- SECTION:");
   });
 
-  it("expands git-workflow.md with Biome in pre-commit tools", () => {
+  it("expands git-workflow.md with Biome and typecheck", () => {
     const gw = result.readText(".claude/rules/git-workflow.md");
     expect(gw).toContain("Biome");
     expect(gw).not.toContain("Ruff");
+    expect(gw).toContain("typecheck");
+    expect(gw).not.toContain("mypy");
     expect(gw).not.toContain("<!-- SECTION:");
+  });
+
+  it("expands test skill with vitest step only", () => {
+    const skill = result.readText(".claude/skills/test/SKILL.md");
+    expect(skill).toContain("pnpm test");
+    expect(skill).not.toContain("pytest");
+    expect(skill).not.toContain("infra");
+    expect(skill).not.toContain("<!-- SECTION:");
   });
 
   it("does not include Python files", () => {
@@ -362,10 +382,12 @@ describe("generate (typescript + python)", () => {
     expect(claude).not.toContain("<!-- SECTION:");
   });
 
-  it("expands git-workflow.md with both Biome and Ruff in pre-commit tools", () => {
+  it("expands git-workflow.md with both Biome/Ruff and typecheck/mypy", () => {
     const gw = result.readText(".claude/rules/git-workflow.md");
     expect(gw).toContain("Biome");
     expect(gw).toContain("Ruff");
+    expect(gw).toContain("typecheck");
+    expect(gw).toContain("mypy");
     expect(gw).not.toContain("<!-- SECTION:");
   });
 

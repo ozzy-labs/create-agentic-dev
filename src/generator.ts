@@ -173,9 +173,13 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   }
 
   // Remove any remaining unused placeholders from all Markdown files
+  // and clean up list items that became content-empty after removal
   for (const [filePath, content] of allFiles) {
     if (filePath.endsWith(".md") && content.includes("<!-- SECTION:")) {
-      allFiles.set(filePath, content.replaceAll(/<!-- SECTION:\w+ -->\n?/g, ""));
+      const cleaned = content
+        .replaceAll(/<!-- SECTION:\w+ -->\n?/g, "")
+        .replaceAll(/^\d+\.\s+\*\*[^*]+\*\*:\s*\n/gm, "");
+      allFiles.set(filePath, cleaned);
     }
   }
 

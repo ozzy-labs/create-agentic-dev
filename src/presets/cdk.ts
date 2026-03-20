@@ -66,6 +66,12 @@ export const cdkPreset: Preset = {
         content: "- CDK: cdk-nag for security best practices",
       },
     ],
+    ".claude/skills/test/SKILL.md": [
+      {
+        placeholder: "<!-- SECTION:TEST_STEPS -->",
+        content: "1. `cd infra && pnpm test` で CDK インフラテスト実行",
+      },
+    ],
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",

@@ -82,10 +82,20 @@ export const pythonPreset: Preset = {
         content: "- Lefthook `pre-push` runs mypy type check (`uv run mypy tests/`)",
       },
     ],
+    ".claude/skills/test/SKILL.md": [
+      {
+        placeholder: "<!-- SECTION:TEST_STEPS -->",
+        content: "1. `uv run pytest` で Python テスト実行",
+      },
+    ],
     ".claude/rules/git-workflow.md": [
       {
         placeholder: "<!-- SECTION:PRE_COMMIT_TOOLS -->",
         content: ", Ruff",
+      },
+      {
+        placeholder: "<!-- SECTION:GIT_WORKFLOW_PRE_PUSH -->",
+        content: "mypy",
       },
     ],
     "README.md": [
