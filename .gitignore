@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# AI agent local settings
+.claude/settings.local.json
+.claude/plans/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Coverage
+coverage/
+*.lcov
+
+# Misc
+*.log
+.cache/
+tmp/

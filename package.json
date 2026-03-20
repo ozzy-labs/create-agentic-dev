@@ -1,0 +1,64 @@
+{
+  "name": "create-agentic-dev",
+  "version": "0.1.0",
+  "description": "Scaffold an AI-agent-native development environment with interactive presets",
+  "type": "module",
+  "bin": {
+    "create-agentic-dev": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "prepare": "lefthook install",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:all": "pnpm run lint && pnpm run typecheck && pnpm run lint:md && pnpm run lint:yaml && pnpm run lint:shell && pnpm run lint:toml && pnpm run lint:secrets",
+    "lint:md": "markdownlint-cli2 '**/*.md' '#**/node_modules' '#**/templates'",
+    "lint:yaml": "yamllint -c .yamllint.yaml .",
+    "lint:shell": "shellcheck scripts/*.sh && shfmt -d scripts/",
+    "lint:toml": "taplo format --check ./*.toml",
+    "lint:secrets": "gitleaks detect --no-banner",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.32.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ozzy-3/create-agentic-dev.git"
+  },
+  "keywords": [
+    "create",
+    "scaffold",
+    "template",
+    "ai",
+    "agent",
+    "claude",
+    "development",
+    "tooling"
+  ],
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "deepmerge-ts": "^7.0.0",
+    "picocolors": "^1.1.0",
+    "smol-toml": "^1.4.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.8",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@types/node": "^22.0.0",
+    "tsdown": "^0.12.0",
+    "typescript": "^5.8.0",
+    "vitest": "^4.0.0"
+  }
+}
