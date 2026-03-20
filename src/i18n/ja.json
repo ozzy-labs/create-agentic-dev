@@ -9,14 +9,14 @@
       "invalid": "プロジェクト名が無効です。英数字、ハイフン、ドット、アンダースコアのみ使用できます。"
     },
     "languages": {
-      "message": "言語",
-      "hint": "プロジェクトで使用する言語を選択",
+      "message": "言語ツールチェイン",
+      "hint": "選択ごとにリンター・フォーマッター・テスト環境を追加",
       "typescript": { "label": "TypeScript" },
       "python": { "label": "Python" }
     },
     "frontend": {
-      "message": "フロントエンドフレームワーク",
-      "hint": "フレームワークを選択（不要なら None）",
+      "message": "フロントエンドアプリ",
+      "hint": "フロントエンドアプリの雛形を追加",
       "none": { "label": "なし" },
       "react": { "label": "React (Vite)", "hint": "TypeScript が強制されます" }
     },

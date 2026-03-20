@@ -16,8 +16,8 @@
 | # | Question | Type | Options |
 |---|----------|------|---------|
 | 1 | Project name | Text input | — |
-| 2 | Languages | Multi-select | TypeScript / Python |
-| 3 | Frontend framework | Single-select | None / React (Vite) |
+| 2 | Language toolchains | Multi-select | TypeScript / Python |
+| 3 | Frontend app | Single-select | None / React (Vite) |
 | 4 | Infrastructure as Code | Single-select | None / AWS CDK / CloudFormation / Terraform |
 
 ## Presets

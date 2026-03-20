@@ -9,14 +9,14 @@
       "invalid": "Invalid project name. Use alphanumeric characters, hyphens, dots, or underscores."
     },
     "languages": {
-      "message": "Languages",
-      "hint": "Select languages for your project",
+      "message": "Language toolchains",
+      "hint": "Each selection adds linters, formatters, and test setup",
       "typescript": { "label": "TypeScript" },
       "python": { "label": "Python" }
     },
     "frontend": {
-      "message": "Frontend framework",
-      "hint": "Choose a frontend framework or skip",
+      "message": "Frontend app",
+      "hint": "Add a frontend application scaffold",
       "none": { "label": "None" },
       "react": { "label": "React (Vite)", "hint": "forces TypeScript" }
     },
