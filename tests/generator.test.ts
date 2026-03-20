@@ -111,6 +111,7 @@ describe("generate (base only)", () => {
     const jobs = ci.jobs as Record<string, Record<string, unknown>>;
     const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
     const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Install dependencies");
     expect(stepNames).toContain("Lint (Markdown)");
     expect(stepNames).toContain("Security (Gitleaks)");
   });

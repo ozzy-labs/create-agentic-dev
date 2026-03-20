@@ -41,7 +41,8 @@ export function mergeYaml(base: string, ...patches: unknown[]): string {
 export function mergeToml(base: string, ...patches: unknown[]): string {
   const baseObj = base.trim() ? (parseToml(base) as Record<string, unknown>) : {};
   const merged = mergeDeep(baseObj, ...patches);
-  return stringifyToml(merged as Record<string, unknown>);
+  const result = stringifyToml(merged as Record<string, unknown>);
+  return result.endsWith("\n") ? result : `${result}\n`;
 }
 
 /** Replace placeholders in a Markdown template with injected sections. */

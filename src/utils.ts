@@ -46,6 +46,35 @@ export function createDiskWriter(outDir: string): FileWriter {
   };
 }
 
+/** Build a GenerateResult from a file map. */
+export function buildResult(files: Map<string, string>): GenerateResult {
+  return {
+    files,
+    fileList: () => [...files.keys()].sort(),
+    hasFile: (p: string) => files.has(p),
+    readText: (p: string) => {
+      const content = files.get(p);
+      if (content === undefined) throw new Error(`File not found: ${p}`);
+      return content;
+    },
+    readJson: (p: string) => {
+      const c = files.get(p);
+      if (c === undefined) throw new Error(`File not found: ${p}`);
+      return JSON.parse(c) as unknown;
+    },
+    readYaml: (p: string) => {
+      const c = files.get(p);
+      if (c === undefined) throw new Error(`File not found: ${p}`);
+      return parseYaml(c) as unknown;
+    },
+    readToml: (p: string) => {
+      const c = files.get(p);
+      if (c === undefined) throw new Error(`File not found: ${p}`);
+      return parseToml(c) as unknown;
+    },
+  };
+}
+
 /** Create a memory-based FileWriter for testing. Returns writer and a function to build GenerateResult. */
 export function createMemoryWriter(): { writer: FileWriter; getResult: () => GenerateResult } {
   const files = new Map<string, string>();
@@ -55,33 +84,5 @@ export function createMemoryWriter(): { writer: FileWriter; getResult: () => Gen
     },
   };
 
-  function getResult(): GenerateResult {
-    return {
-      files,
-      fileList: () => [...files.keys()].sort(),
-      hasFile: (p: string) => files.has(p),
-      readText: (p: string) => {
-        const content = files.get(p);
-        if (content === undefined) throw new Error(`File not found: ${p}`);
-        return content;
-      },
-      readJson: (p: string) => {
-        const c = files.get(p);
-        if (c === undefined) throw new Error(`File not found: ${p}`);
-        return JSON.parse(c) as unknown;
-      },
-      readYaml: (p: string) => {
-        const c = files.get(p);
-        if (c === undefined) throw new Error(`File not found: ${p}`);
-        return parseYaml(c) as unknown;
-      },
-      readToml: (p: string) => {
-        const c = files.get(p);
-        if (c === undefined) throw new Error(`File not found: ${p}`);
-        return parseToml(c) as unknown;
-      },
-    };
-  }
-
-  return { writer, getResult };
+  return { writer, getResult: () => buildResult(files) };
 }

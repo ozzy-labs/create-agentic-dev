@@ -1,5 +1,3 @@
-import { parse as parseToml } from "smol-toml";
-import { parse as parseYaml } from "yaml";
 import { buildCiWorkflow } from "./ci.js";
 import { expandMarkdown, mergeFile } from "./merge.js";
 import { basePreset } from "./presets/base.js";
@@ -17,6 +15,7 @@ import type {
   Preset,
   WizardAnswers,
 } from "./types.js";
+import { buildResult } from "./utils.js";
 
 const ALL_PRESETS: Record<string, Preset> = {
   base: basePreset,
@@ -200,32 +199,4 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   }
 
   return buildResult(allFiles);
-}
-
-function buildResult(files: Map<string, string>): GenerateResult {
-  return {
-    files,
-    fileList: () => [...files.keys()].sort(),
-    hasFile: (p: string) => files.has(p),
-    readText: (p: string) => {
-      const content = files.get(p);
-      if (content === undefined) throw new Error(`File not found: ${p}`);
-      return content;
-    },
-    readJson: (p: string) => {
-      const c = files.get(p);
-      if (c === undefined) throw new Error(`File not found: ${p}`);
-      return JSON.parse(c) as unknown;
-    },
-    readYaml: (p: string) => {
-      const c = files.get(p);
-      if (c === undefined) throw new Error(`File not found: ${p}`);
-      return parseYaml(c) as unknown;
-    },
-    readToml: (p: string) => {
-      const c = files.get(p);
-      if (c === undefined) throw new Error(`File not found: ${p}`);
-      return parseToml(c) as unknown;
-    },
-  };
 }

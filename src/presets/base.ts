@@ -121,6 +121,7 @@ export const basePreset: Preset = {
           "restore-keys": "pnpm-${{ runner.os }}-",
         },
       },
+      { name: "Install dependencies", run: "pnpm install --frozen-lockfile" },
     ],
     lintSteps: [
       { name: "Lint (Markdown)", run: "markdownlint-cli2 '**/*.md' '#**/node_modules'" },

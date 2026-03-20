@@ -154,6 +154,9 @@ interface Preset {
     'lefthook.yaml'?: DeepPartial<LefthookConfig>;
     // ...
   };
+  markdown?: Record<string, MarkdownSection[]>;  // Markdown section injection
+  ciSteps?: CiContribution;      // CI workflow contributions
+  setupExtra?: string;           // Extra commands for setup.sh
 }
 ```
 
@@ -198,6 +201,9 @@ create-agentic-dev/
 │   ├── cli.ts                # Wizard (@clack/prompts)
 │   ├── generator.ts          # Composition engine (resolve → merge → output)
 │   ├── merge.ts              # Per-filetype merge logic
+│   ├── ci.ts                 # CI workflow builder
+│   ├── setup.ts              # setup.sh template expansion
+│   ├── utils.ts              # File I/O utilities (readTemplateFiles, writers)
 │   ├── types.ts              # Type definitions (Preset interface, etc.)
 │   └── presets/
 │       ├── base.ts
