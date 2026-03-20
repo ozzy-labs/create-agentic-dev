@@ -40,6 +40,11 @@ export function getLocale(): Locale {
   return currentLocale;
 }
 
+/** Reset locale to default (en). Useful for testing. */
+export function resetLocale(): void {
+  currentLocale = "en";
+}
+
 /**
  * Detect locale from a CLI flag or environment variables.
  * Priority: langFlag > LC_ALL > LANG > "en"

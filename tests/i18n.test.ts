@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
 import en from "../src/i18n/en.json" with { type: "json" };
-import { detectLocale, getLocale, setLocale, t } from "../src/i18n/index.js";
+import { detectLocale, getLocale, resetLocale, setLocale, t } from "../src/i18n/index.js";
 import ja from "../src/i18n/ja.json" with { type: "json" };
 
 afterEach(() => {
-  setLocale("en");
+  resetLocale();
 });
 
 describe("t()", () => {
