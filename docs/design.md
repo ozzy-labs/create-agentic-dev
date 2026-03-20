@@ -40,7 +40,7 @@ Application order: `base → typescript → python → react → cdk / cloudform
 
 | Category | Elements | Files |
 |----------|----------|-------|
-| Git | .gitignore, .gitattributes, EditorConfig, lefthook, commitlint, Gitleaks | `.gitignore`, `.gitattributes`, `.editorconfig`, `lefthook.yaml`, `.commitlintrc.yaml` |
+| Git | .gitignore, .gitattributes, EditorConfig, lefthook, commitlint, Gitleaks | `.gitignore`, `.gitattributes`, `.editorconfig`, `.commitlintrc.yaml` |
 | Package management | mise, pnpm | `.mise.toml`, `package.json`, `pnpm-lock.yaml`, `.npmrc` |
 | Shell | shellcheck, shfmt | via lefthook / CI |
 | Markdown | markdownlint, mdformat | `.markdownlint-cli2.yaml`, `.mdformat.toml` |
@@ -123,7 +123,7 @@ Application order: `base → typescript → python → react → cdk / cloudform
 
 | Shared file | Modified by |
 |-------------|-------------|
-| `package.json` | base, typescript, react, cdk |
+| `package.json` | base, typescript, python, react, cdk |
 | `.mise.toml` | base, typescript, python, cdk, cloudformation, terraform |
 | `lefthook.yaml` | base, typescript, python |
 | `.github/workflows/ci.yaml` | base, typescript, python, cdk, cloudformation, terraform |
@@ -309,9 +309,12 @@ npm create agentic-dev [my-app]
   │                          → { name, languages, frontend, iac }
   ├─ src/generator.ts      # 1. Resolve dependencies → preset list
   │                          2. Collect owned files from templates/
-  │                          3. Deep merge shared files
-  │                          4. Expand Markdown templates
-  │                          5. Write all files to output directory
+  │                          3. Deep merge shared files (JSON/YAML/TOML)
+  │                          4. Build lint:all script dynamically
+  │                          5. Expand Markdown templates
+  │                          6. Build CI workflow (src/ci.ts)
+  │                          7. Expand setup.sh template (src/setup.ts)
+  │                          8. Write all files to output directory
   └─ Done message (next steps)
 ```
 
