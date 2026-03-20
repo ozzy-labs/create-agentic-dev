@@ -47,6 +47,8 @@ export interface Preset {
   ciSteps?: CiContribution;
   /** Extra commands for setup.sh */
   setupExtra?: string;
+  /** devDependencies that should be removed if not referenced by any script */
+  conditionalDevDeps?: string[];
 }
 
 // --- File I/O abstraction ---

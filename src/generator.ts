@@ -137,9 +137,10 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     const scripts = pkg.scripts ?? {};
 
     // Remove devDependencies not referenced by any script (e.g. tsdown when React overrides build)
+    const conditionalDeps = presets.flatMap((p) => p.conditionalDevDeps ?? []);
     const devDeps = (pkg.devDependencies ?? {}) as Record<string, string>;
     const scriptValues = Object.values(scripts).join(" ");
-    for (const dep of ["tsdown"]) {
+    for (const dep of conditionalDeps) {
       if (dep in devDeps && !scriptValues.includes(dep)) {
         delete devDeps[dep];
       }

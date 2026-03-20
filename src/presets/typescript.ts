@@ -152,4 +152,5 @@ export const typescriptPreset: Preset = {
     testSteps: [{ name: "Test", run: "pnpm test" }],
     buildSteps: [{ name: "Build", run: "pnpm run build" }],
   },
+  conditionalDevDeps: ["tsdown"],
 };
