@@ -11,10 +11,6 @@ user-invocable: false
 
 | 拡張子 / ファイル | 実行コマンド |
 |--------|------------|
-| `.ts`, `.tsx`, `.js`, `.jsx`, `.json`, `.jsonc` | `biome check --write <files>` |
-| `.html`, `.css` | `biome check --write <files>` |
-| `.py` | `ruff format <files>` → `ruff check --fix <files>` |
-| `.sql` | `sqlfluff fix <files>` |
 | `.sh` | `shellcheck <files>` → `shfmt -w <files>` |
 | `.toml` | `taplo format <files>` |
 | `.md` | `markdownlint-cli2 <files>` |
@@ -22,18 +18,13 @@ user-invocable: false
 | `Dockerfile*` | `dockerfmt <files>` → `hadolint --failure-threshold warning <files>` |
 | `compose*.yaml`, `docker-compose*.yaml` | `dclint <files>` |
 | `.github/workflows/*.yaml` | `actionlint` |
-| `*.tf` | `terraform fmt <files>` → `tflint` |
-| CloudFormation テンプレート | `cfn-lint <files>` |
+<!-- SECTION:LINT_RULES_TABLE -->
 
-## 型チェック
-
-- 変更ファイルに TypeScript/JavaScript を含む場合は `tsc --noEmit` も実行する
-- 変更ファイルに Python を含む場合は `uv run mypy tests/` も実行する
+<!-- SECTION:LINT_RULES_TYPECHECK -->
 
 ## セキュリティスキャン
 
 - `gitleaks detect --no-banner` でシークレット検出を実行する
-- `trivy fs --scanners vuln,misconfig,secret .` で脆弱性・ミスコンフィグ・シークレットをスキャンする（CI で実行）
 
 ## 結果の扱い
 

@@ -82,6 +82,17 @@ export const pythonPreset: Preset = {
         content: "- Lefthook `pre-push` runs mypy type check (`uv run mypy tests/`)",
       },
     ],
+    ".claude/skills/lint-rules/SKILL.md": [
+      {
+        placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
+        content: "| `.py` | `ruff format <files>` → `ruff check --fix <files>` |",
+      },
+      {
+        placeholder: "<!-- SECTION:LINT_RULES_TYPECHECK -->",
+        content:
+          "## 型チェック\n\n- 変更ファイルに Python を含む場合は `uv run mypy tests/` も実行する",
+      },
+    ],
     ".claude/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
