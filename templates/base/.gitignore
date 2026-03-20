@@ -13,7 +13,6 @@ build/
 
 # CDK
 cdk.out/
-infra/cdk.out/
 cdk.context.json
 
 # IDE

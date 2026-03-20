@@ -6,7 +6,7 @@
     },
     "aws-iac": {
       "command": "uvx",
-      "args": ["awslabs.aws-iac-mcp-server@latest"],
+      "args": ["awslabs.aws-iac-mcp@latest"],
       "env": {
         "AWS_PROFILE": "${AWS_PROFILE:-default}",
         "AWS_REGION": "${AWS_REGION:-ap-northeast-1}"

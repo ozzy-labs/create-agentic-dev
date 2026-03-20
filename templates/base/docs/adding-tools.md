@@ -58,4 +58,14 @@
 
 ## 対象ファイルのクイックリファレンス
 
-| 更新箇所 | ファイル | |---------|---------| | ツール定義 | `.mise.toml` | | ツール設定 | プロジェクトルートの設定ファイル | | npm scripts | `package.json` | | Git hooks | `lefthook.yaml` | | CI | `.github/workflows/ci.yaml` | | プロジェクトガイダンス | `CLAUDE.md` | | Lint ルール | `.claude/skills/lint-rules/SKILL.md` | | README | `README.md` | | ブランチ戦略 | `docs/branch-strategy.md` |
+| 更新箇所 | ファイル |
+|---------|---------|
+| ツール定義 | `.mise.toml` |
+| ツール設定 | プロジェクトルートの設定ファイル |
+| npm scripts | `package.json` |
+| Git hooks | `lefthook.yaml` |
+| CI | `.github/workflows/ci.yaml` |
+| プロジェクトガイダンス | `CLAUDE.md` |
+| Lint ルール | `.claude/skills/lint-rules/SKILL.md` |
+| README | `README.md` |
+| ブランチ戦略 | `docs/branch-strategy.md` |

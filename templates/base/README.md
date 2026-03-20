@@ -62,6 +62,10 @@ bash scripts/setup.sh
 | `pnpm run lint:secrets` | シークレット検出（Gitleaks） |
 <!-- SECTION:LINT_COMMANDS -->
 
+### テスト
+
+| コマンド | 説明 |
+|---------|------|
 <!-- SECTION:TEST_COMMANDS -->
 
 ## Conventional Commits

@@ -1,5 +1,5 @@
 {
-  "name": "agentic-dev-template",
+  "name": "{{projectName}}",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",

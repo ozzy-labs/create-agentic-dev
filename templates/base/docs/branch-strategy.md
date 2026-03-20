@@ -75,7 +75,7 @@
 | フック | 実行内容 |
 |--------|----------|
 | `commit-msg` | commitlint（コミットメッセージ検証） |
-| `pre-commit` | Biome, Ruff, shellcheck, shfmt, taplo, mdformat, markdownlint, yamlfmt, yamllint, sqlfluff, dockerfmt, hadolint, actionlint, gitleaks（自動修正 + セキュリティ） |
+| `pre-commit` | Biome, Ruff, shellcheck, shfmt, taplo, markdownlint, yamlfmt, yamllint, dockerfmt, hadolint, actionlint, gitleaks（自動修正 + セキュリティ） |
 | `pre-push` | TypeScript typecheck, mypy |
 
 設定ファイル: [`lefthook.yaml`](../lefthook.yaml)

@@ -18,7 +18,7 @@ export const typescriptPreset: Preset = {
       devDependencies: {
         typescript: "^5.0.0",
         "@types/node": "^22.0.0",
-        vitest: "^3.0.0",
+        vitest: "^4.0.0",
         tsdown: "^0.12.0",
       },
     },
@@ -70,7 +70,7 @@ export const typescriptPreset: Preset = {
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
         content:
-          "# Test\npnpm test                  # Run tests (vitest)\npnpm run test:watch        # Watch mode tests",
+          "pnpm test                  # Run tests (vitest)\npnpm run test:watch        # Watch mode tests",
       },
       {
         placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
@@ -113,7 +113,7 @@ export const typescriptPreset: Preset = {
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
         content:
-          "### テスト\n\n| コマンド | 説明 |\n|---------|------|\n| `pnpm test` | テスト実行（vitest） |\n| `pnpm run test:watch` | ウォッチモードテスト |",
+          "| `pnpm test` | テスト実行（vitest） |\n| `pnpm run test:watch` | ウォッチモードテスト |",
       },
     ],
   },
@@ -121,7 +121,7 @@ export const typescriptPreset: Preset = {
     lintSteps: [{ name: "Lint (Biome)", run: "biome check ." }],
     testSteps: [{ name: "Test", run: "pnpm test" }],
     buildSteps: [
-      { name: "Typecheck", run: "tsc --noEmit" },
+      { name: "Typecheck (TypeScript)", run: "tsc --noEmit" },
       { name: "Build", run: "pnpm run build" },
     ],
   },

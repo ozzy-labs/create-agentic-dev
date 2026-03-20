@@ -1,7 +1,0 @@
-scan:
-  skip-dirs:
-    - node_modules
-    - .pnpm-store
-    - .venv
-    - infra/node_modules
-    - infra/cdk.out

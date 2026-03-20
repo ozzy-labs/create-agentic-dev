@@ -66,7 +66,7 @@ export const pythonPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
-        content: "# Test\nuv run pytest              # Run Python tests",
+        content: "uv run pytest              # Run Python tests",
       },
       {
         placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
@@ -107,8 +107,7 @@ export const pythonPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
-        content:
-          "### テスト\n\n| コマンド | 説明 |\n|---------|------|\n| `uv run pytest` | Python テスト実行 |",
+        content: "| `uv run pytest` | Python テスト実行 |",
       },
     ],
   },

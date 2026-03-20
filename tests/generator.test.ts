@@ -66,7 +66,6 @@ describe("generate (base only)", () => {
     expect(result.hasFile("docs/adding-tools.md")).toBe(true);
     expect(result.hasFile("docs/branch-strategy.md")).toBe(true);
     expect(result.hasFile(".hadolint.yaml")).toBe(true);
-    expect(result.hasFile("trivy.yaml")).toBe(true);
     expect(result.hasFile("renovate.json")).toBe(true);
     expect(result.hasFile(".mcp.json.example")).toBe(true);
   });
@@ -214,7 +213,7 @@ describe("generate (typescript)", () => {
     const stepNames = steps.map((s) => s.name);
     expect(stepNames).toContain("Lint (Biome)");
     expect(stepNames).toContain("Test");
-    expect(stepNames).toContain("Typecheck");
+    expect(stepNames).toContain("Typecheck (TypeScript)");
     expect(stepNames).toContain("Build");
     // base steps still present
     expect(stepNames).toContain("Lint (Markdown)");
@@ -408,7 +407,7 @@ describe("generate (react)", () => {
     const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
     const stepNames = steps.map((s) => s.name);
     expect(stepNames).toContain("Lint (Biome)");
-    expect(stepNames).toContain("Typecheck");
+    expect(stepNames).toContain("Typecheck (TypeScript)");
     expect(stepNames).toContain("Build");
     // No duplicate "Build (Vite)" — React overrides the build script instead
     expect(stepNames).not.toContain("Build (Vite)");

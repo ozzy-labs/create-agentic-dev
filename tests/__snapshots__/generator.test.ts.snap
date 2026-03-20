@@ -48,7 +48,6 @@ exports[`file list snapshots > base only 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
-  "trivy.yaml",
 ]
 `;
 
@@ -111,7 +110,6 @@ exports[`file list snapshots > cdk 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
-  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -170,7 +168,6 @@ exports[`file list snapshots > cloudformation (ts) 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
-  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -242,7 +239,6 @@ exports[`file list snapshots > full config 1`] = `
   "tests/__init__.py",
   "tests/index.test.ts",
   "tests/test_placeholder.py",
-  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
   "vite.config.ts",
@@ -303,7 +299,6 @@ exports[`file list snapshots > python + cloudformation 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
-  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -361,7 +356,6 @@ exports[`file list snapshots > python + terraform 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
-  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -417,7 +411,6 @@ exports[`file list snapshots > python 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
-  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -478,7 +471,6 @@ exports[`file list snapshots > react 1`] = `
   "src/main.tsx",
   "src/vite-env.d.ts",
   "tests/index.test.ts",
-  "trivy.yaml",
   "tsconfig.json",
   "vite.config.ts",
 ]
@@ -537,7 +529,6 @@ exports[`file list snapshots > terraform (ts) 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
-  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -596,7 +587,6 @@ exports[`file list snapshots > typescript + python 1`] = `
   "tests/__init__.py",
   "tests/index.test.ts",
   "tests/test_placeholder.py",
-  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
 ]
@@ -653,7 +643,6 @@ exports[`file list snapshots > typescript 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
-  "trivy.yaml",
   "tsconfig.json",
 ]
 `;

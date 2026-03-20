@@ -59,7 +59,7 @@ export const cdkPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
-        content: "# Infra Test\npnpm run test:infra         # CDK infrastructure tests",
+        content: "pnpm run test:infra         # CDK infrastructure tests",
       },
       {
         placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
@@ -91,7 +91,7 @@ export const cdkPreset: Preset = {
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
         content:
-          "### インフラテスト\n\n| コマンド | 説明 |\n|---------|------|\n| `pnpm run test:infra` | CDK インフラテスト |\n| `pnpm run cdk:synth` | CDK テンプレート合成 |\n| `pnpm run cdk:diff` | CDK 差分確認 |",
+          "| `pnpm run test:infra` | CDK インフラテスト |\n| `pnpm run cdk:synth` | CDK テンプレート合成 |\n| `pnpm run cdk:diff` | CDK 差分確認 |",
       },
     ],
   },

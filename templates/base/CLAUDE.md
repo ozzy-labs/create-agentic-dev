@@ -72,6 +72,7 @@ pnpm run lint:compose      # Docker Compose lint (dclint)
 pnpm run lint:actions      # GitHub Actions lint (actionlint)
 pnpm run lint:secrets      # Secret detection (Gitleaks)
 <!-- SECTION:LINT_COMMANDS -->
+# Test
 <!-- SECTION:TEST_COMMANDS -->
 ```
 
