@@ -300,7 +300,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     }
     if (plugins.length > 0) {
       const header =
-        "# NOTE: Plugin versions are not managed by Renovate.\n# Update manually or use `tflint --init` to fetch the latest.\n";
+        "# NOTE: Plugin versions are not managed by Renovate.\n# Update version numbers manually, then run `tflint --init` to download them.\n";
       allFiles.set(".tflint.hcl", `${header}\n${plugins.join("\n\n")}\n`);
     }
   }
