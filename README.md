@@ -36,7 +36,8 @@ The interactive wizard asks 4 questions to configure your project:
 | **terraform** | IaC: Terraform | tflint, terraform fmt |
 
 Presets are composable: each provides owned files + merge contributions to shared files
-(package.json, .mise.toml, lefthook.yaml, CLAUDE.md, README.md, CI workflow).
+(package.json, .mise.toml, lefthook.yaml, .vscode/settings.json, .vscode/extensions.json,
+.devcontainer/devcontainer.json, CLAUDE.md, README.md, CI workflow).
 
 ## What You Get
 
@@ -45,7 +46,7 @@ Every generated project includes:
 - **Claude Code integration** — CLAUDE.md, skills (/setup, /implement, /lint, /test, /commit, /pr, /review, /ship), MCP servers
 - **Git hooks** — commitlint (commit-msg), linters + Gitleaks (pre-commit), typecheck (pre-push)
 - **CI workflow** — All linters + tests + build on push/PR
-- **Dev Container** — VSCode devcontainer with all tools pre-installed
+- **Dev Container** — VSCode devcontainer with preset-specific tools, extensions, and mounts
 - **Renovate** — Automated dependency updates
 
 ## Development

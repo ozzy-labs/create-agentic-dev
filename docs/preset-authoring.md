@@ -169,6 +169,37 @@ merge: {
 },
 ```
 
+### Example: Contributing to VSCode settings and extensions
+
+Presets can add editor settings, recommended extensions, and devcontainer
+configuration. Arrays (like `recommendations` and `mounts`) are deduplicated
+via unique-union merge.
+
+```typescript
+merge: {
+  ".vscode/settings.json": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "[typescript]": {
+      "editor.defaultFormatter": "biomejs.biome",
+    },
+  },
+  ".vscode/extensions.json": {
+    recommendations: ["biomejs.biome"],
+  },
+  ".devcontainer/devcontainer.json": {
+    customizations: {
+      vscode: {
+        extensions: ["biomejs.biome"],
+      },
+    },
+    // Add mounts if needed (e.g., ~/.aws for AWS presets)
+    mounts: [
+      "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+    ],
+  },
+},
+```
+
 ## Markdown Section Injection
 
 Templates (`templates/base/CLAUDE.md`, `templates/base/README.md`) contain
@@ -348,8 +379,9 @@ const result = generate(makeAnswers({ languages: ["typescript"] }));
 1. **Required files exist** — owned files from your preset
 2. **Excluded files don't exist** — files that shouldn't appear for this config
 3. **Shared file contents** — merged scripts, dependencies, tools
-4. **CI workflow** — your lint/test/build steps appear
-5. **Markdown content** — CLAUDE.md and README.md contain your injected sections
+4. **VSCode/devcontainer** — extensions, settings, and mounts are preset-specific
+5. **CI workflow** — your lint/test/build steps appear
+6. **Markdown content** — CLAUDE.md and README.md contain your injected sections
 
 ### Example test
 
