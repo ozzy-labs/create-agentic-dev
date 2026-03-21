@@ -18,7 +18,8 @@
       "message": "Frontend app",
       "hint": "Add a frontend application scaffold",
       "none": { "label": "None" },
-      "react": { "label": "React (Vite)", "hint": "forces TypeScript" }
+      "react": { "label": "React + Vite", "hint": "forces TypeScript" },
+      "nextjs": { "label": "Next.js", "hint": "forces TypeScript" }
     },
     "clouds": {
       "message": "Cloud providers",

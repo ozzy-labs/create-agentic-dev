@@ -9,7 +9,7 @@ export const cdkPreset: Preset = {
     ".gitignore": "# CDK\ncdk.out/\ncdk.context.json\n!infra/**/*.d.ts",
     "biome.json": {
       files: {
-        ignore: ["cdk.out/", "infra/dist/"],
+        includes: ["!**/cdk.out/", "!**/infra/dist/"],
       },
     },
     ".cfnlintrc.yaml": {

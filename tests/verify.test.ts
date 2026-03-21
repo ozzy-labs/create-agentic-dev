@@ -358,6 +358,36 @@ const patterns: PatternDef[] = [
     },
   },
   {
+    name: "nextjs",
+    answers: { frontend: "nextjs" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist", "**/.next"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "test", "build"],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
     name: "full config (ts + python + react + aws + cdk)",
     answers: {
       languages: ["typescript", "python"],

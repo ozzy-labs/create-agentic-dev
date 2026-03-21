@@ -31,6 +31,12 @@ describe("resolvePresets", () => {
     expect(result).toContain("react");
   });
 
+  it("forces typescript when nextjs is selected", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "nextjs" }));
+    expect(result).toContain("typescript");
+    expect(result).toContain("nextjs");
+  });
+
   it("forces typescript when cdk is selected", () => {
     const result = resolvePresets(makeAnswers({ clouds: ["aws"], iac: ["cdk"] }));
     expect(result).toContain("typescript");
@@ -652,6 +658,127 @@ describe("generate (react)", () => {
   });
 });
 
+// --- Pattern 4.5: TypeScript + Next.js ---
+describe("generate (nextjs)", () => {
+  const answers = makeAnswers({ frontend: "nextjs" });
+  const result = generate(answers);
+
+  it("forces TypeScript preset inclusion", () => {
+    expect(result.hasFile("biome.json")).toBe(true);
+    expect(result.hasFile("tsconfig.json")).toBe(true);
+  });
+
+  it("includes Next.js owned files", () => {
+    expect(result.hasFile("next.config.ts")).toBe(true);
+    expect(result.hasFile("src/app/layout.tsx")).toBe(true);
+    expect(result.hasFile("src/app/page.tsx")).toBe(true);
+    expect(result.hasFile("src/app/page.module.css")).toBe(true);
+  });
+
+  it("merges Next.js dependencies into package.json", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const deps = pkg.dependencies as Record<string, string>;
+    expect(deps.react).toBeDefined();
+    expect(deps["react-dom"]).toBeDefined();
+    expect(deps.next).toBeDefined();
+    const devDeps = pkg.devDependencies as Record<string, string>;
+    expect(devDeps["@types/react"]).toBeDefined();
+    expect(devDeps["@types/react-dom"]).toBeDefined();
+    expect(devDeps.typescript).toBeDefined();
+  });
+
+  it("Next.js overrides TypeScript build script", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts.build).toBe("next build");
+    expect(scripts.dev).toBe("next dev");
+    expect(scripts.start).toBe("next start");
+  });
+
+  it("removes tsdown from devDependencies when not used in scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const devDeps = pkg.devDependencies as Record<string, string>;
+    expect(devDeps.tsdown).toBeUndefined();
+  });
+
+  it("overrides tsconfig for Next.js", () => {
+    const tsconfig = result.readJson("tsconfig.json") as Record<string, unknown>;
+    const compilerOptions = tsconfig.compilerOptions as Record<string, unknown>;
+    expect(compilerOptions.jsx).toBe("preserve");
+    expect(compilerOptions.module).toBe("ESNext");
+    expect(compilerOptions.moduleResolution).toBe("bundler");
+    expect(compilerOptions.allowJs).toBe(true);
+    expect(compilerOptions.noEmit).toBe(true);
+    expect(compilerOptions.incremental).toBe(true);
+    const lib = compilerOptions.lib as string[];
+    expect(lib).toContain("dom");
+    const plugins = compilerOptions.plugins as Array<Record<string, string>>;
+    expect(plugins).toContainEqual({ name: "next" });
+    const include = tsconfig.include as string[];
+    expect(include).toContain("next-env.d.ts");
+    expect(include).toContain(".next/types/**/*.ts");
+  });
+
+  it("has TypeScript CI steps (Next.js uses TS build step via script override)", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Biome)");
+    expect(stepNames).toContain("Typecheck (TypeScript)");
+    expect(stepNames).toContain("Build");
+  });
+
+  it("overrides TypeScript sample files with Next.js versions", () => {
+    const indexTs = result.readText("src/index.ts");
+    expect(indexTs).toContain("APP_NAME");
+    expect(indexTs).not.toContain("hello");
+
+    const testFile = result.readText("tests/index.test.ts");
+    expect(testFile).toContain("APP_NAME");
+  });
+
+  it("expands CLAUDE.md with Next.js sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Next.js");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+
+  it("replaces {{projectName}} in Next.js templates", () => {
+    const layout = result.readText("src/app/layout.tsx");
+    expect(layout).toContain("test-app");
+    expect(layout).not.toContain("{{projectName}}");
+  });
+
+  it("adds .next/ to .gitignore and preserves next-env.d.ts", () => {
+    const gitignore = result.readText(".gitignore");
+    expect(gitignore).toContain(".next/");
+    expect(gitignore).toContain("out/");
+    expect(gitignore).toContain("!next-env.d.ts");
+  });
+
+  it("adds .next/ to biome.json includes exclusion", () => {
+    const biome = result.readJson("biome.json") as Record<string, unknown>;
+    const files = biome.files as Record<string, string[]>;
+    expect(files.includes).toContain("!**/.next/");
+  });
+
+  it("adds .next to VSCode search and files exclude", () => {
+    const settings = result.readJson(".vscode/settings.json") as Record<string, unknown>;
+    const searchExclude = settings["search.exclude"] as Record<string, boolean>;
+    const filesExclude = settings["files.exclude"] as Record<string, boolean>;
+    expect(searchExclude["**/.next"]).toBe(true);
+    expect(filesExclude["**/.next"]).toBe(true);
+  });
+
+  it("does not include React+Vite specific files", () => {
+    expect(result.hasFile("vite.config.ts")).toBe(false);
+    expect(result.hasFile("index.html")).toBe(false);
+    expect(result.hasFile("src/App.tsx")).toBe(false);
+    expect(result.hasFile("src/vite-env.d.ts")).toBe(false);
+  });
+});
+
 // --- Pattern 5: TypeScript + CDK ---
 describe("generate (cdk)", () => {
   const answers = makeAnswers({ clouds: ["aws"], iac: ["cdk"] });
@@ -1014,6 +1141,7 @@ describe("file list snapshots", () => {
     { name: "python", answers: { languages: ["python"] } },
     { name: "typescript + python", answers: { languages: ["typescript", "python"] } },
     { name: "react", answers: { frontend: "react" } },
+    { name: "nextjs", answers: { frontend: "nextjs" } },
     { name: "cdk", answers: { clouds: ["aws"], iac: ["cdk"] } },
     {
       name: "cloudformation (ts)",
