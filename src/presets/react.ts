@@ -6,7 +6,7 @@ export const reactPreset: Preset = {
   requires: ["typescript"],
   files: readTemplateFiles("react"),
   merge: {
-    ".gitignore": "# React (Vite)\n!src/vite-env.d.ts",
+    ".gitignore": "# React + Vite\n!src/vite-env.d.ts",
     "tsconfig.json": {
       compilerOptions: {
         module: "ESNext",

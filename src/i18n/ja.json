@@ -18,7 +18,8 @@
       "message": "フロントエンドアプリ",
       "hint": "フロントエンドアプリの雛形を追加",
       "none": { "label": "なし" },
-      "react": { "label": "React (Vite)", "hint": "TypeScript が強制されます" }
+      "react": { "label": "React + Vite", "hint": "TypeScript が強制されます" },
+      "nextjs": { "label": "Next.js", "hint": "TypeScript が強制されます" }
     },
     "clouds": {
       "message": "クラウドプロバイダー",

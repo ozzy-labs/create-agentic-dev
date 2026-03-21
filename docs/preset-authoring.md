@@ -82,7 +82,7 @@ const ALL_PRESETS: Record<string, Preset> = {
 
 const PRESET_ORDER = [
   "base", "typescript", "python",
-  "react", "vue",  // add in logical position
+  "react", "nextjs", "vue",  // add in logical position
   "aws", "azure",
   "cdk", "cloudformation", "terraform", "bicep",
 ];
@@ -423,4 +423,5 @@ Study these files as examples:
 | `typescript` | `src/presets/typescript.ts` | Merge + CI + Markdown |
 | `python` | `src/presets/python.ts` | Merge + CI + Markdown + setupExtra |
 | `react` | `src/presets/react.ts` | Requires + Merge + Markdown (no CI) |
+| `nextjs` | `src/presets/nextjs.ts` | Requires + Merge + Markdown (no CI) |
 | `cdk` | `src/presets/cdk.ts` | Requires + CD workflow + Markdown |

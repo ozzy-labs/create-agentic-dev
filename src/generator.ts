@@ -6,6 +6,7 @@ import { basePreset } from "./presets/base.js";
 import { bicepPreset } from "./presets/bicep.js";
 import { cdkPreset } from "./presets/cdk.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
+import { nextjsPreset } from "./presets/nextjs.js";
 import { pythonPreset } from "./presets/python.js";
 import { reactPreset } from "./presets/react.js";
 import { terraformPreset } from "./presets/terraform.js";
@@ -25,6 +26,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   typescript: typescriptPreset,
   python: pythonPreset,
   react: reactPreset,
+  nextjs: nextjsPreset,
   aws: awsPreset,
   azure: azurePreset,
   cdk: cdkPreset,
@@ -63,6 +65,7 @@ const PRESET_ORDER = [
   "typescript",
   "python",
   "react",
+  "nextjs",
   "aws",
   "azure",
   "cdk",
@@ -79,9 +82,9 @@ export function resolvePresets(answers: WizardAnswers): string[] {
     selected.add(lang);
   }
 
-  if (answers.frontend === "react") {
-    selected.add("react");
-    selected.add("typescript"); // React forces TypeScript
+  if (answers.frontend !== "none") {
+    selected.add(answers.frontend);
+    // TypeScript forcing is handled by each preset's `requires` chain
   }
 
   for (const cloud of answers.clouds) {

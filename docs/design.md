@@ -17,20 +17,21 @@
 |---|----------|------|---------|
 | 1 | Project name | Text input | — |
 | 2 | Language toolchains | Multi-select | TypeScript / Python |
-| 3 | Frontend app | Single-select | None / React (Vite) |
+| 3 | Frontend app | Single-select | None / React + Vite / Next.js |
 | 4 | Cloud providers | Multi-select | AWS / Azure |
 | 5 | Infrastructure as Code | Multi-select | None / CDK / CloudFormation / Terraform / Bicep (filtered by selected cloud providers) |
 
 ## Presets
 
-10 presets, mapped 1:1 to wizard selections.
+11 presets, mapped 1:1 to wizard selections.
 
 | Preset | Trigger | Requires |
 |--------|---------|----------|
 | `base` | Always applied | — |
 | `typescript` | Language: TypeScript | — |
 | `python` | Language: Python | — |
-| `react` | Frontend: React | `typescript` (forced) |
+| `react` | Frontend: React + Vite | `typescript` (forced) |
+| `nextjs` | Frontend: Next.js | `typescript` (forced) |
 | `aws` | Cloud: AWS | — |
 | `azure` | Cloud: Azure | — |
 | `cdk` | IaC: CDK (AWS) | `typescript` (forced) |
@@ -38,7 +39,7 @@
 | `terraform` | IaC: Terraform (AWS, Azure) | — |
 | `bicep` | IaC: Bicep (Azure) | — |
 
-Application order: `base → typescript → python → react → aws → azure → cdk → cloudformation → terraform → bicep`
+Application order: `base → typescript → python → react → nextjs → aws → azure → cdk → cloudformation → terraform → bicep`
 
 ### Always Included (base)
 
@@ -90,7 +91,9 @@ Application order: `base → typescript → python → react → aws → azure �
 
 ### Frontend Selection (forces TypeScript)
 
-**React (Vite)** — adds: Vite + React dependencies, configuration, boilerplate
+**React + Vite** — adds: Vite + React dependencies, configuration, boilerplate
+
+**Next.js** — adds: Next.js + React dependencies, App Router scaffold, configuration
 
 ### Cloud Provider Selection
 
@@ -161,13 +164,13 @@ Application order: `base → typescript → python → react → aws → azure �
 
 | Shared file | Modified by |
 |-------------|-------------|
-| `package.json` | base, typescript, python, react, cdk, bicep |
+| `package.json` | base, typescript, python, react, nextjs, cdk, bicep |
 | `.mise.toml` | base, typescript, python, aws, azure, cdk, cloudformation, terraform |
 | `lefthook.yaml` | base, typescript, python |
 | `.github/workflows/ci.yaml` | base, typescript, python, cdk, cloudformation, terraform, bicep |
 | `.github/workflows/cd.yaml` | cdk, cloudformation, terraform, bicep |
 | `.mcp.json` | base, aws, azure |
-| `.vscode/settings.json` | typescript, python, cdk |
+| `.vscode/settings.json` | typescript, python, nextjs, cdk |
 | `.vscode/extensions.json` | typescript, python, cdk, bicep |
 | `.devcontainer/devcontainer.json` | typescript, python, aws, azure, cdk, bicep |
 | `CLAUDE.md` | all presets |
@@ -205,6 +208,7 @@ interface Preset {
 
 ```text
 React ──────→ TypeScript (forced)
+Next.js ────→ TypeScript (forced)
 CDK ────────→ TypeScript (forced)
            └→ cfn-lint + cdk-nag
            └→ CD workflow
@@ -231,8 +235,8 @@ Azure ──────→ Azure CLI
 
 | Element | Notes |
 |---------|-------|
-| Vue | Frontend app option, to be added when needed |
-| Next.js / Remix | React meta-frameworks; out of scope (app architecture, not dev tooling) |
+| Vue / Nuxt | Frontend app options, to be added when needed |
+| Remix | React meta-framework; to be added when needed |
 
 ## Project Structure
 
@@ -254,6 +258,7 @@ create-agentic-dev/
 │       ├── typescript.ts
 │       ├── python.ts
 │       ├── react.ts
+│       ├── nextjs.ts
 │       ├── aws.ts
 │       ├── azure.ts
 │       ├── cdk.ts
@@ -280,6 +285,8 @@ create-agentic-dev/
 │   │   ├── tests/__init__.py
 │   │   └── tests/test_placeholder.py
 │   ├── react/
+│   │   └── ...
+│   ├── nextjs/
 │   │   └── ...
 │   ├── cdk/
 │   │   ├── infra/
@@ -377,21 +384,23 @@ npm create agentic-dev [my-app]
 
 ### Integration test matrix
 
-Languages (3) × Frontend (2) × IaC (4) = 24 theoretical combinations.
-After applying dependency constraints, **10 representative patterns** to test:
+Languages (3) × Frontend (3) × IaC (4) = 36 theoretical combinations.
+After applying dependency constraints, **12 representative patterns** to test:
 
 | # | Languages | Frontend | IaC | Notes |
 |---|-----------|----------|-----|-------|
 | 1 | TS | None | None | Minimal TS |
 | 2 | Python | None | None | Minimal Python |
 | 3 | TS + Python | None | None | Both languages |
-| 4 | TS | React | None | Frontend |
-| 5 | TS | None | CDK | CDK |
-| 6 | TS | None | CFn | CloudFormation |
-| 7 | TS | None | Terraform | Terraform |
-| 8 | TS + Python | React | CDK | Full config |
-| 9 | Python | None | Terraform | Python + Terraform |
-| 10 | Python | None | CFn | Python + CFn |
+| 4 | TS | React + Vite | None | Frontend (SPA) |
+| 5 | TS | Next.js | None | Frontend (SSR) |
+| 6 | TS | None | CDK | CDK |
+| 7 | TS | None | CFn | CloudFormation |
+| 8 | TS | None | Terraform | Terraform |
+| 9 | TS + Python | React + Vite | CDK | Full config |
+| 10 | Python | None | Terraform | Python + Terraform |
+| 11 | Python | None | CFn | Python + CFn |
+| 12 | — | None | None | Base only |
 
 ### Verification per pattern
 

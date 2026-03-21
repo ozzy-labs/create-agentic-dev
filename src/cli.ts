@@ -77,6 +77,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               label: t("wizard.frontend.react.label"),
               hint: t("wizard.frontend.react.hint"),
             },
+            {
+              value: "nextjs" as const,
+              label: t("wizard.frontend.nextjs.label"),
+              hint: t("wizard.frontend.nextjs.hint"),
+            },
           ],
         }),
       clouds: () =>
