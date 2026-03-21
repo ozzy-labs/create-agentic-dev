@@ -61,7 +61,7 @@ export const cloudformationPreset: Preset = {
       {
         placeholder: "<!-- SECTION:CD_SECTION -->",
         content:
-          "| `AWS_ROLE_ARN` | CloudFormation デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
+          "| `AWS_ROLE_ARN` | デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
       },
     ],
   },
