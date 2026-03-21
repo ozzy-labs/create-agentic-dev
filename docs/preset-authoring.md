@@ -83,7 +83,7 @@ const ALL_PRESETS: Record<string, Preset> = {
 const PRESET_ORDER = [
   "base", "typescript", "python",
   "react", "vue",  // add in logical position
-  "cdk", "cloudformation", "terraform",
+  "cdk", "cloudformation", "terraform", "bicep",
 ];
 ```
 

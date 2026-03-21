@@ -60,6 +60,7 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
       },
       { value: "cloudformation" as const, label: t("wizard.iac.cloudformation.label") },
       { value: "terraform" as const, label: t("wizard.iac.terraform.label") },
+      { value: "bicep" as const, label: t("wizard.iac.bicep.label") },
     ],
   });
   handleCancel(iac);

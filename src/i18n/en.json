@@ -26,7 +26,8 @@
       "none": { "label": "None" },
       "cdk": { "label": "AWS CDK", "hint": "forces TypeScript" },
       "cloudformation": { "label": "CloudFormation" },
-      "terraform": { "label": "Terraform" }
+      "terraform": { "label": "Terraform" },
+      "bicep": { "label": "Bicep (Azure)" }
     }
   },
   "overwrite": {

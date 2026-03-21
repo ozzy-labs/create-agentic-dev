@@ -68,9 +68,15 @@ pnpm run lint:secrets      # Secret detection (Gitleaks)
 
 ## Verification (Required)
 
-Any change to presets, templates, or generator logic **must** pass `pnpm run verify` before committing. This runs verification tests that validate generated output across all preset combinations: JSON validity, preset isolation, correct composition of shared files (VSCode, devcontainer, package.json), and extension consistency.
+Any code change **must** pass the following checks before reporting completion to the user:
 
-`pnpm test` runs all tests including verify. `pnpm run verify` runs only the verification tests.
+1. `pnpm run build` — ビルド成功
+2. `pnpm test` — 全テスト通過（verify 含む）
+3. `pnpm run typecheck` — 型チェック通過
+
+エラーが出た場合はその場で修正し、全て通過してから報告する。
+
+`pnpm run verify` runs only the verification tests that validate generated output across all preset combinations: JSON validity, preset isolation, correct composition of shared files (VSCode, devcontainer, package.json), and extension consistency.
 
 ## Architecture
 

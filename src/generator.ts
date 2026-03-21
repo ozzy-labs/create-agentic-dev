@@ -1,6 +1,7 @@
 import { buildCiWorkflow } from "./ci.js";
 import { expandMarkdown, mergeFile } from "./merge.js";
 import { basePreset } from "./presets/base.js";
+import { bicepPreset } from "./presets/bicep.js";
 import { cdkPreset } from "./presets/cdk.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
 import { pythonPreset } from "./presets/python.js";
@@ -25,6 +26,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   cdk: cdkPreset,
   cloudformation: cloudformationPreset,
   terraform: terraformPreset,
+  bicep: bicepPreset,
 };
 
 /** Canonical application order for presets. */
@@ -36,6 +38,7 @@ const PRESET_ORDER = [
   "cdk",
   "cloudformation",
   "terraform",
+  "bicep",
 ];
 
 /** Resolve which presets to apply based on wizard answers, including dependency chains. */

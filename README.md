@@ -21,7 +21,7 @@ The interactive wizard asks 4 questions to configure your project:
 | 1 | Project name | Text input |
 | 2 | Language toolchains | TypeScript / Python (multi-select) |
 | 3 | Frontend app | None / React (Vite) |
-| 4 | Infrastructure as Code | None / AWS CDK / CloudFormation / Terraform |
+| 4 | Infrastructure as Code | None / AWS CDK / CloudFormation / Terraform / Bicep (Azure) |
 
 ## Presets
 
@@ -34,6 +34,7 @@ The interactive wizard asks 4 questions to configure your project:
 | **cdk** | IaC: AWS CDK | CDK v2, cfn-lint, cdk-nag (forces TypeScript) |
 | **cloudformation** | IaC: CloudFormation | cfn-lint, template scaffold |
 | **terraform** | IaC: Terraform | tflint, terraform fmt |
+| **bicep** | IaC: Bicep (Azure) | Azure CLI, bicepconfig.json |
 
 Presets are composable: each provides owned files + merge contributions to shared files
 (package.json, .mise.toml, lefthook.yaml, .vscode/settings.json, .vscode/extensions.json,
