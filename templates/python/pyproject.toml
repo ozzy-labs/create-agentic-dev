@@ -10,16 +10,23 @@ dev = ["pytest"]
 line-length = 100
 
 [tool.ruff.lint]
-select = ["ALL"]
-ignore = [
-  "D",      # pydocstyle
-  "ANN",    # flake8-annotations (gradual adoption)
-  "ERA001", # commented-out code
-  "T201",   # print
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # isort
+  "S",   # flake8-bandit (security)
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "C4",  # flake8-comprehensions
+  "UP",  # pyupgrade
+  "SIM", # flake8-simplify
+  "TCH", # flake8-type-checking
+  "RUF", # Ruff-specific rules
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101", "PLR2004"]
+"tests/**/*.py" = ["S101"]
 
 [tool.mypy]
 python_version = "3.12"
