@@ -38,6 +38,16 @@ export const cdkPreset: Preset = {
         },
       },
     },
+    "renovate.json": {
+      packageRules: [
+        {
+          matchPackageNames: ["aws-cdk-lib", "aws-cdk"],
+          groupName: "AWS CDK",
+          matchUpdateTypes: ["major"],
+          dependencyDashboardApproval: true,
+        },
+      ],
+    },
   },
   markdown: {
     "CLAUDE.md": [
