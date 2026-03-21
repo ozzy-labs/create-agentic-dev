@@ -13,6 +13,10 @@ export function expandSetupScript(template: string, presets: Preset[]): string {
       extraLines.push("");
     }
   }
+  // Remove trailing blank line from the last preset entry
+  if (extraLines.length > 0 && extraLines[extraLines.length - 1] === "") {
+    extraLines.pop();
+  }
   const replacement = extraLines.length > 0 ? extraLines.join("\n") : "";
   return template.replace("# SETUP:EXTRA", replacement);
 }

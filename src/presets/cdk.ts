@@ -12,6 +12,7 @@ export const cdkPreset: Preset = {
         "cdk:deploy": "cd infra && npx cdk deploy",
         "cdk:diff": "cd infra && npx cdk diff",
         "test:infra": "cd infra && pnpm test",
+        "typecheck:infra": "cd infra && tsc --noEmit",
         "lint:cfn": "cfn-lint",
       },
     },
@@ -57,7 +58,8 @@ export const cdkPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
-        content: "pnpm run lint:cfn          # CloudFormation lint (cfn-lint)",
+        content:
+          "pnpm run typecheck:infra   # CDK TypeScript type check\npnpm run lint:cfn          # CloudFormation lint (cfn-lint)",
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
@@ -100,7 +102,8 @@ export const cdkPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
-        content: "| `pnpm run lint:cfn` | CloudFormation リント |",
+        content:
+          "| `pnpm run typecheck:infra` | CDK TypeScript 型チェック |\n| `pnpm run lint:cfn` | CloudFormation リント |",
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",

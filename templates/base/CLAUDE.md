@@ -13,6 +13,7 @@
 ## Tech Stack
 
 - **Version management**: mise (`.mise.toml`), gh is managed via devcontainer feature
+- **Tool policy**: Biome, lefthook 等の開発ツールは mise で管理（package.json の devDependencies には含めない）
 <!-- SECTION:TECH_STACK -->
 - **Linting/Formatting**:
   - shellcheck + shfmt (Shell)

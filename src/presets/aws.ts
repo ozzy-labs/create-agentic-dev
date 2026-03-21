@@ -20,6 +20,12 @@ export const awsPreset: Preset = {
         "aws-iac": {
           command: "uvx",
           args: ["awslabs.aws-iac-mcp@latest"],
+          env: {
+            // biome-ignore lint/suspicious/noTemplateCurlyInString: MCP env variable syntax
+            AWS_PROFILE: "${AWS_PROFILE:-default}",
+            // biome-ignore lint/suspicious/noTemplateCurlyInString: MCP env variable syntax
+            AWS_REGION: "${AWS_REGION:-ap-northeast-1}",
+          },
         },
       },
     },

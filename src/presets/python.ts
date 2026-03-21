@@ -7,6 +7,7 @@ export const pythonPreset: Preset = {
   merge: {
     "package.json": {
       scripts: {
+        "test:python": "uv run pytest",
         "lint:python": "ruff check . && ruff format --check .",
         "lint:mypy": "uv run mypy tests/",
       },
@@ -38,7 +39,7 @@ export const pythonPreset: Preset = {
           extensions: ["charliermarsh.ruff", "ms-python.mypy-type-checker", "ms-python.python"],
         },
       },
-      mounts: ["source=agentic-dev-uv-cache,target=/home/vscode/.cache/uv,type=volume"],
+      mounts: ["source={{projectName}}-uv-cache,target=/home/vscode/.cache/uv,type=volume"],
     },
     "lefthook.yaml": {
       "pre-commit": {

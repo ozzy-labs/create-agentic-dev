@@ -17,6 +17,17 @@
       "matchDepTypes": ["devDependencies"],
       "groupName": "devDependencies (non-major)",
       "matchUpdateTypes": ["patch", "minor"]
+    },
+    {
+      "matchManagers": ["mise"],
+      "groupName": "mise tools (non-major)",
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["mise"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
     }
   ]
 }

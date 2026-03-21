@@ -24,7 +24,7 @@
     "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
     "source=${localEnv:HOME}/.gitconfig.local,target=/home/vscode/.gitconfig.local,type=bind,consistency=cached",
     "source=${localEnv:HOME}/.zsh_history,target=/home/vscode/.zsh_history,type=bind,consistency=cached",
-    "source=agentic-dev-pnpm-store,target=/home/vscode/.local/share/pnpm/store,type=volume"
+    "source={{projectName}}-pnpm-store,target=/home/vscode/.local/share/pnpm/store,type=volume"
   ],
   "portsAttributes": {
     "*": {

@@ -165,17 +165,43 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     if (scripts.lint) lintParts.push("pnpm run lint");
     // TypeScript typecheck (if present)
     if (scripts.typecheck) lintParts.push("pnpm run typecheck");
-    // All lint:* scripts in sorted order (except lint:all and lint:fix)
+    // Additional typecheck:* scripts (e.g. typecheck:infra for CDK)
     for (const key of Object.keys(scripts).sort()) {
-      if (key.startsWith("lint:") && key !== "lint:all" && key !== "lint:fix") {
+      if (key.startsWith("typecheck:")) {
         lintParts.push(`pnpm run ${key}`);
       }
     }
+    // All lint:* scripts in sorted order (except lint:all, lint:fix, lint:secrets)
+    for (const key of Object.keys(scripts).sort()) {
+      if (
+        key.startsWith("lint:") &&
+        key !== "lint:all" &&
+        key !== "lint:fix" &&
+        key !== "lint:secrets"
+      ) {
+        lintParts.push(`pnpm run ${key}`);
+      }
+    }
+    // lint:secrets last (gitleaks can be slow)
+    if (scripts["lint:secrets"]) lintParts.push("pnpm run lint:secrets");
     if (lintParts.length > 0) {
       scripts["lint:all"] = lintParts.join(" && ");
-      pkg.scripts = scripts;
-      allFiles.set("package.json", `${JSON.stringify(pkg, null, 2)}\n`);
     }
+
+    // Build test:all dynamically
+    const testParts: string[] = [];
+    if (scripts.test) testParts.push("pnpm test");
+    for (const key of Object.keys(scripts).sort()) {
+      if (key.startsWith("test:") && key !== "test:all" && key !== "test:watch") {
+        testParts.push(`pnpm run ${key}`);
+      }
+    }
+    if (testParts.length > 1) {
+      scripts["test:all"] = testParts.join(" && ");
+    }
+
+    pkg.scripts = scripts;
+    allFiles.set("package.json", `${JSON.stringify(pkg, null, 2)}\n`);
   }
 
   // 3. Expand Markdown templates
