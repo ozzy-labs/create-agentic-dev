@@ -6,7 +6,7 @@ export const cloudformationPreset: Preset = {
   files: readTemplateFiles("cloudformation"),
   merge: {
     ".cfnlintrc.yaml": {
-      templates: ["infra/**/*.yaml"],
+      templates: ["infra/template.yaml"],
       ignore_templates: [],
     },
     "package.json": {

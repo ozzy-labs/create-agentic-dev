@@ -56,17 +56,17 @@ export const basePreset: Preset = {
       "pre-commit": {
         parallel: true,
         commands: {
-          shellcheck: { glob: "*.sh", run: "shellcheck {staged_files}" },
-          shfmt: { glob: "*.sh", run: "shfmt -w {staged_files}", stage_fixed: true },
-          taplo: { glob: "*.toml", run: "taplo format {staged_files}", stage_fixed: true },
-          markdownlint: { glob: "*.md", run: "markdownlint-cli2 {staged_files}" },
+          shellcheck: { glob: "**/*.sh", run: "shellcheck {staged_files}" },
+          shfmt: { glob: "**/*.sh", run: "shfmt -w {staged_files}", stage_fixed: true },
+          taplo: { glob: "**/*.toml", run: "taplo format {staged_files}", stage_fixed: true },
+          markdownlint: { glob: "**/*.md", run: "markdownlint-cli2 {staged_files}" },
           yamlfmt: {
-            glob: "*.{yaml,yml}",
+            glob: "**/*.{yaml,yml}",
             run: "yamlfmt {staged_files}",
             stage_fixed: true,
           },
           yamllint: {
-            glob: "*.{yaml,yml}",
+            glob: "**/*.{yaml,yml}",
             run: "yamllint -c .yamllint.yaml {staged_files}",
           },
           dockerfmt: {

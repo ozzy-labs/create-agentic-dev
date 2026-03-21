@@ -47,12 +47,12 @@ export const pythonPreset: Preset = {
       "pre-commit": {
         commands: {
           "ruff-format": {
-            glob: "*.py",
+            glob: "**/*.py",
             run: "ruff format {staged_files}",
             stage_fixed: true,
           },
           "ruff-check": {
-            glob: "*.py",
+            glob: "**/*.py",
             run: "ruff check --fix {staged_files}",
             stage_fixed: true,
           },

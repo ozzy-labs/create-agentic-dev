@@ -28,6 +28,12 @@ jobs:
           install: "true"
           cache: "true"
 
+      # Required repository variables:
+      #   AZURE_CLIENT_ID       - Azure AD application client ID
+      #   AZURE_TENANT_ID       - Azure AD tenant ID
+      #   AZURE_SUBSCRIPTION_ID - Azure subscription ID
+      #   AZURE_RESOURCE_GROUP  - Target resource group name
+      # See: https://github.com/azure/login
       - name: Azure login (OIDC)
         uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
         with:

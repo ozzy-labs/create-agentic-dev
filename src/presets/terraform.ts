@@ -18,6 +18,16 @@ export const terraformPreset: Preset = {
         tflint: "0.55",
       },
     },
+    ".vscode/extensions.json": {
+      recommendations: ["hashicorp.terraform"],
+    },
+    ".devcontainer/devcontainer.json": {
+      customizations: {
+        vscode: {
+          extensions: ["hashicorp.terraform"],
+        },
+      },
+    },
   },
   markdown: {
     "CLAUDE.md": [

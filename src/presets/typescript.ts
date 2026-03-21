@@ -67,7 +67,7 @@ export const typescriptPreset: Preset = {
       "pre-commit": {
         commands: {
           biome: {
-            glob: "*.{ts,tsx,js,jsx,json,jsonc}",
+            glob: "**/*.{ts,tsx,js,jsx,json,jsonc}",
             run: "biome check --write {staged_files}",
             stage_fixed: true,
           },

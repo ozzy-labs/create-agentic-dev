@@ -7,6 +7,11 @@ export const cdkPreset: Preset = {
   files: readTemplateFiles("cdk"),
   merge: {
     ".gitignore": "# CDK\ncdk.out/\ncdk.context.json\n!infra/**/*.d.ts",
+    "biome.json": {
+      files: {
+        ignore: ["cdk.out/", "infra/dist/"],
+      },
+    },
     ".cfnlintrc.yaml": {
       templates: ["infra/cdk.out/**/*.template.json"],
       ignore_templates: [],
@@ -34,6 +39,13 @@ export const cdkPreset: Preset = {
     },
     ".vscode/extensions.json": {
       recommendations: ["amazonwebservices.aws-toolkit-vscode"],
+    },
+    "lefthook.yaml": {
+      "pre-push": {
+        commands: {
+          "typecheck-infra": { run: "cd infra && tsc --noEmit" },
+        },
+      },
     },
     ".devcontainer/devcontainer.json": {
       customizations: {
@@ -83,6 +95,20 @@ export const cdkPreset: Preset = {
       {
         placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
         content: "- CDK: cdk-nag for security best practices",
+      },
+      {
+        placeholder: "<!-- SECTION:PRE_PUSH_HOOKS -->",
+        content: "typecheck-infra (CDK tsc)",
+      },
+      {
+        placeholder: "<!-- SECTION:GIT_WORKFLOW -->",
+        content: "- Lefthook `pre-push` runs CDK TypeScript typecheck (`cd infra && tsc --noEmit`)",
+      },
+    ],
+    ".claude/rules/git-workflow.md": [
+      {
+        placeholder: "<!-- SECTION:GIT_WORKFLOW_PRE_PUSH -->",
+        content: "typecheck-infra",
       },
     ],
     ".claude/skills/lint-rules/SKILL.md": [

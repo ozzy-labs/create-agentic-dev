@@ -8,7 +8,7 @@ export const bicepPreset: Preset = {
     "package.json": {
       scripts: {
         "lint:bicep":
-          "find infra -name '*.bicep' -exec az bicep build --file {} --stdout ; > /dev/null",
+          "find infra -name '*.bicep' -print0 | xargs -0 -I{} az bicep build --file {} --stdout > /dev/null",
       },
     },
     ".vscode/extensions.json": {
@@ -75,7 +75,7 @@ export const bicepPreset: Preset = {
     lintSteps: [
       {
         name: "Lint (Bicep)",
-        run: "find infra -name '*.bicep' -exec az bicep build --file {} --stdout ; > /dev/null",
+        run: "find infra -name '*.bicep' -print0 | xargs -0 -I{} az bicep build --file {} --stdout > /dev/null",
       },
     ],
   },
