@@ -14,7 +14,7 @@ export const cdkPreset: Preset = {
         "cdk:diff": "cd infra && npx cdk diff",
         "test:infra": "cd infra && pnpm test",
         "typecheck:infra": "cd infra && tsc --noEmit",
-        "lint:cfn": "cfn-lint",
+        "lint:cfn": "cfn-lint cdk.out/**/*.template.json",
       },
     },
     ".mise.toml": {
@@ -110,6 +110,11 @@ export const cdkPreset: Preset = {
         content:
           "| `pnpm run test:infra` | CDK インフラテスト |\n| `pnpm run cdk:synth` | CDK テンプレート合成 |\n| `pnpm run cdk:diff` | CDK 差分確認 |",
       },
+      {
+        placeholder: "<!-- SECTION:CD_SECTION -->",
+        content:
+          "| `AWS_ROLE_ARN` | CDK デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
+      },
     ],
   },
   ciSteps: {
@@ -117,7 +122,7 @@ export const cdkPreset: Preset = {
       { name: "Install infra dependencies", run: "cd infra && pnpm install --frozen-lockfile" },
       { name: "CDK synth", run: "cd infra && npx cdk synth" },
     ],
-    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint" }],
+    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint cdk.out/**/*.template.json" }],
     testSteps: [{ name: "Test (CDK)", run: "cd infra && pnpm test" }],
   },
   setupExtra: "cd infra && pnpm install",

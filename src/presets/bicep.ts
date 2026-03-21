@@ -64,6 +64,11 @@ export const bicepPreset: Preset = {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
         content: "| `pnpm run lint:bicep` | Bicep リント |",
       },
+      {
+        placeholder: "<!-- SECTION:CD_SECTION -->",
+        content:
+          "| `AZURE_CLIENT_ID` | Azure OIDC 認証用クライアント ID |\n| `AZURE_TENANT_ID` | Azure テナント ID |\n| `AZURE_SUBSCRIPTION_ID` | Azure サブスクリプション ID |\n| `AZURE_RESOURCE_GROUP` | デプロイ先リソースグループ名 |",
+      },
     ],
   },
   ciSteps: {

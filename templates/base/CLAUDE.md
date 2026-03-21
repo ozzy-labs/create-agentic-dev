@@ -58,7 +58,7 @@ docs/         -> Documentation (branch strategy, etc.)
 
 ```bash
 # Setup
-scripts/setup.sh          # Full environment setup
+scripts/setup.sh          # Full environment setup (初回はロックファイルのコミットも必要)
 mise install               # Install all tools
 <!-- SECTION:SETUP_COMMANDS -->
 

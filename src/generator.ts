@@ -247,6 +247,19 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     collapseInfraPlaceholders(sections, "<!-- SECTION:INFRA_DIR_STRUCTURE -->", (names) => {
       return `├── infra/               # インフラストラクチャ (${names})`;
     });
+
+    // Collapse CD_SECTION: wrap table rows with section header
+    const cdSections = sections.filter((s) => s.placeholder === "<!-- SECTION:CD_SECTION -->");
+    if (cdSections.length > 0) {
+      const remaining = sections.filter((s) => s.placeholder !== "<!-- SECTION:CD_SECTION -->");
+      const rows = [...new Set(cdSections.map((s) => s.content))].join("\n");
+      remaining.push({
+        placeholder: "<!-- SECTION:CD_SECTION -->",
+        content: `## デプロイ設定（CD）\n\nCD ワークフローを利用するには、GitHub リポジトリの **Settings → Secrets and variables → Actions → Variables** で以下を設定してください:\n\n| 変数名 | 説明 |\n|--------|------|\n${rows}`,
+      });
+      sections.length = 0;
+      sections.push(...remaining);
+    }
   }
 
   for (const [filePath, sections] of markdownSections) {

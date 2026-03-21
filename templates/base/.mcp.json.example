@@ -27,6 +27,10 @@
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-postgres", "${DATABASE_URL}"]
     },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"]
+    },
     "playwright": {
       "command": "npx",
       "args": ["-y", "@anthropic-ai/mcp-server-playwright"]
