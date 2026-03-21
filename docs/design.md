@@ -341,6 +341,7 @@ npm create agentic-dev [my-app]
 | Unit tests | `merge.ts`, preset definitions | Merge logic correctness, preset structure validation |
 | Integration tests | `generator.ts` | Verify generated output for each preset combination |
 | Snapshot tests | Generated file sets | Detect unintended changes in output |
+| Verification tests | `verify.test.ts` | Validate preset isolation, shared file composition, JSON validity |
 
 ### Integration test matrix
 
@@ -366,6 +367,18 @@ After applying dependency constraints, **10 representative patterns** to test:
 2. Excluded files do not exist
 3. Shared file contents are correct (merged dependencies, tools, scripts)
 4. Snapshot matches (file list)
+
+### Verification tests (`pnpm run verify`)
+
+Cross-cutting validation across 8 representative patterns:
+
+1. All generated JSON files are valid
+2. Preset-specific settings appear only when the preset is active (preset isolation)
+3. Shared files (VSCode, devcontainer, package.json) correctly compose contributions
+4. `lint:all` dynamically includes all `lint:*` scripts
+5. VSCode extensions and devcontainer extensions are consistent
+
+**Required before committing** any change to presets, templates, or generator logic.
 
 ### Test infrastructure
 

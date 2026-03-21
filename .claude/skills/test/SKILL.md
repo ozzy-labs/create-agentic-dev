@@ -10,7 +10,7 @@ allowed-tools: Bash, AskUserQuestion
 
 ## 手順
 
-1. `pnpm test` で vitest テスト実行
+1. `pnpm test` で vitest テスト実行（verify テストを含む全テスト）
 2. 全テスト結果のサマリーを報告する
 
 ## 次のアクション提案（スキル完了後）

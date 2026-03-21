@@ -41,6 +41,7 @@ pnpm run dev               # Watch mode build
 pnpm run build             # Production build
 pnpm test                  # Run tests
 pnpm run test:watch        # Watch mode tests
+pnpm run verify            # Verify generated output (required before commit)
 
 # Lint & Format
 pnpm run lint              # Biome check
@@ -64,6 +65,12 @@ pnpm run lint:secrets      # Secret detection (Gitleaks)
 - All code must pass `pnpm run lint:all` before committing
 - Shell: must pass shellcheck and shfmt
 - YAML file extension: `.yaml` (not `.yml`, unless required by tools)
+
+## Verification (Required)
+
+Any change to presets, templates, or generator logic **must** pass `pnpm run verify` before committing. This runs verification tests that validate generated output across all preset combinations: JSON validity, preset isolation, correct composition of shared files (VSCode, devcontainer, package.json), and extension consistency.
+
+`pnpm test` runs all tests including verify. `pnpm run verify` runs only the verification tests.
 
 ## Architecture
 

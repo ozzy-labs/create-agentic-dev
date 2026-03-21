@@ -24,7 +24,8 @@
     "lint:secrets": "gitleaks detect --no-banner",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "verify": "vitest run tests/verify.test.ts"
   },
   "engines": {
     "node": ">=22"
