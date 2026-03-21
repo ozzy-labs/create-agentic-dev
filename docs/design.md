@@ -18,11 +18,11 @@
 | 1 | Project name | Text input | — |
 | 2 | Language toolchains | Multi-select | TypeScript / Python |
 | 3 | Frontend app | Single-select | None / React (Vite) |
-| 4 | Infrastructure as Code | Single-select | None / AWS CDK / CloudFormation / Terraform |
+| 4 | Infrastructure as Code | Single-select | None / AWS CDK / CloudFormation / Terraform / Bicep (Azure) |
 
 ## Presets
 
-7 presets, mapped 1:1 to wizard selections.
+8 presets, mapped 1:1 to wizard selections.
 
 | Preset | Trigger | Requires |
 |--------|---------|----------|
@@ -33,8 +33,9 @@
 | `cdk` | IaC: AWS CDK | `typescript` (forced) |
 | `cloudformation` | IaC: CloudFormation | — |
 | `terraform` | IaC: Terraform | — |
+| `bicep` | IaC: Bicep (Azure) | — |
 
-Application order: `base → typescript → python → react → cdk / cloudformation / terraform`
+Application order: `base → typescript → python → react → cdk / cloudformation / terraform / bicep`
 
 ### Always Included (base)
 
@@ -123,6 +124,18 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | MCP: AWS IaC | `.mcp.json` (auto-added) |
 | devcontainer: ~/.aws mount | `.devcontainer/devcontainer.json` (merge) |
 
+**Bicep (Azure)** — adds:
+
+| Element | Files |
+|---------|-------|
+| Bicep templates directory | `infra/` (main.bicep) |
+| bicepconfig.json | `bicepconfig.json` |
+| Azure CLI | via mise (`pipx:azure-cli`) |
+| CD workflow | `.github/workflows/cd.yaml` |
+| MCP: Azure | `.mcp.json` (auto-added) |
+| VSCode: Bicep extension | `.vscode/extensions.json` (merge) |
+| devcontainer: Bicep extension, ~/.azure mount | `.devcontainer/devcontainer.json` (merge) |
+
 ## Preset Composition
 
 ### Each preset provides
@@ -134,15 +147,15 @@ Application order: `base → typescript → python → react → cdk / cloudform
 
 | Shared file | Modified by |
 |-------------|-------------|
-| `package.json` | base, typescript, python, react, cdk |
-| `.mise.toml` | base, typescript, python, cdk, cloudformation, terraform |
+| `package.json` | base, typescript, python, react, cdk, bicep |
+| `.mise.toml` | base, typescript, python, cdk, cloudformation, terraform, bicep |
 | `lefthook.yaml` | base, typescript, python |
-| `.github/workflows/ci.yaml` | base, typescript, python, cdk, cloudformation, terraform |
-| `.github/workflows/cd.yaml` | cdk, cloudformation, terraform |
-| `.mcp.json` | base, cdk, cloudformation, terraform |
+| `.github/workflows/ci.yaml` | base, typescript, python, cdk, cloudformation, terraform, bicep |
+| `.github/workflows/cd.yaml` | cdk, cloudformation, terraform, bicep |
+| `.mcp.json` | base, cdk, cloudformation, terraform, bicep |
 | `.vscode/settings.json` | typescript, python, cdk |
-| `.vscode/extensions.json` | typescript, python, cdk |
-| `.devcontainer/devcontainer.json` | typescript, python, cdk, cloudformation, terraform |
+| `.vscode/extensions.json` | typescript, python, cdk, bicep |
+| `.devcontainer/devcontainer.json` | typescript, python, cdk, cloudformation, terraform, bicep |
 | `CLAUDE.md` | all presets |
 | `README.md` | all presets |
 
