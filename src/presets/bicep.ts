@@ -7,7 +7,8 @@ export const bicepPreset: Preset = {
   merge: {
     "package.json": {
       scripts: {
-        "lint:bicep": "az bicep build --file infra/main.bicep --stdout > /dev/null",
+        "lint:bicep":
+          "find infra -name '*.bicep' -exec az bicep build --file {} --stdout ; > /dev/null",
       },
     },
     ".mise.toml": {
@@ -88,7 +89,10 @@ export const bicepPreset: Preset = {
   },
   ciSteps: {
     lintSteps: [
-      { name: "Lint (Bicep)", run: "az bicep build --file infra/main.bicep --stdout > /dev/null" },
+      {
+        name: "Lint (Bicep)",
+        run: "find infra -name '*.bicep' -exec az bicep build --file {} --stdout ; > /dev/null",
+      },
     ],
   },
 };
