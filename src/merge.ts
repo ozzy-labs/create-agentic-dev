@@ -74,11 +74,28 @@ export function expandMarkdown(template: string, sections: MarkdownSection[]): s
   return result;
 }
 
+/** Append unique lines/blocks to a text file (e.g. .gitignore). */
+export function mergeText(base: string, ...patches: unknown[]): string {
+  let result = base.endsWith("\n") ? base : `${base}\n`;
+  for (const patch of patches) {
+    const block = String(patch);
+    if (block && !result.includes(block)) {
+      result += `\n${block}\n`;
+    }
+  }
+  return result;
+}
+
+/** Files that support text-append merging (block-level dedup). */
+const TEXT_MERGE_FILES = new Set([".gitignore"]);
+
 /** Dispatch to the correct merge function based on file extension. */
 export function mergeFile(filePath: string, base: string, patches: unknown[]): string {
   if (patches.length === 0) return base;
   if (filePath.endsWith(".json")) return mergeJson(base, ...patches);
   if (filePath.endsWith(".yaml") || filePath.endsWith(".yml")) return mergeYaml(base, ...patches);
   if (filePath.endsWith(".toml")) return mergeToml(base, ...patches);
+  const basename = filePath.split("/").pop() ?? filePath;
+  if (TEXT_MERGE_FILES.has(basename)) return mergeText(base, ...patches);
   return base;
 }

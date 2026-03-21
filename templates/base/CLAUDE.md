@@ -36,6 +36,7 @@ scripts/      -> Shell scripts (setup, etc.)
 docs/         -> Documentation (branch strategy, etc.)
 .claude/      -> Claude Code project settings and skills
 <!-- SECTION:PROJECT_STRUCTURE -->
+<!-- SECTION:INFRA_STRUCTURE -->
 ```
 
 ## Skills

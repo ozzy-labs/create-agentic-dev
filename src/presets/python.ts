@@ -12,6 +12,8 @@ export const pythonPreset: Preset = {
         "lint:mypy": "uv run mypy tests/",
       },
     },
+    ".gitignore":
+      "# Python\n__pycache__/\n*.py[cod]\n*$py.class\n*.egg-info/\n.mypy_cache/\n.pytest_cache/\n.ruff_cache/",
     ".mise.toml": {
       tools: {
         python: "3.12",

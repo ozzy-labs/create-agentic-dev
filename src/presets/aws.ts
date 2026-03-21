@@ -34,7 +34,7 @@ export const awsPreset: Preset = {
     "CLAUDE.md": [
       {
         placeholder: "<!-- SECTION:TECH_STACK_MCP -->",
-        content: ", AWS IaC",
+        content: "AWS IaC",
       },
     ],
   },

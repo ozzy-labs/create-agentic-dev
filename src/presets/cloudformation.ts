@@ -27,8 +27,8 @@ export const cloudformationPreset: Preset = {
         content: "  - cfn-lint (CloudFormation)",
       },
       {
-        placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
-        content: "infra/        -> CloudFormation templates",
+        placeholder: "<!-- SECTION:INFRA_STRUCTURE -->",
+        content: "CloudFormation",
       },
       {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
@@ -47,8 +47,8 @@ export const cloudformationPreset: Preset = {
     ],
     "README.md": [
       {
-        placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
-        content: "├── infra/               # CloudFormation テンプレート",
+        placeholder: "<!-- SECTION:INFRA_DIR_STRUCTURE -->",
+        content: "CloudFormation",
       },
       {
         placeholder: "<!-- SECTION:ROOT_FILES -->",

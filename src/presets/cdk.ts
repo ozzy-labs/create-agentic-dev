@@ -6,6 +6,7 @@ export const cdkPreset: Preset = {
   requires: ["typescript"],
   files: readTemplateFiles("cdk"),
   merge: {
+    ".gitignore": "# CDK\ncdk.out/\ncdk.context.json\n!infra/**/*.d.ts",
     "package.json": {
       scripts: {
         "cdk:synth": "cd infra && npx cdk synth",
@@ -49,8 +50,8 @@ export const cdkPreset: Preset = {
         content: "  - cfn-lint (CloudFormation)",
       },
       {
-        placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
-        content: "infra/        -> CDK infrastructure (bin/, lib/, test/)",
+        placeholder: "<!-- SECTION:INFRA_STRUCTURE -->",
+        content: "CDK (bin/, lib/, test/)",
       },
       {
         placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
@@ -84,9 +85,8 @@ export const cdkPreset: Preset = {
     ],
     "README.md": [
       {
-        placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
-        content:
-          "├── infra/               # CDK インフラストラクチャ\n│   ├── bin/             # CDK アプリエントリポイント\n│   ├── lib/             # スタック定義\n│   └── test/            # インフラテスト",
+        placeholder: "<!-- SECTION:INFRA_DIR_STRUCTURE -->",
+        content: "CDK (bin/, lib/, test/)",
       },
       {
         placeholder: "<!-- SECTION:ROOT_FILES -->",

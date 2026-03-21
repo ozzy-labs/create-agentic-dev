@@ -497,3 +497,121 @@ describe("verify: generated output", () => {
     });
   }
 });
+
+// --- CI deduplication checks ---
+
+describe("verify: CI deduplication", () => {
+  it("cfn-lint appears only once when both CDK and CloudFormation are selected", () => {
+    const result = generate(
+      makeAnswers({
+        languages: ["typescript"],
+        clouds: ["aws"],
+        iac: ["cdk", "cloudformation"],
+      }),
+    );
+    const ci = result.readText(".github/workflows/ci.yaml");
+    const matches = ci.match(/Lint \(cfn-lint\)/g) ?? [];
+    expect(matches.length, "cfn-lint should appear exactly once in CI").toBe(1);
+  });
+});
+
+// --- Terraform file generation checks ---
+
+describe("verify: Terraform preset", () => {
+  it("generates main.tf placeholder", () => {
+    const result = generate(
+      makeAnswers({ languages: ["typescript"], clouds: ["aws"], iac: ["terraform"] }),
+    );
+    expect(result.hasFile("main.tf")).toBe(true);
+  });
+
+  it("adds Terraform entries to .gitignore", () => {
+    const result = generate(
+      makeAnswers({ languages: ["typescript"], clouds: ["aws"], iac: ["terraform"] }),
+    );
+    const gitignore = result.readText(".gitignore");
+    expect(gitignore).toContain(".terraform/");
+    expect(gitignore).toContain("*.tfstate");
+  });
+});
+
+// --- .gitignore preset isolation ---
+
+describe("verify: .gitignore preset isolation", () => {
+  it("base-only does not include CDK or Python or Terraform entries", () => {
+    const result = generate(makeAnswers());
+    const gitignore = result.readText(".gitignore");
+    expect(gitignore).not.toContain("cdk.out");
+    expect(gitignore).not.toContain("__pycache__");
+    expect(gitignore).not.toContain(".terraform/");
+    expect(gitignore).not.toContain("*.d.ts");
+  });
+
+  it("CDK preset adds cdk.out to .gitignore", () => {
+    const result = generate(makeAnswers({ clouds: ["aws"], iac: ["cdk"] }));
+    const gitignore = result.readText(".gitignore");
+    expect(gitignore).toContain("cdk.out/");
+    expect(gitignore).toContain("!infra/**/*.d.ts");
+  });
+
+  it("Python preset adds __pycache__ to .gitignore", () => {
+    const result = generate(makeAnswers({ languages: ["python"] }));
+    const gitignore = result.readText(".gitignore");
+    expect(gitignore).toContain("__pycache__/");
+    expect(gitignore).toContain(".mypy_cache/");
+  });
+});
+
+// --- CLAUDE.md MCP servers line ---
+
+describe("verify: CLAUDE.md MCP servers", () => {
+  it("no empty entries when both AWS and Azure are selected", () => {
+    const result = generate(
+      makeAnswers({ languages: ["typescript"], clouds: ["aws", "azure"], iac: ["terraform"] }),
+    );
+    const claude = result.readText("CLAUDE.md");
+    const mcpLine = claude.split("\n").find((l) => l.includes("MCP servers"));
+    expect(mcpLine).toBeDefined();
+    expect(mcpLine).not.toMatch(/, ,/);
+    expect(mcpLine).toContain("AWS IaC");
+    expect(mcpLine).toContain("Azure");
+  });
+});
+
+// --- Project Structure infra/ deduplication ---
+
+describe("verify: infra/ structure deduplication", () => {
+  it("CLAUDE.md shows single infra/ line for multiple IaC presets", () => {
+    const result = generate(
+      makeAnswers({
+        languages: ["typescript"],
+        clouds: ["aws", "azure"],
+        iac: ["cdk", "cloudformation", "bicep"],
+      }),
+    );
+    const claude = result.readText("CLAUDE.md");
+    const infraLines = claude.split("\n").filter((l) => l.includes("infra/"));
+    const structureInfra = infraLines.filter((l) => l.includes("->"));
+    expect(structureInfra.length, "Should have exactly one infra/ -> line in structure").toBe(1);
+    expect(structureInfra[0]).toContain("CDK");
+    expect(structureInfra[0]).toContain("CloudFormation");
+    expect(structureInfra[0]).toContain("Bicep");
+  });
+
+  it("README shows single infra/ line for multiple IaC presets", () => {
+    const result = generate(
+      makeAnswers({
+        languages: ["typescript"],
+        clouds: ["aws", "azure"],
+        iac: ["cdk", "cloudformation", "bicep"],
+      }),
+    );
+    const readme = result.readText("README.md");
+    const infraLines = readme
+      .split("\n")
+      .filter((l) => l.includes("├── infra/") || l.includes("└── infra/"));
+    expect(infraLines.length, "Should have exactly one infra/ line in dir structure").toBe(1);
+    expect(infraLines[0]).toContain("CDK");
+    expect(infraLines[0]).toContain("Bicep");
+  });
+});

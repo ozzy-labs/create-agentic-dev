@@ -33,8 +33,8 @@ export const bicepPreset: Preset = {
         content: "  - az bicep build (Bicep)",
       },
       {
-        placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
-        content: "infra/        -> Bicep infrastructure templates",
+        placeholder: "<!-- SECTION:INFRA_STRUCTURE -->",
+        content: "Bicep",
       },
       {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
@@ -53,8 +53,8 @@ export const bicepPreset: Preset = {
     ],
     "README.md": [
       {
-        placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
-        content: "├── infra/               # Bicep インフラストラクチャテンプレート",
+        placeholder: "<!-- SECTION:INFRA_DIR_STRUCTURE -->",
+        content: "Bicep",
       },
       {
         placeholder: "<!-- SECTION:ROOT_FILES -->",

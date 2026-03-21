@@ -21,6 +21,20 @@ export function buildCiWorkflow({ contributions, hasTest, hasBuild }: CiWorkflow
     if (c.buildSteps) buildSteps.push(...c.buildSteps);
   }
 
+  // Deduplicate steps by name (last-wins)
+  const dedup = (steps: CiStep[]): CiStep[] => {
+    const seen = new Map<string, CiStep>();
+    for (const step of steps) {
+      seen.set(step.name, step);
+    }
+    return [...seen.values()];
+  };
+
+  const dedupedSetup = dedup(setupSteps);
+  const dedupedLint = dedup(lintSteps);
+  const dedupedTest = dedup(testSteps);
+  const dedupedBuild = dedup(buildSteps);
+
   // Common setup: checkout + mise
   const commonSetup: CiStep[] = [
     {
@@ -34,9 +48,9 @@ export function buildCiWorkflow({ contributions, hasTest, hasBuild }: CiWorkflow
     },
   ];
 
-  const allSteps = [...commonSetup, ...setupSteps, ...lintSteps];
-  if (hasTest) allSteps.push(...testSteps);
-  if (hasBuild) allSteps.push(...buildSteps);
+  const allSteps = [...commonSetup, ...dedupedSetup, ...dedupedLint];
+  if (hasTest) allSteps.push(...dedupedTest);
+  if (hasBuild) allSteps.push(...dedupedBuild);
 
   const workflow = {
     name: "CI",

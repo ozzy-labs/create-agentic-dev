@@ -32,6 +32,7 @@ bash scripts/setup.sh
 ├── docs/                # ドキュメント
 ├── scripts/             # シェルスクリプト
 <!-- SECTION:DIR_STRUCTURE -->
+<!-- SECTION:INFRA_DIR_STRUCTURE -->
 ├── .mise.toml           # 全ツールバージョン定義
 ├── lefthook.yaml        # Git フック定義
 <!-- SECTION:ROOT_FILES -->

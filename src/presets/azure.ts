@@ -28,7 +28,7 @@ export const azurePreset: Preset = {
     "CLAUDE.md": [
       {
         placeholder: "<!-- SECTION:TECH_STACK_MCP -->",
-        content: ", Azure",
+        content: "Azure",
       },
     ],
   },

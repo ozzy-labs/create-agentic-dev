@@ -5,6 +5,8 @@ export const terraformPreset: Preset = {
   name: "terraform",
   files: readTemplateFiles("terraform"),
   merge: {
+    ".gitignore":
+      "# Terraform\n.terraform/\n*.tfstate\n*.tfstate.*\ncrash.log\noverride.tf\noverride.tf.json\n*_override.tf\n*_override.tf.json\n.terraformrc\nterraform.rc",
     "package.json": {
       scripts: {
         "lint:tf": "terraform fmt -check -recursive && tflint",

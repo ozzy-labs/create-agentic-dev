@@ -22,6 +22,7 @@ export const typescriptPreset: Preset = {
         tsdown: "^0.12.0",
       },
     },
+    ".gitignore": "# TypeScript\n*.d.ts",
     ".mise.toml": {
       tools: {
         "npm:@biomejs/biome": "2",

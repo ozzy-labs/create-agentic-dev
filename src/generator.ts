@@ -33,6 +33,30 @@ const ALL_PRESETS: Record<string, Preset> = {
   bicep: bicepPreset,
 };
 
+/**
+ * Collapse multiple IaC infra placeholder contributions into a single entry.
+ * e.g. ["CDK (bin/, lib/, test/)", "CloudFormation"] → "infra/ -> Infrastructure (CDK (bin/, lib/, test/), CloudFormation)"
+ */
+function collapseInfraPlaceholders(
+  sections: MarkdownSection[],
+  placeholder: string,
+  formatter: (names: string) => string,
+): void {
+  const infraSections = sections.filter((s) => s.placeholder === placeholder);
+  if (infraSections.length === 0) return;
+
+  // Remove all matching entries
+  const remaining = sections.filter((s) => s.placeholder !== placeholder);
+
+  // Combine into single entry
+  const names = [...new Set(infraSections.map((s) => s.content))].join(", ");
+  remaining.push({ placeholder, content: formatter(names) });
+
+  // Replace sections array contents
+  sections.length = 0;
+  sections.push(...remaining);
+}
+
 /** Canonical application order for presets. */
 const PRESET_ORDER = [
   "base",
@@ -215,6 +239,16 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     }
   }
 
+  // Pre-process: collapse INFRA_STRUCTURE / INFRA_DIR_STRUCTURE into single lines
+  for (const [, sections] of markdownSections) {
+    collapseInfraPlaceholders(sections, "<!-- SECTION:INFRA_STRUCTURE -->", (names) => {
+      return `infra/        -> Infrastructure (${names})`;
+    });
+    collapseInfraPlaceholders(sections, "<!-- SECTION:INFRA_DIR_STRUCTURE -->", (names) => {
+      return `├── infra/               # インフラストラクチャ (${names})`;
+    });
+  }
+
   for (const [filePath, sections] of markdownSections) {
     const template = allFiles.get(filePath);
     if (template) {
@@ -265,6 +299,15 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     const hasBuild = presets.some((p) => p.ciSteps?.buildSteps?.length);
     const ciYaml = buildCiWorkflow({ contributions: ciContributions, hasTest, hasBuild });
     allFiles.set(".github/workflows/ci.yaml", ciYaml);
+  }
+
+  // 4.5. Warn about multi-IaC CD workflow (add comment header)
+  const iacPresets = answers.iac;
+  if (iacPresets.length > 1 && allFiles.has(".github/workflows/cd.yaml")) {
+    const cdContent = allFiles.get(".github/workflows/cd.yaml") as string;
+    const iacNames = iacPresets.join(", ");
+    const comment = `# TODO: This project uses multiple IaC tools (${iacNames}).\n# This CD workflow only covers one. Add separate workflows or jobs for each IaC tool.\n`;
+    allFiles.set(".github/workflows/cd.yaml", `${comment}${cdContent}`);
   }
 
   // 5. Expand setup.sh template with preset-specific extra commands
