@@ -7,7 +7,7 @@ export const cloudformationPreset: Preset = {
   merge: {
     "package.json": {
       scripts: {
-        "lint:cfn": "cfn-lint",
+        "lint:cfn": "cfn-lint infra/template.yaml",
       },
     },
     ".mise.toml": {
@@ -58,9 +58,14 @@ export const cloudformationPreset: Preset = {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
         content: "| `pnpm run lint:cfn` | CloudFormation リント |",
       },
+      {
+        placeholder: "<!-- SECTION:CD_SECTION -->",
+        content:
+          "| `AWS_ROLE_ARN` | デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
+      },
     ],
   },
   ciSteps: {
-    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint" }],
+    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint infra/template.yaml" }],
   },
 };

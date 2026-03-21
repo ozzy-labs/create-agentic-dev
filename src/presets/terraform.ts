@@ -61,6 +61,11 @@ export const terraformPreset: Preset = {
         placeholder: "<!-- SECTION:LINT_COMMANDS -->",
         content: "| `pnpm run lint:tf` | Terraform フォーマット + tflint |",
       },
+      {
+        placeholder: "<!-- SECTION:CD_SECTION -->",
+        content:
+          "| `AWS_ROLE_ARN` | デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
+      },
     ],
   },
   ciSteps: {

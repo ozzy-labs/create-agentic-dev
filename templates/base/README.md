@@ -7,6 +7,7 @@ AI エージェント連携を前提とした開発プロジェクト。
 - WSL2 / Ubuntu 24.04（または互換環境）
 - Git
 - [mise](https://mise.jdx.dev/)（未インストールの場合、setup.sh が自動インストール）
+- `GITHUB_TOKEN` 環境変数（Dev Container ビルド時に mise の GitHub API レートリミット回避に使用）
 
 ## クイックスタート
 
@@ -20,6 +21,8 @@ bash scripts/setup.sh
 1. mise 未インストール時の自動インストール
 1. `mise trust` + `mise install`（全開発ツール）
 <!-- SECTION:SETUP_STEPS -->
+
+> **Note:** 初回セットアップ後、生成されたロックファイル（`pnpm-lock.yaml` 等）を最初のコミットに含めてください。CI の `--frozen-lockfile` が正常に動作するために必要です。
 
 ## ディレクトリ構成
 
@@ -67,6 +70,8 @@ bash scripts/setup.sh
 | コマンド | 説明 |
 |---------|------|
 <!-- SECTION:TEST_COMMANDS -->
+
+<!-- SECTION:CD_SECTION -->
 
 ## Conventional Commits
 
