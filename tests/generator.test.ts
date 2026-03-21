@@ -158,6 +158,44 @@ describe("generate (base only)", () => {
     expect(skill).not.toContain("infra");
   });
 
+  it("generates VSCode settings with common settings only", () => {
+    const settings = result.readJson(".vscode/settings.json") as Record<string, unknown>;
+    expect(settings["editor.formatOnSave"]).toBe(true);
+    expect(settings["files.eol"]).toBe("\n");
+    // No Biome or Python settings in base
+    expect(settings["editor.defaultFormatter"]).toBeUndefined();
+    expect(settings["editor.codeActionsOnSave"]).toBeUndefined();
+    expect(settings["[javascript]"]).toBeUndefined();
+    expect(settings["[python]"]).toBeUndefined();
+    expect(settings["search.exclude"]).toBeUndefined();
+    expect(settings["mypy-type-checker.importStrategy"]).toBeUndefined();
+  });
+
+  it("generates VSCode extensions with common extensions only", () => {
+    const ext = result.readJson(".vscode/extensions.json") as Record<string, string[]>;
+    expect(ext.recommendations).toContain("EditorConfig.EditorConfig");
+    expect(ext.recommendations).toContain("timonwong.shellcheck");
+    // No preset-specific extensions
+    expect(ext.recommendations).not.toContain("biomejs.biome");
+    expect(ext.recommendations).not.toContain("charliermarsh.ruff");
+    expect(ext.recommendations).not.toContain("amazonwebservices.aws-toolkit-vscode");
+  });
+
+  it("generates devcontainer with common extensions only", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const customizations = dc.customizations as Record<string, Record<string, string[]>>;
+    const extensions = customizations.vscode.extensions;
+    expect(extensions).toContain("EditorConfig.EditorConfig");
+    expect(extensions).not.toContain("biomejs.biome");
+    expect(extensions).not.toContain("charliermarsh.ruff");
+    expect(extensions).not.toContain("amazonwebservices.aws-toolkit-vscode");
+    // No preset-specific mounts
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes(".aws"))).toBe(false);
+    expect(mounts.some((m: string) => m.includes("uv-cache"))).toBe(false);
+    expect(mounts.some((m: string) => m.includes("pnpm-store"))).toBe(true);
+  });
+
   it("base only has no TypeScript/Python specific files", () => {
     expect(result.hasFile("biome.json")).toBe(false);
     expect(result.hasFile("tsconfig.json")).toBe(false);
@@ -279,6 +317,33 @@ describe("generate (typescript)", () => {
     expect(skill).not.toContain("<!-- SECTION:");
   });
 
+  it("merges Biome settings into VSCode settings", () => {
+    const settings = result.readJson(".vscode/settings.json") as Record<string, unknown>;
+    expect(settings["editor.defaultFormatter"]).toBe("biomejs.biome");
+    const codeActions = settings["editor.codeActionsOnSave"] as Record<string, string>;
+    expect(codeActions["source.fixAll.biome"]).toBe("explicit");
+    const searchExclude = settings["search.exclude"] as Record<string, boolean>;
+    expect(searchExclude["**/dist"]).toBe(true);
+    const jsSettings = settings["[javascript]"] as Record<string, string>;
+    expect(jsSettings["editor.defaultFormatter"]).toBe("biomejs.biome");
+    // No Python settings
+    expect(settings["[python]"]).toBeUndefined();
+    expect(settings["mypy-type-checker.importStrategy"]).toBeUndefined();
+  });
+
+  it("merges Biome extension into VSCode extensions", () => {
+    const ext = result.readJson(".vscode/extensions.json") as Record<string, string[]>;
+    expect(ext.recommendations).toContain("biomejs.biome");
+    expect(ext.recommendations).not.toContain("charliermarsh.ruff");
+  });
+
+  it("merges Biome extension into devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const customizations = dc.customizations as Record<string, Record<string, string[]>>;
+    expect(customizations.vscode.extensions).toContain("biomejs.biome");
+    expect(customizations.vscode.extensions).not.toContain("charliermarsh.ruff");
+  });
+
   it("does not include Python files", () => {
     expect(result.hasFile("pyproject.toml")).toBe(false);
     expect(result.hasFile("uv.lock")).toBe(false);
@@ -354,6 +419,35 @@ describe("generate (python)", () => {
     expect(claude).not.toContain("<!-- SECTION:");
   });
 
+  it("merges Python settings into VSCode settings", () => {
+    const settings = result.readJson(".vscode/settings.json") as Record<string, unknown>;
+    expect(settings["mypy-type-checker.importStrategy"]).toBe("fromEnvironment");
+    const pySettings = settings["[python]"] as Record<string, unknown>;
+    expect(pySettings["editor.defaultFormatter"]).toBe("charliermarsh.ruff");
+    // No Biome settings
+    expect(settings["editor.defaultFormatter"]).toBeUndefined();
+    expect(settings["[javascript]"]).toBeUndefined();
+  });
+
+  it("merges Python extensions into VSCode extensions", () => {
+    const ext = result.readJson(".vscode/extensions.json") as Record<string, string[]>;
+    expect(ext.recommendations).toContain("charliermarsh.ruff");
+    expect(ext.recommendations).toContain("ms-python.mypy-type-checker");
+    expect(ext.recommendations).toContain("ms-python.python");
+    expect(ext.recommendations).not.toContain("biomejs.biome");
+  });
+
+  it("merges Python extensions and uv-cache mount into devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const customizations = dc.customizations as Record<string, Record<string, string[]>>;
+    expect(customizations.vscode.extensions).toContain("charliermarsh.ruff");
+    expect(customizations.vscode.extensions).toContain("ms-python.python");
+    expect(customizations.vscode.extensions).not.toContain("biomejs.biome");
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes("uv-cache"))).toBe(true);
+    expect(mounts.some((m: string) => m.includes(".aws"))).toBe(false);
+  });
+
   it("does not include TypeScript files", () => {
     expect(result.hasFile("biome.json")).toBe(false);
     expect(result.hasFile("tsconfig.json")).toBe(false);
@@ -422,6 +516,36 @@ describe("generate (typescript + python)", () => {
     expect(scripts["lint:all"]).toContain("pnpm run lint:python");
     expect(scripts["lint:all"]).toContain("pnpm run lint:mypy");
     expect(scripts["lint:all"]).toContain("pnpm run lint:secrets");
+  });
+
+  it("merges both language settings into VSCode settings", () => {
+    const settings = result.readJson(".vscode/settings.json") as Record<string, unknown>;
+    // TypeScript settings
+    expect(settings["editor.defaultFormatter"]).toBe("biomejs.biome");
+    expect(settings["[typescript]"]).toBeDefined();
+    // Python settings
+    expect(settings["mypy-type-checker.importStrategy"]).toBe("fromEnvironment");
+    expect(settings["[python]"]).toBeDefined();
+  });
+
+  it("merges both language extensions into VSCode extensions", () => {
+    const ext = result.readJson(".vscode/extensions.json") as Record<string, string[]>;
+    expect(ext.recommendations).toContain("biomejs.biome");
+    expect(ext.recommendations).toContain("charliermarsh.ruff");
+    expect(ext.recommendations).toContain("ms-python.python");
+    // base extensions still present
+    expect(ext.recommendations).toContain("EditorConfig.EditorConfig");
+  });
+
+  it("merges both language extensions and mounts into devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const customizations = dc.customizations as Record<string, Record<string, string[]>>;
+    expect(customizations.vscode.extensions).toContain("biomejs.biome");
+    expect(customizations.vscode.extensions).toContain("charliermarsh.ruff");
+    expect(customizations.vscode.extensions).toContain("ms-python.python");
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes("uv-cache"))).toBe(true);
+    expect(mounts.some((m: string) => m.includes("pnpm-store"))).toBe(true);
   });
 });
 
@@ -611,6 +735,28 @@ describe("generate (cdk)", () => {
     expect(appTs).not.toContain("source-map-support");
   });
 
+  it("merges CDK settings into VSCode settings", () => {
+    const settings = result.readJson(".vscode/settings.json") as Record<string, unknown>;
+    const searchExclude = settings["search.exclude"] as Record<string, boolean>;
+    expect(searchExclude["**/cdk.out"]).toBe(true);
+    // TypeScript settings also present (CDK forces TypeScript)
+    expect(searchExclude["**/dist"]).toBe(true);
+  });
+
+  it("merges AWS Toolkit into VSCode extensions", () => {
+    const ext = result.readJson(".vscode/extensions.json") as Record<string, string[]>;
+    expect(ext.recommendations).toContain("amazonwebservices.aws-toolkit-vscode");
+    expect(ext.recommendations).toContain("biomejs.biome");
+  });
+
+  it("merges AWS Toolkit and ~/.aws mount into devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const customizations = dc.customizations as Record<string, Record<string, string[]>>;
+    expect(customizations.vscode.extensions).toContain("amazonwebservices.aws-toolkit-vscode");
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes(".aws"))).toBe(true);
+  });
+
   it("expands CLAUDE.md with CDK sections", () => {
     const claude = result.readText("CLAUDE.md");
     expect(claude).toContain("CDK");
@@ -647,6 +793,12 @@ describe("generate (cloudformation)", () => {
     const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
     const stepNames = steps.map((s) => s.name);
     expect(stepNames).toContain("Lint (cfn-lint)");
+  });
+
+  it("merges ~/.aws mount into devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes(".aws"))).toBe(true);
   });
 
   it("does not include CDK or Terraform files", () => {
@@ -689,6 +841,12 @@ describe("generate (terraform)", () => {
     const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
     const stepNames = steps.map((s) => s.name);
     expect(stepNames).toContain("Lint (Terraform)");
+  });
+
+  it("merges ~/.aws mount into devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes(".aws"))).toBe(true);
   });
 
   it("does not include CDK or CloudFormation files", () => {

@@ -19,6 +19,27 @@ export const pythonPreset: Preset = {
         "pipx:mypy": "1",
       },
     },
+    ".vscode/settings.json": {
+      "mypy-type-checker.importStrategy": "fromEnvironment",
+      "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.ruff": "explicit",
+          "source.organizeImports.ruff": "explicit",
+        },
+      },
+    },
+    ".vscode/extensions.json": {
+      recommendations: ["charliermarsh.ruff", "ms-python.mypy-type-checker", "ms-python.python"],
+    },
+    ".devcontainer/devcontainer.json": {
+      customizations: {
+        vscode: {
+          extensions: ["charliermarsh.ruff", "ms-python.mypy-type-checker", "ms-python.python"],
+        },
+      },
+      mounts: ["source=agentic-dev-uv-cache,target=/home/vscode/.cache/uv,type=volume"],
+    },
     "lefthook.yaml": {
       "pre-commit": {
         commands: {

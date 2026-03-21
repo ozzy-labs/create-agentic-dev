@@ -22,6 +22,25 @@ export const cdkPreset: Preset = {
         "pipx:cfn-lint": "1",
       },
     },
+    ".vscode/settings.json": {
+      "search.exclude": {
+        "**/cdk.out": true,
+      },
+    },
+    ".vscode/extensions.json": {
+      recommendations: ["amazonwebservices.aws-toolkit-vscode"],
+    },
+    ".devcontainer/devcontainer.json": {
+      customizations: {
+        vscode: {
+          extensions: ["amazonwebservices.aws-toolkit-vscode"],
+        },
+      },
+      mounts: [
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: devcontainer variable syntax
+        "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+      ],
+    },
     ".mcp.json": {
       mcpServers: {
         "aws-iac": {

@@ -17,6 +17,12 @@ export const terraformPreset: Preset = {
         tflint: "0.55",
       },
     },
+    ".devcontainer/devcontainer.json": {
+      mounts: [
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: devcontainer variable syntax
+        "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+      ],
+    },
     ".mcp.json": {
       mcpServers: {
         "aws-iac": {

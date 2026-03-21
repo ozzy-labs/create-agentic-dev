@@ -27,6 +27,41 @@ export const typescriptPreset: Preset = {
         "npm:@biomejs/biome": "2",
       },
     },
+    ".vscode/settings.json": {
+      "editor.codeActionsOnSave": {
+        "source.fixAll.biome": "explicit",
+      },
+      // Top-level default; language-specific overrides in base (md/yaml/toml/shell) and python take precedence
+      "editor.defaultFormatter": "biomejs.biome",
+      "search.exclude": {
+        "**/dist": true,
+      },
+      "[javascript]": {
+        "editor.defaultFormatter": "biomejs.biome",
+      },
+      "[json]": {
+        "editor.defaultFormatter": "biomejs.biome",
+      },
+      "[jsonc]": {
+        "editor.defaultFormatter": "biomejs.biome",
+      },
+      "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome",
+      },
+      "[typescriptreact]": {
+        "editor.defaultFormatter": "biomejs.biome",
+      },
+    },
+    ".vscode/extensions.json": {
+      recommendations: ["biomejs.biome"],
+    },
+    ".devcontainer/devcontainer.json": {
+      customizations: {
+        vscode: {
+          extensions: ["biomejs.biome"],
+        },
+      },
+    },
     "lefthook.yaml": {
       "pre-commit": {
         commands: {

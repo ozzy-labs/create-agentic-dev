@@ -11,6 +11,9 @@ dist/
 *.swo
 *~
 
+# Override global gitignore for template assets
+!templates/**/.vscode/
+
 # AI agent local settings
 .claude/settings.local.json
 .claude/plans/

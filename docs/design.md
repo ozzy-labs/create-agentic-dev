@@ -47,11 +47,11 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | YAML | yamllint, yamlfmt | `.yamllint.yaml`, `.yamlfmt.yaml` |
 | TOML | taplo | via lefthook / CI |
 | GitHub Actions | actionlint | via lefthook / CI |
-| Docker | devcontainer, hadolint, dockerfmt, dclint | `.devcontainer/` (4 files), `.hadolint.yaml`, `.dockerignore` |
+| Docker | devcontainer (common only), hadolint, dockerfmt, dclint | `.devcontainer/` (4 files), `.hadolint.yaml`, `.dockerignore` |
 | Security | Trivy, Gitleaks | `trivy.yaml` |
 | Claude Code | Skills, Rules, Settings | `.claude/` (skills, rules, settings.json) |
 | GitHub | CI workflow, PR template, CODEOWNERS, rulesets | `.github/` |
-| VSCode | Editor settings, extensions | `.vscode/` |
+| VSCode | Editor settings (common only), extensions (common only) | `.vscode/` |
 | MCP | Context7, Fetch | `.mcp.json`, `.mcp.json.example` |
 | Docs | CLAUDE.md, README.md, adding-tools.md, branch-strategy.md | `CLAUDE.md`, `README.md`, `docs/` |
 | Scripts | setup, configure-repo, apply-rulesets | `scripts/` |
@@ -68,6 +68,9 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | Node.js devDeps | `package.json` (devDependencies) |
 | Sample code | `src/index.ts` |
 | Tests | `tests/index.test.ts` |
+| VSCode: Biome formatter settings | `.vscode/settings.json` (merge) |
+| VSCode: Biome extension | `.vscode/extensions.json` (merge) |
+| devcontainer: Biome extension | `.devcontainer/devcontainer.json` (merge) |
 
 **Python** — adds:
 
@@ -77,6 +80,9 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | mypy (type check) | `pyproject.toml` |
 | uv (package manager) | `uv.lock` |
 | Tests | `tests/test_placeholder.py`, `tests/__init__.py` |
+| VSCode: Ruff/mypy/Python settings | `.vscode/settings.json` (merge) |
+| VSCode: Ruff, mypy, Python extensions | `.vscode/extensions.json` (merge) |
+| devcontainer: Python extensions, uv-cache mount | `.devcontainer/devcontainer.json` (merge) |
 
 ### Frontend Selection (forces TypeScript)
 
@@ -93,6 +99,9 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | cdk-nag | `infra/package.json` (dependency) |
 | CD workflow | `.github/workflows/cd.yaml` |
 | MCP: AWS IaC | `.mcp.json` (auto-added) |
+| VSCode: cdk.out search exclude | `.vscode/settings.json` (merge) |
+| VSCode: AWS Toolkit extension | `.vscode/extensions.json` (merge) |
+| devcontainer: AWS Toolkit extension, ~/.aws mount | `.devcontainer/devcontainer.json` (merge) |
 
 **CloudFormation** — adds:
 
@@ -102,6 +111,7 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | cfn-lint | `.cfnlintrc.yaml` |
 | CD workflow | `.github/workflows/cd.yaml` |
 | MCP: AWS IaC | `.mcp.json` (auto-added) |
+| devcontainer: ~/.aws mount | `.devcontainer/devcontainer.json` (merge) |
 
 **Terraform** — adds:
 
@@ -111,6 +121,7 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | terraform | via mise |
 | CD workflow | `.github/workflows/cd.yaml` |
 | MCP: AWS IaC | `.mcp.json` (auto-added) |
+| devcontainer: ~/.aws mount | `.devcontainer/devcontainer.json` (merge) |
 
 ## Preset Composition
 
@@ -129,6 +140,9 @@ Application order: `base → typescript → python → react → cdk / cloudform
 | `.github/workflows/ci.yaml` | base, typescript, python, cdk, cloudformation, terraform |
 | `.github/workflows/cd.yaml` | cdk, cloudformation, terraform |
 | `.mcp.json` | base, cdk, cloudformation, terraform |
+| `.vscode/settings.json` | typescript, python, cdk |
+| `.vscode/extensions.json` | typescript, python, cdk |
+| `.devcontainer/devcontainer.json` | typescript, python, cdk, cloudformation, terraform |
 | `CLAUDE.md` | all presets |
 | `README.md` | all presets |
 
@@ -136,7 +150,7 @@ Application order: `base → typescript → python → react → cdk / cloudform
 
 | File type | Strategy |
 |-----------|----------|
-| JSON (`package.json`, `.mcp.json`) | Deep merge. Arrays: unique union |
+| JSON (`package.json`, `.mcp.json`, `.vscode/*.json`, `devcontainer.json`) | Deep merge. Arrays: unique union |
 | YAML (`lefthook.yaml`, `ci.yaml`) | Deep merge. Arrays: unique union |
 | TOML (`.mise.toml`) | Deep merge |
 | Markdown (`CLAUDE.md`, `README.md`) | Template + section injection (exception: uses placeholder-based approach) |

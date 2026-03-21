@@ -16,6 +16,12 @@ export const cloudformationPreset: Preset = {
         "pipx:cfn-lint": "1",
       },
     },
+    ".devcontainer/devcontainer.json": {
+      mounts: [
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: devcontainer variable syntax
+        "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+      ],
+    },
     ".mcp.json": {
       mcpServers: {
         "aws-iac": {
