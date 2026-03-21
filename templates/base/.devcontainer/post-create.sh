@@ -4,7 +4,7 @@ set -euo pipefail
 # Replace broken symlinks with pre-resolved content from initialize.sh.
 # Sidecar files (*.__resolved__) contain the actual content that was
 # resolved on the host where symlink targets are accessible.
-for dir in ~/.aws ~/.config/gh; do
+for dir in ~/.aws ~/.azure ~/.config/gh; do
   for resolved in "$dir"/*.__resolved__; do
     [[ -f "$resolved" ]] || continue
     target="${resolved%.__resolved__}"

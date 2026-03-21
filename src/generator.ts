@@ -299,7 +299,9 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
 }`);
     }
     if (plugins.length > 0) {
-      allFiles.set(".tflint.hcl", `${plugins.join("\n\n")}\n`);
+      const header =
+        "# NOTE: Plugin versions are not managed by Renovate.\n# Update manually or use `tflint --init` to fetch the latest.\n";
+      allFiles.set(".tflint.hcl", `${header}\n${plugins.join("\n\n")}\n`);
     }
   }
 
