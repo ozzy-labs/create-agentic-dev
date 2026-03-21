@@ -21,7 +21,6 @@
   - yamlfmt + yamllint (YAML)
   - taplo (TOML)
   - dockerfmt + hadolint (Dockerfile)
-  - dclint (Docker Compose)
   - actionlint (GitHub Actions)
 <!-- SECTION:TECH_STACK_LINTING -->
 - **Security scanning**: Gitleaks (secrets)
@@ -69,7 +68,6 @@ pnpm run lint:yaml         # YAML lint (yamllint)
 pnpm run lint:shell        # Shell lint (shellcheck + shfmt check)
 pnpm run lint:toml         # TOML format check (taplo)
 pnpm run lint:docker       # Dockerfile lint (hadolint)
-pnpm run lint:compose      # Docker Compose lint (dclint)
 pnpm run lint:actions      # GitHub Actions lint (actionlint)
 pnpm run lint:secrets      # Secret detection (Gitleaks)
 <!-- SECTION:LINT_COMMANDS -->
@@ -85,7 +83,6 @@ pnpm run lint:secrets      # Secret detection (Gitleaks)
 - YAML ファイルの拡張子は `.yaml` に統一する（ツールが `.yml` を要求する場合は許容）
 - Shell: must pass shellcheck and shfmt
 - Dockerfile: must pass hadolint
-- Docker Compose: must pass dclint
 - GitHub Actions: must pass actionlint
 - Security: must pass Gitleaks secret detection
 <!-- SECTION:CODING_CONVENTIONS -->

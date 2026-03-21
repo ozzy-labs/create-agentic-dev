@@ -5,7 +5,7 @@ set -euo pipefail
 # Docker creates missing sources as directories, which breaks file mounts.
 
 # Directories
-mkdir -p "$HOME/.aws" "$HOME/.claude" "$HOME/.claude/projects" "$HOME/.config/gh"
+mkdir -p "$HOME/.aws" "$HOME/.azure" "$HOME/.claude" "$HOME/.claude/projects" "$HOME/.config/gh"
 
 # Files (create only if missing)
 [[ -f "$HOME/.claude/.credentials.json" ]] || touch "$HOME/.claude/.credentials.json"
@@ -19,7 +19,7 @@ mkdir -p "$HOME/.aws" "$HOME/.claude" "$HOME/.claude/projects" "$HOME/.config/gh
 # Dotfile managers (e.g. stow) create symlinks pointing to host paths
 # that don't exist inside the container. Save resolved content as sidecar
 # files so post-create.sh can replace the broken symlinks.
-for dir in "$HOME/.aws" "$HOME/.config/gh"; do
+for dir in "$HOME/.aws" "$HOME/.azure" "$HOME/.config/gh"; do
   while IFS= read -r link; do
     if [[ -f "$link" ]]; then
       cp -L "$link" "${link}.__resolved__"

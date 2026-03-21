@@ -515,6 +515,35 @@ describe("verify: CI deduplication", () => {
   });
 });
 
+// --- CD workflow per-IaC checks ---
+
+describe("verify: CD workflows", () => {
+  it("generates separate CD workflows for each IaC tool", () => {
+    const result = generate(
+      makeAnswers({
+        languages: ["typescript"],
+        clouds: ["aws", "azure"],
+        iac: ["cdk", "cloudformation", "terraform", "bicep"],
+      }),
+    );
+    expect(result.hasFile(".github/workflows/cd-cdk.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-cloudformation.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-terraform.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-bicep.yaml")).toBe(true);
+  });
+
+  it("does not generate a single cd.yaml when multiple IaC tools are selected", () => {
+    const result = generate(
+      makeAnswers({
+        languages: ["typescript"],
+        clouds: ["aws", "azure"],
+        iac: ["cdk", "bicep"],
+      }),
+    );
+    expect(result.hasFile(".github/workflows/cd.yaml")).toBe(false);
+  });
+});
+
 // --- Terraform file generation checks ---
 
 describe("verify: Terraform preset", () => {
@@ -575,6 +604,17 @@ describe("verify: CLAUDE.md MCP servers", () => {
     expect(mcpLine).not.toMatch(/, ,/);
     expect(mcpLine).toContain("AWS IaC");
     expect(mcpLine).toContain("Azure");
+  });
+
+  it("has comma separator between base and injected MCP servers", () => {
+    const result = generate(
+      makeAnswers({ languages: ["typescript"], clouds: ["aws"], iac: ["terraform"] }),
+    );
+    const claude = result.readText("CLAUDE.md");
+    const mcpLine = claude.split("\n").find((l) => l.includes("MCP servers"));
+    expect(mcpLine).toBeDefined();
+    // Ensure "Fetch (web)" is followed by ", AWS IaC" (not "Fetch (web)AWS IaC")
+    expect(mcpLine).toContain("Fetch (web), AWS IaC");
   });
 });
 

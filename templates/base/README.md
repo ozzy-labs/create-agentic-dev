@@ -58,7 +58,6 @@ bash scripts/setup.sh
 | `pnpm run lint:shell` | Shell リント（shellcheck + shfmt） |
 | `pnpm run lint:toml` | TOML フォーマットチェック（taplo） |
 | `pnpm run lint:docker` | Dockerfile リント（hadolint） |
-| `pnpm run lint:compose` | Docker Compose リント（dclint） |
 | `pnpm run lint:actions` | GitHub Actions リント（actionlint） |
 | `pnpm run lint:secrets` | シークレット検出（Gitleaks） |
 <!-- SECTION:LINT_COMMANDS -->

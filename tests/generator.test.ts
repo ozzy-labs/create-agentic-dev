@@ -670,7 +670,7 @@ describe("generate (cdk)", () => {
     expect(result.hasFile("infra/tsconfig.json")).toBe(true);
     expect(result.hasFile("infra/package.json")).toBe(true);
     expect(result.hasFile(".cfnlintrc.yaml")).toBe(true);
-    expect(result.hasFile(".github/workflows/cd.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-cdk.yaml")).toBe(true);
   });
 
   it("merges CDK tools into .mise.toml", () => {
@@ -783,7 +783,7 @@ describe("generate (cloudformation)", () => {
   it("includes CloudFormation owned files", () => {
     expect(result.hasFile("infra/template.yaml")).toBe(true);
     expect(result.hasFile(".cfnlintrc.yaml")).toBe(true);
-    expect(result.hasFile(".github/workflows/cd.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-cloudformation.yaml")).toBe(true);
   });
 
   it("merges cfn-lint into .mise.toml", () => {
@@ -830,7 +830,7 @@ describe("generate (terraform)", () => {
 
   it("includes Terraform owned files", () => {
     expect(result.hasFile(".tflint.hcl")).toBe(true);
-    expect(result.hasFile(".github/workflows/cd.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-terraform.yaml")).toBe(true);
   });
 
   it("merges Terraform tools into .mise.toml", () => {
@@ -899,7 +899,7 @@ describe("generate (full config)", () => {
     // CDK
     expect(result.hasFile("infra/bin/app.ts")).toBe(true);
     expect(result.hasFile(".cfnlintrc.yaml")).toBe(true);
-    expect(result.hasFile(".github/workflows/cd.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-cdk.yaml")).toBe(true);
   });
 
   it("merges all tools into .mise.toml", () => {

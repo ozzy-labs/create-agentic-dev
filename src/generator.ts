@@ -301,15 +301,6 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     allFiles.set(".github/workflows/ci.yaml", ciYaml);
   }
 
-  // 4.5. Warn about multi-IaC CD workflow (add comment header)
-  const iacPresets = answers.iac;
-  if (iacPresets.length > 1 && allFiles.has(".github/workflows/cd.yaml")) {
-    const cdContent = allFiles.get(".github/workflows/cd.yaml") as string;
-    const iacNames = iacPresets.join(", ");
-    const comment = `# TODO: This project uses multiple IaC tools (${iacNames}).\n# This CD workflow only covers one. Add separate workflows or jobs for each IaC tool.\n`;
-    allFiles.set(".github/workflows/cd.yaml", `${comment}${cdContent}`);
-  }
-
   // 5. Expand setup.sh template with preset-specific extra commands
   const setupTemplate = allFiles.get("scripts/setup.sh");
   if (setupTemplate) {

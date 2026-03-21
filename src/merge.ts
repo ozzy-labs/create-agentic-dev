@@ -63,13 +63,23 @@ export function expandMarkdown(template: string, sections: MarkdownSection[]): s
     // Detect inline placeholder (preceded by non-whitespace on same line) → join with ", "
     const idx = result.indexOf(placeholder);
     let separator = "\n";
+    let needsLeadingSep = false;
     if (idx > 0) {
       const lineStart = result.lastIndexOf("\n", idx - 1) + 1;
       const prefix = result.slice(lineStart, idx);
-      if (prefix.trim().length > 0) separator = ", ";
+      if (prefix.trim().length > 0) {
+        separator = ", ";
+        // If the char before the placeholder is not a natural separator, prepend one
+        const charBefore = result[idx - 1];
+        if (unique.length > 0 && !/[\s,:]/.test(charBefore)) {
+          needsLeadingSep = true;
+        }
+      }
     }
 
-    result = result.replaceAll(placeholder, unique.join(separator));
+    const joined = unique.join(separator);
+    const replacement = needsLeadingSep ? `${separator}${joined}` : joined;
+    result = result.replaceAll(placeholder, replacement);
   }
   return result;
 }

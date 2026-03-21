@@ -16,7 +16,6 @@ user-invocable: false
 | `.md` | `markdownlint-cli2 <files>` |
 | `.yaml`, `.yml` | `yamlfmt <files>` → `yamllint -c .yamllint.yaml <files>` |
 | `Dockerfile*` | `dockerfmt <files>` → `hadolint --failure-threshold warning <files>` |
-| `compose*.yaml`, `docker-compose*.yaml` | `dclint <files>` |
 | `.github/workflows/*.yaml` | `actionlint` |
 <!-- SECTION:LINT_RULES_TABLE -->
 
