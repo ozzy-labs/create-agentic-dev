@@ -5,9 +5,13 @@ export const cloudformationPreset: Preset = {
   name: "cloudformation",
   files: readTemplateFiles("cloudformation"),
   merge: {
+    ".cfnlintrc.yaml": {
+      templates: ["infra/**/*.yaml"],
+      ignore_templates: [],
+    },
     "package.json": {
       scripts: {
-        "lint:cfn": "cfn-lint infra/template.yaml",
+        "lint:cfn": "cfn-lint",
       },
     },
     ".mise.toml": {
@@ -66,6 +70,6 @@ export const cloudformationPreset: Preset = {
     ],
   },
   ciSteps: {
-    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint infra/template.yaml" }],
+    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint" }],
   },
 };

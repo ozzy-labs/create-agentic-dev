@@ -7,6 +7,10 @@ export const cdkPreset: Preset = {
   files: readTemplateFiles("cdk"),
   merge: {
     ".gitignore": "# CDK\ncdk.out/\ncdk.context.json\n!infra/**/*.d.ts",
+    ".cfnlintrc.yaml": {
+      templates: ["infra/cdk.out/**/*.template.json"],
+      ignore_templates: [],
+    },
     "package.json": {
       scripts: {
         "cdk:synth": "cd infra && npx cdk synth",
@@ -14,7 +18,7 @@ export const cdkPreset: Preset = {
         "cdk:diff": "cd infra && npx cdk diff",
         "test:infra": "cd infra && pnpm test",
         "typecheck:infra": "cd infra && tsc --noEmit",
-        "lint:cfn": "cfn-lint cdk.out/**/*.template.json",
+        "lint:cfn": "cfn-lint",
       },
     },
     ".mise.toml": {
@@ -132,7 +136,7 @@ export const cdkPreset: Preset = {
       { name: "Install infra dependencies", run: "cd infra && pnpm install --frozen-lockfile" },
       { name: "CDK synth", run: "cd infra && npx cdk synth" },
     ],
-    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint cdk.out/**/*.template.json" }],
+    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint" }],
     testSteps: [{ name: "Test (CDK)", run: "cd infra && pnpm test" }],
   },
   setupExtra: "cd infra && pnpm install",

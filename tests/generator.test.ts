@@ -686,7 +686,7 @@ describe("generate (cdk)", () => {
     expect(scripts["cdk:synth"]).toContain("cdk synth");
     expect(scripts["cdk:deploy"]).toContain("cdk deploy");
     expect(scripts["test:infra"]).toContain("pnpm test");
-    expect(scripts["lint:cfn"]).toBe("cfn-lint cdk.out/**/*.template.json");
+    expect(scripts["lint:cfn"]).toBe("cfn-lint");
   });
 
   it("merges aws-iac MCP server into .mcp.json", () => {
