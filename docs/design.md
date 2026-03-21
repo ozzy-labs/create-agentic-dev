@@ -39,6 +39,24 @@
 | `terraform` | IaC: Terraform (AWS, Azure) | — |
 | `bicep` | IaC: Bicep (Azure) | — |
 
+### プリセットレイヤー
+
+| レイヤー | カテゴリ | 選択方式 | プリセット |
+|---------|---------|---------|-----------|
+| 0 | Base | 常に適用 | `base` |
+| 1 | Language | 複数選択可 | `typescript`, `python` |
+| 2 | Frontend | 単一選択（排他） | `react`, `nextjs` |
+| 3 | Cloud | 複数選択可 | `aws`, `azure` |
+| 4 | IaC | 複数選択可、Cloud に依存 | `cdk`, `cloudformation`, `terraform`, `bicep` |
+
+**相互作用ルール:**
+
+- **同レイヤー内**: プリセットは独立に合成される（競合しない設計が前提）。例外: Frontend は排他（単一選択）
+- **レイヤー間依存**: プリセットの `requires` フィールドで番号が小さいレイヤーのプリセットを強制（例: CDK → TypeScript）
+- **フィルタリング**: 番号が大きいレイヤーの選択肢は、番号が小さいレイヤーの選択に基づきフィルタされる（例: IaC の選択肢は選択された Cloud に依存）
+
+**新プリセット追加時** は、いずれかのレイヤーに割り当てる。既存レイヤーに該当しない場合は、新レイヤーの追加とウィザードフローの更新を検討する。
+
 Application order: `base → typescript → python → react → nextjs → aws → azure → cdk → cloudformation → terraform → bicep`
 
 ### Always Included (base)
@@ -233,10 +251,25 @@ Azure ──────→ Azure CLI
 
 ## Future Additions
 
-| Element | Notes |
-|---------|-------|
-| Vue / Nuxt | Frontend app options, to be added when needed |
-| Remix | React meta-framework; to be added when needed |
+| 要素 | レイヤー | 備考 |
+|-----|---------|------|
+| Google Cloud | 3 (Cloud) | 次に実装予定（#67） |
+| マルチエージェント対応（Codex 等） | — | 保留。base プリセットから Claude Code 設定を分離する設計変更が前提 |
+| バックエンドFW（Express, FastAPI 等） | — | 保留。モノレポ対応とテスト戦略の見直しが前提 |
+| Vue / Nuxt | 2 (Frontend) | 必要になったら追加 |
+| Remix | 2 (Frontend) | React メタフレームワーク。必要になったら追加 |
+
+## Adding a New Preset
+
+新プリセット追加時のチェックリスト:
+
+1. **レイヤーの特定** — どのレイヤーに属するか？（[プリセットレイヤー](#プリセットレイヤー)参照）
+2. **相互作用の確認** — 同レイヤー・異レイヤーの既存プリセットと競合しないか検証
+3. **`PRESET_ORDER` への追加** — `src/generator.ts` のレイヤーグループ内の適切な位置に配置
+4. **`WizardAnswers` の更新** — 必要に応じて `src/types.ts` のユニオン型に追加
+5. **プリセットの実装** — `src/presets/<name>.ts` と `templates/<name>/`（必要な場合）を作成
+6. **verify パターンの追加** — [テストパターン選定ルール](#テストパターン選定ルール)に従う
+7. **本ドキュメントの更新** — Presets テーブル、レイヤーテーブル、共有ファイルテーブル、および関連する詳細セクション
 
 ## Project Structure
 
@@ -420,6 +453,22 @@ Cross-cutting validation across 8 representative patterns:
 5. VSCode extensions and devcontainer extensions are consistent
 
 **Required before committing** any change to presets, templates, or generator logic.
+
+### テストパターン選定ルール
+
+`verify.test.ts` に含めるパターンの選定ルール:
+
+1. **単体カバレッジ**: 各プリセットが少なくとも1つのパターンに含まれること
+2. **レイヤー内組み合わせ**: 同レイヤーの複数プリセットを選択するパターンを1つ以上含む（例: AWS + Azure）
+3. **レイヤー間依存**: `requires` チェーンが発動するパターンを含む（例: CDK → TypeScript）
+4. **最大構成**: 全レイヤーから選択するフルスタックパターンを1つ含む
+5. **最小構成**: base only パターンを含む
+
+**新プリセット追加時:**
+
+- 同レイヤーの既存プリセットと同構造の場合（例: AWS/Azure と同列に GCP を追加）: verify パターンを1つ追加
+- 新しいレイヤー間依存を導入する場合: その依存を検証するパターンを追加
+- フルスタックパターンに新プリセットを含めるか検討する
 
 ### Test infrastructure
 
