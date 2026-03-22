@@ -234,6 +234,7 @@ exports[`file list snapshots > express 1`] = `
 
 exports[`file list snapshots > fastapi 1`] = `
 [
+  ".claude/rules/fastapi.md",
   ".claude/rules/git-workflow.md",
   ".claude/settings.json",
   ".claude/skills/commit-conventions/SKILL.md",
@@ -273,6 +274,11 @@ exports[`file list snapshots > fastapi 1`] = `
   ".yamllint.yaml",
   "CLAUDE.md",
   "README.md",
+  "api/pyproject.toml",
+  "api/src/__init__.py",
+  "api/src/main.py",
+  "api/tests/__init__.py",
+  "api/tests/test_main.py",
   "docs/adding-tools.md",
   "docs/branch-strategy.md",
   "lefthook.yaml",
@@ -666,6 +672,7 @@ exports[`file list snapshots > react + express 1`] = `
 
 exports[`file list snapshots > react + fastapi 1`] = `
 [
+  ".claude/rules/fastapi.md",
   ".claude/rules/git-workflow.md",
   ".claude/settings.json",
   ".claude/skills/commit-conventions/SKILL.md",
@@ -705,6 +712,11 @@ exports[`file list snapshots > react + fastapi 1`] = `
   ".yamllint.yaml",
   "CLAUDE.md",
   "README.md",
+  "api/pyproject.toml",
+  "api/src/__init__.py",
+  "api/src/main.py",
+  "api/tests/__init__.py",
+  "api/tests/test_main.py",
   "biome.json",
   "docs/adding-tools.md",
   "docs/branch-strategy.md",

@@ -241,3 +241,60 @@ describe("pairwise: react + python", () => {
     expect(scripts["lint:all"]).toContain("pnpm run lint:python");
   });
 });
+
+// --- FastAPI + React (web/ + api/ coexistence) ---
+
+describe("pairwise: fastapi + react", () => {
+  const answers = makeAnswers({ frontend: "react", backend: "fastapi" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("web/package.json")).toBe(true);
+    expect(result.hasFile("api/src/main.py")).toBe(true);
+    expect(result.hasFile("api/pyproject.toml")).toBe(true);
+  });
+
+  it("workspace includes web only (FastAPI uses uv, not pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).not.toContain("- api");
+  });
+
+  it("root package.json has both orchestration and API scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["build:web"]).toBe("pnpm --filter web build");
+    expect(scripts["dev:api"]).toContain("uvicorn");
+    expect(scripts["test:api"]).toContain("pytest");
+  });
+
+  it("includes both TypeScript (via React) and Python (via FastAPI) tools", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    expect(toml.tools.python).toBe("3.12");
+  });
+
+  it("devcontainer forwards port 8000", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const ports = dc.forwardPorts as number[];
+    expect(ports).toContain(8000);
+  });
+
+  it("has CI steps from both presets", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Biome)");
+    expect(stepNames).toContain("Lint (API Ruff)");
+    expect(stepNames).toContain("Test (API pytest)");
+  });
+
+  it("CLAUDE.md contains both React and FastAPI sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("React");
+    expect(claude).toContain("FastAPI");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
