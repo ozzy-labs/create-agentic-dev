@@ -67,6 +67,30 @@ describe("resolvePresets", () => {
     const tsCount = result.filter((p) => p === "typescript").length;
     expect(tsCount).toBe(1);
   });
+
+  it("includes fastapi and forces python", () => {
+    const result = resolvePresets(makeAnswers({ backend: "fastapi" }));
+    expect(result).toEqual(["base", "python", "fastapi"]);
+  });
+
+  it("includes express and forces typescript", () => {
+    const result = resolvePresets(makeAnswers({ backend: "express" }));
+    expect(result).toEqual(["base", "typescript", "express"]);
+  });
+
+  it("includes both frontend and backend presets", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "react", backend: "fastapi" }));
+    expect(result).toEqual(["base", "typescript", "python", "react", "fastapi"]);
+  });
+
+  it("deduplicates typescript when express and react are both selected", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "react", backend: "express" }));
+    expect(result).toContain("typescript");
+    expect(result).toContain("react");
+    expect(result).toContain("express");
+    const tsCount = result.filter((p) => p === "typescript").length;
+    expect(tsCount).toBe(1);
+  });
 });
 
 // --- File list snapshots for all patterns ---
@@ -104,6 +128,22 @@ describe("file list snapshots", () => {
     {
       name: "python + cloudformation",
       answers: { languages: ["python"], clouds: ["aws"], iac: ["cloudformation"] },
+    },
+    {
+      name: "fastapi",
+      answers: { backend: "fastapi" },
+    },
+    {
+      name: "express",
+      answers: { backend: "express" },
+    },
+    {
+      name: "react + fastapi",
+      answers: { frontend: "react", backend: "fastapi" },
+    },
+    {
+      name: "react + express",
+      answers: { frontend: "react", backend: "express" },
     },
   ];
 

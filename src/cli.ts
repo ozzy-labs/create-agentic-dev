@@ -41,6 +41,23 @@ function buildIacOptions(clouds: Array<"aws" | "azure" | "gcp">): Array<{
   return options;
 }
 
+/** Determine which languages are already forced by frontend/backend selections. */
+function resolvedLanguages(
+  frontend: WizardAnswers["frontend"],
+  backend: WizardAnswers["backend"],
+  iac: WizardAnswers["iac"],
+): Set<"typescript" | "python"> {
+  const resolved = new Set<"typescript" | "python">();
+  // Frontend frameworks force TypeScript
+  if (frontend === "react" || frontend === "nextjs") resolved.add("typescript");
+  // Backend frameworks force their language
+  if (backend === "fastapi") resolved.add("python");
+  if (backend === "express") resolved.add("typescript");
+  // CDK forces TypeScript
+  if (iac.includes("cdk")) resolved.add("typescript");
+  return resolved;
+}
+
 export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
   p.intro(pc.bold(t("intro")));
 
@@ -58,15 +75,6 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
             }
           },
         }),
-      languages: () =>
-        p.multiselect({
-          message: `${t("wizard.languages.message")} ${pc.dim(t("wizard.languages.hint"))}`,
-          options: [
-            { value: "typescript" as const, label: t("wizard.languages.typescript.label") },
-            { value: "python" as const, label: t("wizard.languages.python.label") },
-          ],
-          required: false,
-        }),
       frontend: () =>
         p.select({
           message: `${t("wizard.frontend.message")} ${pc.dim(t("wizard.frontend.hint"))}`,
@@ -81,6 +89,23 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               value: "nextjs" as const,
               label: t("wizard.frontend.nextjs.label"),
               hint: t("wizard.frontend.nextjs.hint"),
+            },
+          ],
+        }),
+      backend: () =>
+        p.select({
+          message: `${t("wizard.backend.message")} ${pc.dim(t("wizard.backend.hint"))}`,
+          options: [
+            { value: "none" as const, label: t("wizard.backend.none.label") },
+            {
+              value: "fastapi" as const,
+              label: t("wizard.backend.fastapi.label"),
+              hint: t("wizard.backend.fastapi.hint"),
+            },
+            {
+              value: "express" as const,
+              label: t("wizard.backend.express.label"),
+              hint: t("wizard.backend.express.hint"),
             },
           ],
         }),
@@ -107,6 +132,32 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
           required: false,
         });
       },
+      languages: ({ results }) => {
+        const frontend = (results.frontend ?? "none") as WizardAnswers["frontend"];
+        const backend = (results.backend ?? "none") as WizardAnswers["backend"];
+        const iac = (results.iac ?? []) as WizardAnswers["iac"];
+        const resolved = resolvedLanguages(frontend, backend, iac);
+
+        // All languages already resolved by FW/IaC selections — skip
+        if (resolved.has("typescript") && resolved.has("python")) return undefined;
+
+        const options: Array<{ value: "typescript" | "python"; label: string }> = [];
+        if (!resolved.has("typescript")) {
+          options.push({
+            value: "typescript" as const,
+            label: t("wizard.languages.typescript.label"),
+          });
+        }
+        if (!resolved.has("python")) {
+          options.push({ value: "python" as const, label: t("wizard.languages.python.label") });
+        }
+
+        return p.multiselect({
+          message: `${t("wizard.languages.message")} ${pc.dim(t("wizard.languages.hint"))}`,
+          options,
+          required: false,
+        });
+      },
     },
     {
       onCancel: () => {
@@ -118,9 +169,10 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
 
   return {
     projectName: (answers.projectName as string).trim(),
-    languages: (answers.languages ?? []) as WizardAnswers["languages"],
     frontend: (answers.frontend ?? "none") as WizardAnswers["frontend"],
+    backend: (answers.backend ?? "none") as WizardAnswers["backend"],
     clouds: (answers.clouds ?? []) as WizardAnswers["clouds"],
     iac: (answers.iac ?? []) as WizardAnswers["iac"],
+    languages: (answers.languages ?? []) as WizardAnswers["languages"],
   };
 }

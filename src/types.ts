@@ -2,10 +2,11 @@
 
 export interface WizardAnswers {
   projectName: string;
-  languages: Array<"typescript" | "python">;
   frontend: "none" | "react" | "nextjs";
+  backend: "none" | "fastapi" | "express";
   clouds: Array<"aws" | "azure" | "gcp">;
   iac: Array<"cdk" | "cloudformation" | "terraform" | "bicep">;
+  languages: Array<"typescript" | "python">;
 }
 
 // --- Markdown template ---
