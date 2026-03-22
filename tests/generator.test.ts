@@ -91,6 +91,21 @@ describe("resolvePresets", () => {
     const tsCount = result.filter((p) => p === "typescript").length;
     expect(tsCount).toBe(1);
   });
+
+  it("includes both typescript and python when react + fastapi", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "react", backend: "fastapi" }));
+    expect(result).toEqual(["base", "typescript", "python", "react", "fastapi"]);
+  });
+
+  it("includes both typescript and python when nextjs + fastapi", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "nextjs", backend: "fastapi" }));
+    expect(result).toEqual(["base", "typescript", "python", "nextjs", "fastapi"]);
+  });
+
+  it("does not force languages for cloud-only selections", () => {
+    const result = resolvePresets(makeAnswers({ clouds: ["aws", "azure", "gcp"] }));
+    expect(result).toEqual(["base", "aws", "azure", "gcp"]);
+  });
 });
 
 // --- File list snapshots for all patterns ---
@@ -144,6 +159,30 @@ describe("file list snapshots", () => {
     {
       name: "react + express",
       answers: { frontend: "react", backend: "express" },
+    },
+    {
+      name: "nextjs + fastapi",
+      answers: { frontend: "nextjs", backend: "fastapi" },
+    },
+    {
+      name: "nextjs + express",
+      answers: { frontend: "nextjs", backend: "express" },
+    },
+    {
+      name: "express + cdk",
+      answers: { backend: "express", clouds: ["aws"], iac: ["cdk"] },
+    },
+    {
+      name: "fastapi + cdk",
+      answers: { backend: "fastapi", clouds: ["aws"], iac: ["cdk"] },
+    },
+    {
+      name: "azure + bicep",
+      answers: { languages: ["typescript"], clouds: ["azure"], iac: ["bicep"] },
+    },
+    {
+      name: "gcp + terraform",
+      answers: { languages: ["typescript"], clouds: ["gcp"], iac: ["terraform"] },
     },
   ];
 

@@ -26,11 +26,40 @@ export const reactPreset: Preset = {
         placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
         content: "web/          -> Frontend (React + Vite)",
       },
+      {
+        placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
+        content: "pnpm --filter web install # Install frontend dependencies",
+      },
+      {
+        placeholder: "<!-- SECTION:LINT_COMMANDS -->",
+        content: "pnpm run build:web         # Vite production build",
+      },
+      {
+        placeholder: "<!-- SECTION:TEST_COMMANDS -->",
+        content: "pnpm --filter web test     # Run frontend tests",
+      },
+      {
+        placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
+        content: "- React: functional components with hooks, co-located tests in `web/tests/`",
+      },
     ],
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
         content: "├── web/                 # フロントエンド (React + Vite)",
+      },
+      {
+        placeholder: "<!-- SECTION:ROOT_FILES -->",
+        content: "├── web/package.json     # フロントエンド依存・スクリプト",
+      },
+      {
+        placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
+        content: "| `pnpm --filter web install` | フロントエンド依存パッケージインストール |",
+      },
+      {
+        placeholder: "<!-- SECTION:TEST_COMMANDS -->",
+        content:
+          "| `pnpm run build:web` | フロントエンドビルド |\n| `pnpm run dev` | Vite 開発サーバー起動 |",
       },
     ],
   },

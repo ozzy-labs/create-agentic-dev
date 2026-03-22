@@ -163,7 +163,7 @@ export const cdkPreset: Preset = {
       { name: "CDK synth", run: "cd infra && npx cdk synth" },
     ],
     lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint" }],
-    testSteps: [{ name: "Test (CDK)", run: "cd infra && pnpm test" }],
+    testSteps: [{ name: "Test (infra CDK)", run: "cd infra && pnpm test" }],
   },
   setupExtra: "cd infra && pnpm install",
 };

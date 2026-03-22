@@ -33,11 +33,41 @@ export const nextjsPreset: Preset = {
         placeholder: "<!-- SECTION:PROJECT_STRUCTURE -->",
         content: "web/          -> Frontend (Next.js App Router)",
       },
+      {
+        placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
+        content: "pnpm --filter web install # Install frontend dependencies",
+      },
+      {
+        placeholder: "<!-- SECTION:LINT_COMMANDS -->",
+        content: "pnpm run build:web         # Next.js production build",
+      },
+      {
+        placeholder: "<!-- SECTION:TEST_COMMANDS -->",
+        content: "pnpm --filter web test     # Run frontend tests",
+      },
+      {
+        placeholder: "<!-- SECTION:CODING_CONVENTIONS -->",
+        content:
+          "- Next.js: App Router with `src/app/`, Server Components by default, co-located tests in `web/tests/`",
+      },
     ],
     "README.md": [
       {
         placeholder: "<!-- SECTION:DIR_STRUCTURE -->",
         content: "├── web/                 # フロントエンド (Next.js App Router)",
+      },
+      {
+        placeholder: "<!-- SECTION:ROOT_FILES -->",
+        content: "├── web/package.json     # フロントエンド依存・スクリプト",
+      },
+      {
+        placeholder: "<!-- SECTION:SETUP_COMMANDS -->",
+        content: "| `pnpm --filter web install` | フロントエンド依存パッケージインストール |",
+      },
+      {
+        placeholder: "<!-- SECTION:TEST_COMMANDS -->",
+        content:
+          "| `pnpm run build:web` | フロントエンドビルド |\n| `pnpm run dev` | Next.js 開発サーバー起動 |",
       },
     ],
   },

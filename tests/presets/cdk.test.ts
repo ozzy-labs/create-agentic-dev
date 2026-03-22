@@ -52,7 +52,7 @@ describe("generate (cdk)", () => {
     expect(stepNames).toContain("Install infra dependencies");
     expect(stepNames).toContain("CDK synth");
     expect(stepNames).toContain("Lint (cfn-lint)");
-    expect(stepNames).toContain("Test (CDK)");
+    expect(stepNames).toContain("Test (infra CDK)");
     const synthIdx = stepNames.indexOf("CDK synth");
     const cfnLintIdx = stepNames.indexOf("Lint (cfn-lint)");
     expect(synthIdx).toBeLessThan(cfnLintIdx);

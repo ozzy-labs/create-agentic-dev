@@ -397,7 +397,7 @@ describe("pairwise: express + cdk", () => {
     const stepNames = steps.map((s) => s.name);
     expect(stepNames).toContain("Typecheck (API tsc)");
     expect(stepNames).toContain("Test (API vitest)");
-    expect(stepNames).toContain("Test (CDK)");
+    expect(stepNames).toContain("Test (infra CDK)");
   });
 });
 
@@ -423,5 +423,116 @@ describe("pairwise: express + react + cdk", () => {
     expect(workspace).toContain("- web");
     expect(workspace).toContain("- api");
     expect(workspace).not.toContain("- infra");
+  });
+});
+
+// --- NextJS + Express (web/ + api/, both TypeScript) ---
+
+describe("pairwise: nextjs + express", () => {
+  const answers = makeAnswers({ frontend: "nextjs", backend: "express" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/next.config.ts")).toBe(true);
+    expect(result.hasFile("api/src/app.ts")).toBe(true);
+  });
+
+  it("workspace includes both web and api", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- api");
+  });
+
+  it("CLAUDE.md contains both Next.js and Express sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Next.js");
+    expect(claude).toContain("Express");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- NextJS + FastAPI (web/ + api/, TypeScript + Python) ---
+
+describe("pairwise: nextjs + fastapi", () => {
+  const answers = makeAnswers({ frontend: "nextjs", backend: "fastapi" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/next.config.ts")).toBe(true);
+    expect(result.hasFile("api/src/main.py")).toBe(true);
+  });
+
+  it("workspace includes web only (FastAPI uses uv, not pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).not.toContain("- api");
+  });
+
+  it("includes both TypeScript and Python tools", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    expect(toml.tools.python).toBe("3.12");
+  });
+
+  it("CLAUDE.md contains both Next.js and FastAPI sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Next.js");
+    expect(claude).toContain("FastAPI");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- FastAPI + CDK (api/ Python + infra/ TypeScript) ---
+
+describe("pairwise: fastapi + cdk", () => {
+  const answers = makeAnswers({ backend: "fastapi", clouds: ["aws"], iac: ["cdk"] });
+  const result = generate(answers);
+
+  it("includes both api/ and infra/ directories", () => {
+    expect(result.hasFile("api/src/main.py")).toBe(true);
+    expect(result.hasFile("infra/bin/app.ts")).toBe(true);
+  });
+
+  it("includes both TypeScript (via CDK) and Python (via FastAPI) tools", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    expect(toml.tools.python).toBe("3.12");
+    expect(toml.tools["npm:aws-cdk"]).toBe("2");
+  });
+
+  it("has CI steps from both presets", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (API Ruff)");
+    expect(stepNames).toContain("Test (API pytest)");
+    expect(stepNames).toContain("Test (infra CDK)");
+  });
+});
+
+// --- AWS + Azure (multi-cloud MCP and mounts) ---
+
+describe("pairwise: aws + azure", () => {
+  const answers = makeAnswers({ clouds: ["aws", "azure"] });
+  const result = generate(answers);
+
+  it("includes both cloud CLI tools in .mise.toml", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools.awscli).toBe("2");
+    expect(toml.tools["pipx:azure-cli"]).toBe("2");
+  });
+
+  it("merges both MCP servers into .mcp.json", () => {
+    const mcp = result.readJson(".mcp.json") as Record<string, Record<string, unknown>>;
+    expect(mcp.mcpServers["aws-iac"]).toBeDefined();
+    expect(mcp.mcpServers.azure).toBeDefined();
+  });
+
+  it("mounts both ~/.aws and ~/.azure in devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const mounts = dc.mounts as string[];
+    expect(mounts.some((m: string) => m.includes(".aws"))).toBe(true);
+    expect(mounts.some((m: string) => m.includes(".azure"))).toBe(true);
   });
 });
