@@ -11,19 +11,22 @@
 
 ## Wizard Selections
 
-5 questions only. Only ask what fundamentally changes project structure.
+6 questions. App-first flow: application frameworks first, then infrastructure.
 
 | # | Question | Type | Options |
 |---|----------|------|---------|
 | 1 | Project name | Text input | — |
-| 2 | Language toolchains | Multi-select | TypeScript / Python |
-| 3 | Frontend app | Single-select | None / React + Vite / Next.js |
+| 2 | Frontend app | Single-select | None / React + Vite / Next.js |
+| 3 | Backend app | Single-select | None / FastAPI / Express |
 | 4 | Cloud providers | Multi-select | AWS / Azure / Google Cloud |
 | 5 | Infrastructure as Code | Multi-select | None / CDK / CloudFormation / Terraform / Bicep (filtered by selected cloud providers) |
+| 6 | Language toolchains (complement) | Multi-select | TypeScript / Python (auto-resolved languages are excluded) |
+
+Language は FW 選択で自動解決された言語を除外して表示する。全言語が自動解決済みならスキップする。
 
 ## Presets
 
-12 presets, mapped 1:1 to wizard selections.
+14 presets, mapped 1:1 to wizard selections.
 
 | Preset | Trigger | Requires |
 |--------|---------|----------|
@@ -32,6 +35,8 @@
 | `python` | Language: Python | — |
 | `react` | Frontend: React + Vite | `typescript` (forced) |
 | `nextjs` | Frontend: Next.js | `typescript` (forced) |
+| `fastapi` | Backend: FastAPI | `python` (forced) |
+| `express` | Backend: Express | `typescript` (forced) |
 | `aws` | Cloud: AWS | — |
 | `azure` | Cloud: Azure | — |
 | `gcp` | Cloud: Google Cloud | — |
@@ -45,20 +50,22 @@
 | レイヤー | カテゴリ | 選択方式 | プリセット |
 |---------|---------|---------|-----------|
 | 0 | Base | 常に適用 | `base` |
-| 1 | Language | 複数選択可 | `typescript`, `python` |
-| 2 | Frontend | 単一選択（排他） | `react`, `nextjs` |
+| 1 | Frontend | 単一選択（排他） | `react`, `nextjs` |
+| 2 | Backend | 単一選択（排他） | `fastapi`, `express` |
 | 3 | Cloud | 複数選択可 | `aws`, `azure`, `gcp` |
 | 4 | IaC | 複数選択可、Cloud に依存 | `cdk`, `cloudformation`, `terraform`, `bicep` |
+| 5 | Language (complement) | 複数選択可 | `typescript`, `python` |
 
 **相互作用ルール:**
 
-- **同レイヤー内**: プリセットは独立に合成される（競合しない設計が前提）。例外: Frontend は排他（単一選択）
-- **レイヤー間依存**: プリセットの `requires` フィールドで番号が小さいレイヤーのプリセットを強制（例: CDK → TypeScript）
-- **フィルタリング**: 番号が大きいレイヤーの選択肢は、番号が小さいレイヤーの選択に基づきフィルタされる（例: IaC の選択肢は選択された Cloud に依存）
+- **同レイヤー内**: プリセットは独立に合成される（競合しない設計が前提）。例外: Frontend / Backend は排他（単一選択）
+- **レイヤー間依存**: プリセットの `requires` フィールドで言語レイヤーのプリセットを強制（例: CDK → TypeScript、FastAPI → Python）
+- **フィルタリング**: IaC の選択肢は選択された Cloud に基づきフィルタされる
+- **Language complement**: FW（Frontend / Backend / IaC）で自動解決された言語を除外して表示。全言語が解決済みならスキップ
 
 **新プリセット追加時** は、いずれかのレイヤーに割り当てる。既存レイヤーに該当しない場合は、新レイヤーの追加とウィザードフローの更新を検討する。
 
-Application order: `base → typescript → python → react → nextjs → aws → azure → gcp → cdk → cloudformation → terraform → bicep`
+Application order: `base → typescript → python → react → nextjs → fastapi → express → aws → azure → gcp → cdk → cloudformation → terraform → bicep`
 
 ### Always Included (base)
 
@@ -110,9 +117,54 @@ Application order: `base → typescript → python → react → nextjs → aws 
 
 ### Frontend Selection (forces TypeScript)
 
-**React + Vite** — adds: Vite + React dependencies, configuration, boilerplate
+**React + Vite** — adds: Vite + React dependencies, configuration, boilerplate in `web/`
 
-**Next.js** — adds: Next.js + React dependencies, App Router scaffold, configuration
+**Next.js** — adds: Next.js + React dependencies, App Router scaffold, configuration in `web/`
+
+### Backend Selection
+
+**FastAPI** (forces Python) — adds:
+
+| Element | Files |
+|---------|-------|
+| FastAPI + uvicorn | `api/pyproject.toml` |
+| App entrypoint | `api/src/main.py`, `api/src/__init__.py` |
+| Tests (httpx + pytest-asyncio) | `api/tests/test_main.py`, `api/tests/__init__.py` |
+| Ruff FAST plugin | `api/pyproject.toml` |
+| Agent rules | `.claude/rules/fastapi.md` |
+| devcontainer: port 8000 | `.devcontainer/devcontainer.json` (merge) |
+
+**Express** (forces TypeScript) — adds:
+
+| Element | Files |
+|---------|-------|
+| Express app | `api/src/index.ts`, `api/src/app.ts` |
+| Tests (supertest + vitest) | `api/tests/app.test.ts` |
+| tsconfig (API) | `api/tsconfig.json` |
+| Package (API) | `api/package.json` |
+| Agent rules | `.claude/rules/express.md` |
+
+### ディレクトリ構造パターン
+
+FW 選択に応じてプロジェクト構造が変わる。`infra/` は常にルート直下。
+
+| Selection | Structure | Workspace |
+|-----------|-----------|-----------|
+| FW なし | flat `src/` | なし |
+| Frontend のみ | `web/` | pnpm-workspace |
+| Backend のみ (FastAPI) | `api/` | なし（Python/uv） |
+| Backend のみ (Express) | `api/` | pnpm-workspace |
+| Frontend + FastAPI | `web/` + `api/` | pnpm-workspace（web のみ） |
+| Frontend + Express | `web/` + `api/` | pnpm-workspace（web + api） |
+
+**Workspace ルール:**
+
+- `web/`（React / Next.js）→ pnpm workspace に含める
+- `api/`（Express）→ pnpm workspace に含める
+- `api/`（FastAPI）→ uv で管理、pnpm workspace に含めない
+- `infra/`（CDK）→ pnpm workspace に含めない（独立した npm パッケージとして `cd infra && npm install` で管理）
+- `biome.json` はルートに配置（全サブディレクトリで共有）
+- 各サブディレクトリは独自の `package.json`（or `pyproject.toml`）とテストを持つ
 
 ### Cloud Provider Selection
 
@@ -191,15 +243,16 @@ Application order: `base → typescript → python → react → nextjs → aws 
 
 | Shared file | Modified by |
 |-------------|-------------|
-| `package.json` | base, typescript, python, react, nextjs, cdk, bicep |
+| `package.json` | base, typescript, python, react, nextjs, fastapi, express, cdk, bicep |
 | `.mise.toml` | base, typescript, python, aws, azure, gcp, cdk, cloudformation, terraform |
-| `lefthook.yaml` | base, typescript, python |
-| `.github/workflows/ci.yaml` | base, typescript, python, cdk, cloudformation, terraform, bicep |
+| `lefthook.yaml` | base, typescript, python, fastapi, express |
+| `pnpm-workspace.yaml` | react, nextjs, express (auto-generated when workspace packages exist) |
+| `.github/workflows/ci.yaml` | base, typescript, python, fastapi, express, cdk, cloudformation, terraform, bicep |
 | `.github/workflows/cd.yaml` | cdk, cloudformation, terraform, bicep |
 | `.mcp.json` | base, aws, azure, gcp |
 | `.vscode/settings.json` | typescript, python, nextjs, cdk |
 | `.vscode/extensions.json` | typescript, python, cdk, bicep |
-| `.devcontainer/devcontainer.json` | typescript, python, aws, azure, gcp, cdk, bicep |
+| `.devcontainer/devcontainer.json` | typescript, python, fastapi, aws, azure, gcp, cdk, bicep |
 | `CLAUDE.md` | all presets |
 | `README.md` | all presets |
 
@@ -236,6 +289,8 @@ interface Preset {
 ```text
 React ──────→ TypeScript (forced)
 Next.js ────→ TypeScript (forced)
+FastAPI ────→ Python (forced)
+Express ────→ TypeScript (forced)
 CDK ────────→ TypeScript (forced)
            └→ cfn-lint + cdk-nag
            └→ CD workflow
@@ -266,9 +321,9 @@ GCP ────────→ gcloud CLI
 | 要素 | レイヤー | 備考 |
 |-----|---------|------|
 | マルチエージェント対応（Codex 等） | — | 保留。base プリセットから Claude Code 設定を分離する設計変更が前提 |
-| バックエンドFW（Express, FastAPI 等） | — | 保留。モノレポ対応とテスト戦略の見直しが前提 |
-| Vue / Nuxt | 2 (Frontend) | 必要になったら追加 |
-| Remix | 2 (Frontend) | React メタフレームワーク。必要になったら追加 |
+| Vue / Nuxt | 1 (Frontend) | 必要になったら追加 |
+| Remix | 1 (Frontend) | React メタフレームワーク。必要になったら追加 |
+| batch / worker 等 | 2 (Backend) | Backend レイヤーの拡張。`api/` 以外のディレクトリパターンも検討 |
 
 ## Adding a New Preset
 
@@ -279,7 +334,7 @@ GCP ────────→ gcloud CLI
 3. **`PRESET_ORDER` への追加** — `src/generator.ts` のレイヤーグループ内の適切な位置に配置
 4. **`WizardAnswers` の更新** — 必要に応じて `src/types.ts` のユニオン型に追加
 5. **プリセットの実装** — `src/presets/<name>.ts` と `templates/<name>/`（必要な場合）を作成
-6. **verify パターンの追加** — [テストパターン選定ルール](#テストパターン選定ルール)に従う
+6. **テストの追加** — [テストパターン選定ルール](#テストパターン選定ルール)に従い、Layer A/B/C にテストを追加
 7. **本ドキュメントの更新** — Presets テーブル、レイヤーテーブル、共有ファイルテーブル、および関連する詳細セクション
 
 ## Project Structure
@@ -303,12 +358,15 @@ create-agentic-dev/
 │       ├── python.ts
 │       ├── react.ts
 │       ├── nextjs.ts
+│       ├── fastapi.ts
+│       ├── express.ts
 │       ├── aws.ts
 │       ├── azure.ts
 │       ├── gcp.ts
 │       ├── cdk.ts
 │       ├── cloudformation.ts
-│       └── terraform.ts
+│       ├── terraform.ts
+│       └── bicep.ts
 ├── templates/                # Owned files (copied as-is by presets)
 │   ├── base/
 │   │   ├── .gitignore
@@ -330,9 +388,20 @@ create-agentic-dev/
 │   │   ├── tests/__init__.py
 │   │   └── tests/test_placeholder.py
 │   ├── react/
-│   │   └── ...
+│   │   └── web/...
 │   ├── nextjs/
-│   │   └── ...
+│   │   └── web/...
+│   ├── fastapi/
+│   │   ├── api/src/
+│   │   ├── api/tests/
+│   │   ├── api/pyproject.toml
+│   │   └── .claude/rules/fastapi.md
+│   ├── express/
+│   │   ├── api/src/
+│   │   ├── api/tests/
+│   │   ├── api/package.json
+│   │   ├── api/tsconfig.json
+│   │   └── .claude/rules/express.md
 │   ├── cdk/
 │   │   ├── infra/
 │   │   └── .cfnlintrc.yaml
@@ -404,7 +473,7 @@ npm create agentic-dev [my-app]
   │
   ├─ src/index.ts          # Get project name from process.argv
   ├─ src/cli.ts            # Run wizard with @clack/prompts
-  │                          → { name, languages, frontend, iac }
+  │                          → { name, frontend, backend, clouds, iac, languages }
   ├─ src/generator.ts      # 1. Resolve dependencies → preset list
   │                          2. Collect owned files from templates/
   │                          3. Deep merge shared files (JSON/YAML/TOML)
@@ -418,69 +487,90 @@ npm create agentic-dev [my-app]
 
 ## Testing Strategy
 
-### Test types
+### 3層テスト戦略
 
-| Level | Target | Purpose |
-|-------|--------|---------|
-| Unit tests | `merge.ts`, preset definitions | Merge logic correctness, preset structure validation |
-| Integration tests | `generator.ts` | Verify generated output for each preset combination |
-| Snapshot tests | Generated file sets | Detect unintended changes in output |
-| Verification tests | `verify.test.ts` | Validate preset isolation, shared file composition, JSON validity |
+プリセット数の増加に伴い、組み合わせ爆発を防ぐため3層構造でテストする。
 
-### Integration test matrix
+| Layer | Name | Scope | Growth |
+|-------|------|-------|--------|
+| A | Preset unit | 各プリセット単体（base + requires のみ） | O(n) |
+| B | Pairwise | レイヤー間の重要ペア | O(edges) |
+| C | Smoke | 代表パターン（少数） | 固定 |
 
-Languages (3) × Frontend (3) × IaC (4) = 36 theoretical combinations.
-After applying dependency constraints, **12 representative patterns** to test:
+**Layer A** — `tests/presets/*.test.ts`
 
-| # | Languages | Frontend | IaC | Notes |
-|---|-----------|----------|-----|-------|
-| 1 | TS | None | None | Minimal TS |
-| 2 | Python | None | None | Minimal Python |
-| 3 | TS + Python | None | None | Both languages |
-| 4 | TS | React + Vite | None | Frontend (SPA) |
-| 5 | TS | Next.js | None | Frontend (SSR) |
-| 6 | TS | None | CDK | CDK |
-| 7 | TS | None | CFn | CloudFormation |
-| 8 | TS | None | Terraform | Terraform |
-| 9 | TS + Python | React + Vite | CDK | Full config |
-| 10 | Python | None | Terraform | Python + Terraform |
-| 11 | Python | None | CFn | Python + CFn |
-| 12 | — | None | None | Base only |
+各プリセットを base + requires のみで generate し、owned files / merge / markdown / ciSteps を検証。
+
+**Layer B** — `tests/pairwise.test.ts`
+
+重要なレイヤー間ペアの共有ファイルマージを検証:
+
+- React + CDK（web/ + infra/ の共存）
+- React + FastAPI（web/ + api/、workspace 構成）
+- React + Express（web/ + api/、両方 pnpm workspace）
+- Express + CDK（api/ + infra/ の共存）
+- TypeScript + Python（言語の共存）
+
+**Layer C** — `tests/smoke.test.ts`（= `pnpm run verify`）
+
+代表パターンで JSON validity, VSCode/devcontainer consistency, preset isolation を検証。
+
+### Smoke test patterns
+
+| # | Language | Frontend | Backend | Cloud | IaC | Notes |
+|---|---------|----------|---------|-------|-----|-------|
+| 1 | — | — | — | — | — | Base only |
+| 2 | TS | — | — | — | — | Minimal TS |
+| 3 | Python | — | — | — | — | Minimal Python |
+| 4 | TS + Python | — | — | — | — | Both languages |
+| 5 | (auto) | React | — | — | — | Frontend SPA |
+| 6 | (auto) | Next.js | — | — | — | Frontend SSR |
+| 7 | (auto) | — | FastAPI | — | — | Backend (Python) |
+| 8 | (auto) | — | Express | — | — | Backend (TS) |
+| 9 | (auto) | — | — | AWS | CDK | IaC (CDK) |
+| 10 | Python | — | — | — | CFn | IaC (CFn) |
+| 11 | — | — | — | — | Terraform | IaC (multi-cloud) |
+| 12 | — | — | — | Azure | Bicep | IaC (Bicep) |
+| 13 | (auto) | React | FastAPI | AWS | CDK | Full config (monorepo) |
+| 14 | (auto) | React | Express | AWS | CDK | Full config (all TS workspace) |
 
 ### Verification per pattern
-
-1. Required files exist
-2. Excluded files do not exist
-3. Shared file contents are correct (merged dependencies, tools, scripts)
-4. Snapshot matches (file list)
-
-### Verification tests (`pnpm run verify`)
-
-Cross-cutting validation across 8 representative patterns:
 
 1. All generated JSON files are valid
 2. Preset-specific settings appear only when the preset is active (preset isolation)
 3. Shared files (VSCode, devcontainer, package.json) correctly compose contributions
 4. `lint:all` dynamically includes all `lint:*` scripts
 5. VSCode extensions and devcontainer extensions are consistent
+6. Directory structure matches expected pattern (flat / web/ / api/ / web+api/)
+7. pnpm-workspace.yaml contains correct packages
 
 **Required before committing** any change to presets, templates, or generator logic.
 
 ### テストパターン選定ルール
 
-`verify.test.ts` に含めるパターンの選定ルール:
+**Layer A (preset unit):**
+
+- 各プリセットに1つのテストファイル（`tests/presets/<name>.test.ts`）
+- base + requires のみで generate し、owned files と merge contributions を検証
+
+**Layer B (pairwise):**
+
+- 新しいレイヤー間依存やディレクトリ共存パターンを導入する場合にペアを追加
+- 同レイヤー内の組み合わせ（例: AWS + Azure）も重要なペアとして検証
+
+**Layer C (smoke):**
 
 1. **単体カバレッジ**: 各プリセットが少なくとも1つのパターンに含まれること
-2. **レイヤー内組み合わせ**: 同レイヤーの複数プリセットを選択するパターンを1つ以上含む（例: AWS + Azure）
+2. **レイヤー内組み合わせ**: 同レイヤーの複数プリセットを選択するパターンを1つ以上含む
 3. **レイヤー間依存**: `requires` チェーンが発動するパターンを含む（例: CDK → TypeScript）
-4. **最大構成**: 全レイヤーから選択するフルスタックパターンを1つ含む
+4. **最大構成**: 全レイヤーから選択するフルスタックパターンを含む
 5. **最小構成**: base only パターンを含む
 
 **新プリセット追加時:**
 
-- 同レイヤーの既存プリセットと同構造の場合（例: AWS/Azure と同列に GCP を追加）: verify パターンを1つ追加
-- 新しいレイヤー間依存を導入する場合: その依存を検証するパターンを追加
-- フルスタックパターンに新プリセットを含めるか検討する
+- Layer A: テストファイルを1つ追加
+- Layer B: 既存プリセットとの重要なペアを追加
+- Layer C: 同レイヤーの既存プリセットと同構造なら smoke パターンを1つ追加。新しい依存を導入するなら検証パターンを追加
 
 ### Test infrastructure
 
