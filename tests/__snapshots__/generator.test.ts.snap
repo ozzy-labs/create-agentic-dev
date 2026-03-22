@@ -177,6 +177,7 @@ exports[`file list snapshots > cloudformation (ts) 1`] = `
 
 exports[`file list snapshots > express 1`] = `
 [
+  ".claude/rules/express.md",
   ".claude/rules/git-workflow.md",
   ".claude/settings.json",
   ".claude/skills/commit-conventions/SKILL.md",
@@ -216,6 +217,11 @@ exports[`file list snapshots > express 1`] = `
   ".yamllint.yaml",
   "CLAUDE.md",
   "README.md",
+  "api/package.json",
+  "api/src/app.ts",
+  "api/src/index.ts",
+  "api/tests/app.test.ts",
+  "api/tsconfig.json",
   "biome.json",
   "docs/adding-tools.md",
   "docs/branch-strategy.md",
@@ -608,6 +614,7 @@ exports[`file list snapshots > python 1`] = `
 
 exports[`file list snapshots > react + express 1`] = `
 [
+  ".claude/rules/express.md",
   ".claude/rules/git-workflow.md",
   ".claude/settings.json",
   ".claude/skills/commit-conventions/SKILL.md",
@@ -647,6 +654,11 @@ exports[`file list snapshots > react + express 1`] = `
   ".yamllint.yaml",
   "CLAUDE.md",
   "README.md",
+  "api/package.json",
+  "api/src/app.ts",
+  "api/src/index.ts",
+  "api/tests/app.test.ts",
+  "api/tsconfig.json",
   "biome.json",
   "docs/adding-tools.md",
   "docs/branch-strategy.md",
