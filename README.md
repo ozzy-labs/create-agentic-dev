@@ -14,34 +14,31 @@ bash scripts/setup.sh
 
 ## Wizard
 
-The interactive wizard asks 5 questions to configure your project:
+The interactive wizard asks 6 questions in an app-first flow:
 
-| # | Question | Options |
-|---|----------|---------|
-| 1 | Project name | Text input |
-| 2 | Language toolchains | TypeScript / Python (multi-select) |
-| 3 | Frontend app | None / React (Vite) |
-| 4 | Cloud providers | AWS / Azure (multi-select) |
-| 5 | Infrastructure as Code | None / CDK / CloudFormation / Terraform / Bicep (multi-select, filtered by cloud providers) |
+1. **Project name**
+2. **Frontend** — None / React + Vite / Next.js
+3. **Backend** — None / FastAPI / Express
+4. **Cloud providers** — AWS / Azure / Google Cloud (multi-select)
+5. **Infrastructure as Code** — CDK / CloudFormation / Terraform / Bicep (filtered by cloud)
+6. **Language toolchains** — TypeScript / Python (excluding auto-resolved)
 
 ## Presets
 
-| Preset | Trigger | Includes |
-|--------|---------|----------|
-| **base** | Always | Git hooks (lefthook, commitlint), linters (shellcheck, markdownlint, yamllint, taplo, hadolint, actionlint), Gitleaks, devcontainer, Claude Code skills, MCP servers |
-| **typescript** | Language: TypeScript | Biome, tsconfig, vitest, tsdown |
-| **python** | Language: Python | Ruff, mypy, uv, pytest |
-| **react** | Frontend: React | Vite, React 19 (forces TypeScript) |
-| **aws** | Cloud: AWS | AWS CLI, MCP: AWS IaC, ~/.aws mount |
-| **azure** | Cloud: Azure | Azure CLI, MCP: Azure, ~/.azure mount |
-| **cdk** | IaC: CDK | CDK v2, cfn-lint, cdk-nag (AWS, forces TypeScript) |
-| **cloudformation** | IaC: CloudFormation | cfn-lint, template scaffold (AWS) |
-| **terraform** | IaC: Terraform | tflint, terraform fmt (AWS, Azure) |
-| **bicep** | IaC: Bicep | bicepconfig.json (Azure) |
+14 composable presets across 5 layers. Each provides owned files + merge contributions
+to shared files (package.json, .mise.toml, lefthook.yaml, VSCode, devcontainer, CLAUDE.md,
+README.md, CI workflow).
 
-Presets are composable: each provides owned files + merge contributions to shared files
-(package.json, .mise.toml, lefthook.yaml, .vscode/settings.json, .vscode/extensions.json,
-.devcontainer/devcontainer.json, CLAUDE.md, README.md, CI workflow).
+| Layer | Presets |
+|-------|--------|
+| Base | Always included (git hooks, linters, devcontainer, Claude Code, MCP) |
+| Frontend | React + Vite, Next.js |
+| Backend | FastAPI, Express |
+| Cloud | AWS, Azure, Google Cloud |
+| IaC | CDK, CloudFormation, Terraform, Bicep |
+| Language | TypeScript, Python |
+
+See [docs/design.md](docs/design.md) for the full preset details and dependency chains.
 
 ## What You Get
 

@@ -26,6 +26,7 @@ interface Preset {
   markdown?: Record<string, MarkdownSection[]>;
   ciSteps?: CiContribution;
   setupExtra?: string;
+  conditionalDevDeps?: string[];  // devDeps removed if unused by scripts
 }
 ```
 
@@ -83,7 +84,8 @@ const ALL_PRESETS: Record<string, Preset> = {
 const PRESET_ORDER = [
   "base", "typescript", "python",
   "react", "nextjs", "vue",  // add in logical position
-  "aws", "azure",
+  "fastapi", "express",
+  "aws", "azure", "gcp",
   "cdk", "cloudformation", "terraform", "bicep",
 ];
 ```
@@ -94,7 +96,11 @@ Update `src/cli.ts` to add the new option to the wizard.
 
 ### 5. Add tests
 
-Add test cases in `tests/generator.test.ts` (see [Testing](#testing)).
+Add tests following the 3-layer strategy (see [Testing](#testing)):
+
+- Layer A: `tests/presets/<preset>.test.ts` (unit test for the preset)
+- Layer B: `tests/pairwise.test.ts` (cross-layer pairs, if needed)
+- Layer C: `tests/smoke.test.ts` (representative patterns, if needed)
 
 ### 6. Update docs
 
@@ -424,4 +430,6 @@ Study these files as examples:
 | `python` | `src/presets/python.ts` | Merge + CI + Markdown + setupExtra |
 | `react` | `src/presets/react.ts` | Requires + Merge + Markdown (no CI) |
 | `nextjs` | `src/presets/nextjs.ts` | Requires + Merge + Markdown (no CI) |
+| `fastapi` | `src/presets/fastapi.ts` | Requires + Merge + CI + Markdown + setupExtra |
+| `express` | `src/presets/express.ts` | Requires + Merge + CI + Markdown |
 | `cdk` | `src/presets/cdk.ts` | Requires + CD workflow + Markdown |

@@ -38,5 +38,8 @@ See [docs/design.md](docs/design.md) for the full architecture and design decisi
 1. Create `templates/<preset>/` with owned files
 2. Create `src/presets/<preset>.ts` implementing the `Preset` interface
 3. Register it in `src/generator.ts` (`ALL_PRESETS` and `PRESET_ORDER`)
-4. Add integration tests in `tests/generator.test.ts`
+4. Add tests following the 3-layer strategy:
+   - Layer A: `tests/presets/<preset>.test.ts` (unit)
+   - Layer B: `tests/pairwise.test.ts` (cross-layer pairs, if needed)
+   - Layer C: `tests/smoke.test.ts` (representative patterns, if needed)
 5. Update `docs/design.md` with the new preset details

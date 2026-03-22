@@ -46,11 +46,12 @@ All code must pass `pnpm run lint:all` before committing.
 
 Tests are located in `tests/` and run with [vitest](https://vitest.dev/):
 
-| Level | Target | Purpose |
-|-------|--------|---------|
-| Unit | `merge.ts` | Merge logic correctness for JSON, YAML, TOML, Markdown |
-| Integration | `generator.ts` | Verify generated output for each preset combination |
-| Snapshot | Generated file sets | Detect unintended changes in output |
+| Layer | Files | Purpose |
+|-------|-------|---------|
+| Unit | `tests/merge.test.ts`, `tests/generator.test.ts`, `tests/i18n.test.ts` | Merge logic, generator core, i18n |
+| A (Preset unit) | `tests/presets/*.test.ts` | Each preset in isolation (base + requires only) |
+| B (Pairwise) | `tests/pairwise.test.ts` | Cross-layer interaction (e.g., React + CDK) |
+| C (Smoke) | `tests/smoke.test.ts` | Representative patterns, JSON validity, composition |
 
 Tests use an in-memory file writer (`createMemoryWriter`) so no disk I/O or cleanup is needed.
 
