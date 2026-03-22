@@ -15,13 +15,11 @@ export const gcpPreset: Preset = {
         "source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached",
       ],
     },
-    ".mcp.json": {
-      mcpServers: {
-        "google-cloud": {
-          command: "npx",
-          args: ["-y", "@google-cloud/gcloud-mcp"],
-        },
-      },
+  },
+  mcpServers: {
+    "google-cloud": {
+      command: "npx",
+      args: ["-y", "@google-cloud/gcloud-mcp"],
     },
   },
   markdown: {

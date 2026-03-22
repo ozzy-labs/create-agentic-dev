@@ -1,5 +1,5 @@
 import { buildCiWorkflow } from "./ci.js";
-import { expandMarkdown, mergeFile } from "./merge.js";
+import { expandMarkdown, formatMcpJson, mergeFile } from "./merge.js";
 import { awsPreset } from "./presets/aws.js";
 import { azurePreset } from "./presets/azure.js";
 import { basePreset } from "./presets/base.js";
@@ -19,6 +19,7 @@ import type {
   FileWriter,
   GenerateResult,
   MarkdownSection,
+  McpServerConfig,
   Preset,
   WizardAnswers,
 } from "./types.js";
@@ -249,6 +250,17 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
 
     pkg.scripts = scripts;
     allFiles.set("package.json", `${JSON.stringify(pkg, null, 2)}\n`);
+  }
+
+  // 2.7. Collect MCP servers from all presets and write .mcp.json
+  const allMcpServers: Record<string, McpServerConfig> = {};
+  for (const preset of presets) {
+    if (preset.mcpServers) {
+      Object.assign(allMcpServers, preset.mcpServers);
+    }
+  }
+  if (Object.keys(allMcpServers).length > 0) {
+    allFiles.set(".mcp.json", formatMcpJson(allMcpServers));
   }
 
   // 3. Expand Markdown templates

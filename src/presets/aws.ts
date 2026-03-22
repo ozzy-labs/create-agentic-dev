@@ -15,18 +15,16 @@ export const awsPreset: Preset = {
         "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
       ],
     },
-    ".mcp.json": {
-      mcpServers: {
-        "aws-iac": {
-          command: "uvx",
-          args: ["awslabs.aws-iac-mcp@latest"],
-          env: {
-            // biome-ignore lint/suspicious/noTemplateCurlyInString: MCP env variable syntax
-            AWS_PROFILE: "${AWS_PROFILE:-default}",
-            // biome-ignore lint/suspicious/noTemplateCurlyInString: MCP env variable syntax
-            AWS_REGION: "${AWS_REGION:-ap-northeast-1}",
-          },
-        },
+  },
+  mcpServers: {
+    "aws-iac": {
+      command: "uvx",
+      args: ["awslabs.aws-iac-mcp@latest"],
+      env: {
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: MCP env variable syntax
+        AWS_PROFILE: "${AWS_PROFILE:-default}",
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: MCP env variable syntax
+        AWS_REGION: "${AWS_REGION:-ap-northeast-1}",
       },
     },
   },

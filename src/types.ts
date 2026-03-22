@@ -34,6 +34,14 @@ export interface CiContribution {
   buildSteps?: CiStep[];
 }
 
+// --- MCP ---
+
+export interface McpServerConfig {
+  command: string;
+  args: string[];
+  env?: Record<string, string>;
+}
+
 // --- Preset ---
 
 export interface Preset {
@@ -51,6 +59,8 @@ export interface Preset {
   setupExtra?: string;
   /** devDependencies that should be removed if not referenced by any script */
   conditionalDevDeps?: string[];
+  /** MCP server definitions (distributed to agent config files by generator) */
+  mcpServers?: Record<string, McpServerConfig>;
 }
 
 // --- File I/O abstraction ---

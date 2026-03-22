@@ -1,7 +1,7 @@
 import { deepmergeCustom } from "deepmerge-ts";
 import { parse as parseToml, stringify as stringifyToml } from "smol-toml";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import type { MarkdownSection } from "./types.js";
+import type { MarkdownSection, McpServerConfig } from "./types.js";
 
 /**
  * Deep merge with unique-union arrays.
@@ -94,6 +94,28 @@ export function mergeText(base: string, ...patches: unknown[]): string {
     }
   }
   return result;
+}
+
+/** Format MCP server configs as a JSON string (.mcp.json format). */
+export function formatMcpJson(servers: Record<string, McpServerConfig>): string {
+  return `${JSON.stringify({ mcpServers: servers }, null, 2)}\n`;
+}
+
+/** Format MCP server configs as a TOML string (Codex config.toml format). */
+export function formatMcpToml(servers: Record<string, McpServerConfig>): string {
+  const tables: Record<string, Record<string, unknown>> = {};
+  for (const [name, config] of Object.entries(servers)) {
+    const entry: Record<string, unknown> = {
+      command: config.command,
+      args: config.args,
+    };
+    if (config.env && Object.keys(config.env).length > 0) {
+      entry.env = config.env;
+    }
+    tables[name] = entry;
+  }
+  const result = stringifyToml({ mcp_servers: tables });
+  return result.endsWith("\n") ? result : `${result}\n`;
 }
 
 /** Files that support text-append merging (block-level dedup). */

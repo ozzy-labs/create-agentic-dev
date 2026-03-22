@@ -15,13 +15,11 @@ export const azurePreset: Preset = {
         "source=${localEnv:HOME}/.azure,target=/home/vscode/.azure,type=bind,consistency=cached",
       ],
     },
-    ".mcp.json": {
-      mcpServers: {
-        azure: {
-          command: "npx",
-          args: ["-y", "@azure/mcp@latest", "server", "start"],
-        },
-      },
+  },
+  mcpServers: {
+    azure: {
+      command: "npx",
+      args: ["-y", "@azure/mcp@latest", "server", "start"],
     },
   },
   markdown: {
