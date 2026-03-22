@@ -422,6 +422,73 @@ const patterns: PatternDef[] = [
     },
   },
   {
+    name: "fastapi",
+    answers: { backend: "fastapi" },
+    vscodeSettings: {
+      mustInclude: ["charliermarsh.ruff", "mypy-type-checker.importStrategy"],
+      mustExclude: ["biomejs.biome", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [
+        ...COMMON_EXTENSIONS,
+        "charliermarsh.ruff",
+        "ms-python.mypy-type-checker",
+        "ms-python.python",
+      ],
+      mustExclude: [
+        "biomejs.biome",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [
+        ...COMMON_EXTENSIONS,
+        "charliermarsh.ruff",
+        "ms-python.mypy-type-checker",
+        "ms-python.python",
+      ],
+      extensionsMustExclude: [
+        "biomejs.biome",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store", "uv-cache"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint:python", "lint:mypy", "lint:api", "test:api", "dev:api"],
+      scriptsMustExclude: ["lint", "typecheck", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
+    name: "react + fastapi",
+    answers: { frontend: "react", backend: "fastapi" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "charliermarsh.ruff", "mypy-type-checker.importStrategy"],
+      mustExclude: ["cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [
+        ...COMMON_EXTENSIONS,
+        "biomejs.biome",
+        "charliermarsh.ruff",
+        "ms-python.python",
+      ],
+      mustExclude: ["amazonwebservices.aws-toolkit-vscode", "ms-azuretools.vscode-bicep"],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome", "charliermarsh.ruff"],
+      extensionsMustExclude: ["amazonwebservices.aws-toolkit-vscode", "ms-azuretools.vscode-bicep"],
+      mountsMustInclude: ["pnpm-store", "uv-cache"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "lint:python", "lint:api", "test:api", "build:web"],
+      scriptsMustExclude: ["lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
     name: "full config (ts + python + react + aws + gcp + cdk + terraform)",
     answers: {
       languages: ["typescript", "python"],
