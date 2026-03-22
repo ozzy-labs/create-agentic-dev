@@ -6,6 +6,8 @@ import { basePreset } from "./presets/base.js";
 import { bicepPreset } from "./presets/bicep.js";
 import { cdkPreset } from "./presets/cdk.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
+import { expressPreset } from "./presets/express.js";
+import { fastapiPreset } from "./presets/fastapi.js";
 import { gcpPreset } from "./presets/gcp.js";
 import { nextjsPreset } from "./presets/nextjs.js";
 import { pythonPreset } from "./presets/python.js";
@@ -28,6 +30,8 @@ const ALL_PRESETS: Record<string, Preset> = {
   python: pythonPreset,
   react: reactPreset,
   nextjs: nextjsPreset,
+  fastapi: fastapiPreset,
+  express: expressPreset,
   aws: awsPreset,
   azure: azurePreset,
   gcp: gcpPreset,
@@ -68,6 +72,8 @@ const PRESET_ORDER = [
   "python",
   "react",
   "nextjs",
+  "fastapi",
+  "express",
   "aws",
   "azure",
   "gcp",
@@ -88,6 +94,11 @@ export function resolvePresets(answers: WizardAnswers): string[] {
   if (answers.frontend !== "none") {
     selected.add(answers.frontend);
     // TypeScript forcing is handled by each preset's `requires` chain
+  }
+
+  if (answers.backend !== "none") {
+    selected.add(answers.backend);
+    // Language forcing is handled by each preset's `requires` chain
   }
 
   for (const cloud of answers.clouds) {
@@ -344,6 +355,8 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   // 6. Generate pnpm-workspace.yaml for workspace packages
   const workspacePackages: string[] = [];
   if (answers.frontend !== "none") workspacePackages.push("web");
+  if (answers.backend === "express") workspacePackages.push("api");
+  // FastAPI uses Python/uv, not pnpm workspace
   if (workspacePackages.length > 0) {
     const yamlLines = ["packages:"];
     for (const pkg of workspacePackages) {

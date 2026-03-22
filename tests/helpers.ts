@@ -6,10 +6,11 @@ import type { WizardAnswers } from "../src/types.js";
 export function makeAnswers(overrides: Partial<WizardAnswers> = {}): WizardAnswers {
   return {
     projectName: "test-app",
-    languages: [],
     frontend: "none",
+    backend: "none",
     clouds: [],
     iac: [],
+    languages: [],
     ...overrides,
   };
 }
