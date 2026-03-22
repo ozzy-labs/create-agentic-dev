@@ -78,7 +78,7 @@ Application order: `base → typescript → python → react → nextjs → fast
 | YAML | yamllint, yamlfmt | `.yamllint.yaml`, `.yamlfmt.yaml` |
 | TOML | taplo | via lefthook / CI |
 | GitHub Actions | actionlint | via lefthook / CI |
-| Docker | devcontainer (common only), hadolint, dockerfmt, dclint | `.devcontainer/` (4 files), `.hadolint.yaml`, `.dockerignore` |
+| Docker | devcontainer (common only), hadolint, dockerfmt | `.devcontainer/` (4 files), `.hadolint.yaml`, `.dockerignore` |
 | Security | Gitleaks | via lefthook / CI |
 | Claude Code | Skills, Rules, Settings | `.claude/` (skills, rules, settings.json) |
 | GitHub | CI workflow, PR template, CODEOWNERS, rulesets | `.github/` |

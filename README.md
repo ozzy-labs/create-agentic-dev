@@ -25,7 +25,7 @@ The interactive wizard asks 6 questions in an app-first flow:
 
 ## Presets
 
-14 composable presets across 5 layers. Each provides owned files + merge contributions
+14 composable presets across 6 layers. Each provides owned files + merge contributions
 to shared files (package.json, .mise.toml, lefthook.yaml, VSCode, devcontainer, CLAUDE.md,
 README.md, CI workflow).
 
