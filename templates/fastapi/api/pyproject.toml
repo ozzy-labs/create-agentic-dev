@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 dependencies = ["fastapi>=0.115", "uvicorn[standard]>=0.34"]
 
 [dependency-groups]
-dev = ["anyio[trio]", "httpx", "pytest", "pytest-cov"]
+dev = ["anyio[trio]", "httpx", "pytest"]
 
 [tool.ruff]
 line-length = 100
@@ -36,7 +36,6 @@ python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
-plugins = ["pydantic.mypy"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
