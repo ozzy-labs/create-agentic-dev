@@ -755,40 +755,11 @@ describe("smoke: infra/ structure deduplication", () => {
   });
 });
 
-// --- pnpm workspace structure ---
+// --- pnpm workspace structure (negative case only; positive cases in preset/pairwise tests) ---
 
 describe("smoke: pnpm workspace", () => {
-  it("generates pnpm-workspace.yaml for React", () => {
-    const result = generate(makeAnswers({ frontend: "react" }));
-    expect(result.hasFile("pnpm-workspace.yaml")).toBe(true);
-    const workspace = result.readText("pnpm-workspace.yaml");
-    expect(workspace).toContain("- web");
-  });
-
-  it("generates pnpm-workspace.yaml for Next.js", () => {
-    const result = generate(makeAnswers({ frontend: "nextjs" }));
-    expect(result.hasFile("pnpm-workspace.yaml")).toBe(true);
-    const workspace = result.readText("pnpm-workspace.yaml");
-    expect(workspace).toContain("- web");
-  });
-
   it("does not generate pnpm-workspace.yaml without frontend", () => {
     const result = generate(makeAnswers({ languages: ["typescript"] }));
     expect(result.hasFile("pnpm-workspace.yaml")).toBe(false);
-  });
-
-  it("React + CDK generates workspace with web only (infra uses independent npm)", () => {
-    const result = generate(makeAnswers({ frontend: "react", clouds: ["aws"], iac: ["cdk"] }));
-    const workspace = result.readText("pnpm-workspace.yaml");
-    expect(workspace).toContain("- web");
-    expect(workspace).not.toContain("- infra");
-  });
-
-  it("frontend removes TypeScript sample files", () => {
-    const result = generate(makeAnswers({ frontend: "react" }));
-    expect(result.hasFile("src/index.ts")).toBe(false);
-    expect(result.hasFile("tests/index.test.ts")).toBe(false);
-    expect(result.hasFile("web/src/index.ts")).toBe(true);
-    expect(result.hasFile("web/tests/index.test.ts")).toBe(true);
   });
 });
