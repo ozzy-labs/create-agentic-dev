@@ -167,6 +167,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               label: t("wizard.agents.claude-code.label"),
               hint: t("wizard.agents.claude-code.hint"),
             },
+            {
+              value: "codex" as const,
+              label: t("wizard.agents.codex.label"),
+              hint: t("wizard.agents.codex.hint"),
+            },
           ],
           required: false,
         }),
