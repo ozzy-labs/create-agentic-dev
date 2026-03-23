@@ -9,6 +9,7 @@ import { cdkPreset } from "./presets/cdk.js";
 import { claudeCodePreset } from "./presets/claude-code.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
 import { codexPreset } from "./presets/codex.js";
+import { copilotPreset } from "./presets/copilot.js";
 import { expressPreset } from "./presets/express.js";
 import { fastapiPreset } from "./presets/fastapi.js";
 import { gcpPreset } from "./presets/gcp.js";
@@ -48,6 +49,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   codex: codexPreset,
   gemini: geminiPreset,
   "amazon-q": amazonQPreset,
+  copilot: copilotPreset,
 };
 
 /**
@@ -94,6 +96,7 @@ const PRESET_ORDER = [
   "codex",
   "gemini",
   "amazon-q",
+  "copilot",
 ];
 
 /** Resolve which presets to apply based on wizard answers, including dependency chains. */
@@ -281,6 +284,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
       codex: { path: ".codex/config.toml", format: "toml" },
       gemini: { path: ".gemini/settings.json", format: "json" },
       "amazon-q": { path: ".amazonq/mcp.json", format: "json" },
+      copilot: { path: ".copilot/mcp-config.json", format: "json" },
     };
     for (const name of presetNames) {
       const config = AGENT_MCP_FILES[name];
@@ -311,6 +315,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     codex: "AGENTS.md",
     gemini: "GEMINI.md",
     "amazon-q": ".amazonq/rules/project.md",
+    copilot: ".github/copilot-instructions.md",
   };
   const instructionTargets = presetNames
     .filter((name) => name in AGENT_INSTRUCTION_FILES)

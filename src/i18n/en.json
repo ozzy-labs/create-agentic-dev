@@ -49,7 +49,8 @@
       "claude-code": { "label": "Claude Code", "hint": "CLAUDE.md, skills, rules" },
       "codex": { "label": "Codex CLI", "hint": "AGENTS.md, MCP" },
       "gemini": { "label": "Gemini CLI", "hint": "GEMINI.md, MCP" },
-      "amazon-q": { "label": "Amazon Q Developer", "hint": "project rules, MCP" }
+      "amazon-q": { "label": "Amazon Q Developer", "hint": "project rules, MCP" },
+      "copilot": { "label": "GitHub Copilot", "hint": "copilot-instructions.md, MCP" }
     }
   },
   "overwrite": {
