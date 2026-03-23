@@ -1,5 +1,5 @@
 import { buildCiWorkflow } from "./ci.js";
-import { expandMarkdown, formatMcpJson, mergeFile } from "./merge.js";
+import { expandMarkdown, formatMcpJson, formatMcpToml, mergeFile } from "./merge.js";
 import { awsPreset } from "./presets/aws.js";
 import { azurePreset } from "./presets/azure.js";
 import { basePreset } from "./presets/base.js";
@@ -7,6 +7,7 @@ import { bicepPreset } from "./presets/bicep.js";
 import { cdkPreset } from "./presets/cdk.js";
 import { claudeCodePreset } from "./presets/claude-code.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
+import { codexPreset } from "./presets/codex.js";
 import { expressPreset } from "./presets/express.js";
 import { fastapiPreset } from "./presets/fastapi.js";
 import { gcpPreset } from "./presets/gcp.js";
@@ -42,6 +43,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   terraform: terraformPreset,
   bicep: bicepPreset,
   "claude-code": claudeCodePreset,
+  codex: codexPreset,
 };
 
 /**
@@ -85,6 +87,7 @@ const PRESET_ORDER = [
   "terraform",
   "bicep",
   "claude-code",
+  "codex",
 ];
 
 /** Resolve which presets to apply based on wizard answers, including dependency chains. */
@@ -259,7 +262,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     allFiles.set("package.json", `${JSON.stringify(pkg, null, 2)}\n`);
   }
 
-  // 2.7. Collect MCP servers from all presets and write .mcp.json
+  // 2.7. Collect MCP servers from all presets and distribute to agent config files
   const allMcpServers: Record<string, McpServerConfig> = {};
   for (const preset of presets) {
     if (preset.mcpServers) {
@@ -267,7 +270,19 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     }
   }
   if (Object.keys(allMcpServers).length > 0) {
-    allFiles.set(".mcp.json", formatMcpJson(allMcpServers));
+    const AGENT_MCP_FILES: Record<string, { path: string; format: "json" | "toml" }> = {
+      "claude-code": { path: ".mcp.json", format: "json" },
+      codex: { path: ".codex/config.toml", format: "toml" },
+    };
+    for (const name of presetNames) {
+      const config = AGENT_MCP_FILES[name];
+      if (config) {
+        allFiles.set(
+          config.path,
+          config.format === "toml" ? formatMcpToml(allMcpServers) : formatMcpJson(allMcpServers),
+        );
+      }
+    }
   }
 
   // 3. Expand Markdown templates
@@ -285,6 +300,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   // Each agent preset's top-level .md owned file is an instruction target.
   const AGENT_INSTRUCTION_FILES: Record<string, string> = {
     "claude-code": "CLAUDE.md",
+    codex: "AGENTS.md",
   };
   const instructionTargets = presetNames
     .filter((name) => name in AGENT_INSTRUCTION_FILES)
