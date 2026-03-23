@@ -47,7 +47,8 @@
       "message": "AI エージェントツール",
       "hint": "エージェント固有のプロジェクト設定・ルール・MCP サーバーを追加",
       "claude-code": { "label": "Claude Code", "hint": "CLAUDE.md, スキル, ルール" },
-      "codex": { "label": "Codex CLI", "hint": "AGENTS.md, MCP" }
+      "codex": { "label": "Codex CLI", "hint": "AGENTS.md, MCP" },
+      "gemini": { "label": "Gemini CLI", "hint": "GEMINI.md, MCP" }
     }
   },
   "overwrite": {

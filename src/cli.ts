@@ -172,6 +172,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               label: t("wizard.agents.codex.label"),
               hint: t("wizard.agents.codex.hint"),
             },
+            {
+              value: "gemini" as const,
+              label: t("wizard.agents.gemini.label"),
+              hint: t("wizard.agents.gemini.hint"),
+            },
           ],
           required: false,
         }),

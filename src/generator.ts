@@ -11,6 +11,7 @@ import { codexPreset } from "./presets/codex.js";
 import { expressPreset } from "./presets/express.js";
 import { fastapiPreset } from "./presets/fastapi.js";
 import { gcpPreset } from "./presets/gcp.js";
+import { geminiPreset } from "./presets/gemini.js";
 import { nextjsPreset } from "./presets/nextjs.js";
 import { pythonPreset } from "./presets/python.js";
 import { reactPreset } from "./presets/react.js";
@@ -44,6 +45,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   bicep: bicepPreset,
   "claude-code": claudeCodePreset,
   codex: codexPreset,
+  gemini: geminiPreset,
 };
 
 /**
@@ -88,6 +90,7 @@ const PRESET_ORDER = [
   "bicep",
   "claude-code",
   "codex",
+  "gemini",
 ];
 
 /** Resolve which presets to apply based on wizard answers, including dependency chains. */
@@ -273,6 +276,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     const AGENT_MCP_FILES: Record<string, { path: string; format: "json" | "toml" }> = {
       "claude-code": { path: ".mcp.json", format: "json" },
       codex: { path: ".codex/config.toml", format: "toml" },
+      gemini: { path: ".gemini/settings.json", format: "json" },
     };
     for (const name of presetNames) {
       const config = AGENT_MCP_FILES[name];
@@ -301,6 +305,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   const AGENT_INSTRUCTION_FILES: Record<string, string> = {
     "claude-code": "CLAUDE.md",
     codex: "AGENTS.md",
+    gemini: "GEMINI.md",
   };
   const instructionTargets = presetNames
     .filter((name) => name in AGENT_INSTRUCTION_FILES)
