@@ -154,6 +154,18 @@ describe("expandMarkdown", () => {
     ]);
     expect(result).toBe("<!-- SECTION:UNKNOWN -->");
   });
+
+  it("handles same placeholder in both inline and block contexts", () => {
+    const template = "Tools: <!-- SECTION:TOOLS -->\n\n## Details\n<!-- SECTION:TOOLS -->\nEnd";
+    const result = expandMarkdown(template, [
+      { placeholder: "<!-- SECTION:TOOLS -->", content: "Node.js" },
+      { placeholder: "<!-- SECTION:TOOLS -->", content: "pnpm" },
+    ]);
+    // First occurrence is inline → comma-separated
+    expect(result).toContain("Tools: Node.js, pnpm");
+    // Second occurrence is block → newline-separated
+    expect(result).toContain("## Details\nNode.js\npnpm\nEnd");
+  });
 });
 
 describe("mergeFile", () => {
