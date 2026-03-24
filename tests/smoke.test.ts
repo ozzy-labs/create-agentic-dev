@@ -897,3 +897,112 @@ describe("smoke: pnpm workspace", () => {
     expect(result.hasFile("pnpm-workspace.yaml")).toBe(false);
   });
 });
+
+// --- Stress tests: maximum preset combinations ---
+
+describe("smoke: full-combo stress", () => {
+  it("React + Express + all clouds + CDK/CF/Terraform + all agents", () => {
+    const result = generate(
+      makeAnswers({
+        frontend: "react",
+        backend: "express",
+        clouds: ["aws", "azure", "gcp"],
+        iac: ["cdk", "cloudformation", "terraform"],
+        languages: ["typescript", "python"],
+        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot"],
+      }),
+    );
+
+    // Core structure exists
+    expect(result.hasFile("package.json")).toBe(true);
+    expect(result.hasFile("web/package.json")).toBe(true);
+    expect(result.hasFile("api/package.json")).toBe(true);
+    expect(result.hasFile("infra/bin/app.ts")).toBe(true);
+    expect(result.hasFile("infra/template.yaml")).toBe(true);
+    expect(result.hasFile("main.tf")).toBe(true);
+
+    // All agent configs exist
+    expect(result.hasFile("CLAUDE.md")).toBe(true);
+    expect(result.hasFile("AGENTS.md")).toBe(true);
+    expect(result.hasFile("GEMINI.md")).toBe(true);
+    expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
+    expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
+
+    // JSON files are valid
+    readValidJson(result, "package.json");
+    readValidJson(result, "web/package.json");
+    readValidJson(result, "api/package.json");
+    readValidJson(result, "infra/package.json");
+    readValidJson(result, ".vscode/settings.json");
+    readValidJson(result, ".vscode/extensions.json");
+
+    // No leftover section placeholders
+    for (const file of result.fileList()) {
+      if (file.endsWith(".md")) {
+        const content = result.readText(file);
+        expect(content, `${file} should not have leftover placeholders`).not.toContain(
+          "<!-- SECTION:",
+        );
+      }
+    }
+
+    // Template variables are replaced
+    for (const file of result.fileList()) {
+      const content = result.readText(file);
+      expect(content, `${file} should not have unreplaced variables`).not.toContain(
+        "{{projectName}}",
+      );
+    }
+  });
+
+  it("Next.js + FastAPI + Azure + Bicep/Terraform + all agents", () => {
+    const result = generate(
+      makeAnswers({
+        frontend: "nextjs",
+        backend: "fastapi",
+        clouds: ["aws", "azure", "gcp"],
+        iac: ["bicep", "terraform"],
+        languages: ["typescript", "python"],
+        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot"],
+      }),
+    );
+
+    // Core structure exists
+    expect(result.hasFile("package.json")).toBe(true);
+    expect(result.hasFile("web/package.json")).toBe(true);
+    expect(result.hasFile("api/pyproject.toml")).toBe(true);
+    expect(result.hasFile("infra/main.bicep")).toBe(true);
+    expect(result.hasFile("main.tf")).toBe(true);
+
+    // All agent configs exist
+    expect(result.hasFile("CLAUDE.md")).toBe(true);
+    expect(result.hasFile("AGENTS.md")).toBe(true);
+    expect(result.hasFile("GEMINI.md")).toBe(true);
+    expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
+    expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
+
+    // JSON files are valid
+    readValidJson(result, "package.json");
+    readValidJson(result, "web/package.json");
+    readValidJson(result, ".vscode/settings.json");
+    readValidJson(result, ".vscode/extensions.json");
+
+    // No leftover section placeholders
+    for (const file of result.fileList()) {
+      if (file.endsWith(".md")) {
+        const content = result.readText(file);
+        expect(content, `${file} should not have leftover placeholders`).not.toContain(
+          "<!-- SECTION:",
+        );
+      }
+    }
+
+    // Template variables are replaced
+    for (const file of result.fileList()) {
+      const content = result.readText(file);
+      expect(content, `${file} should not have unreplaced variables`).not.toContain(
+        "{{projectName}}",
+      );
+    }
+  });
+});
