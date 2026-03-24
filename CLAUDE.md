@@ -111,3 +111,4 @@ See [`docs/branch-strategy.md`](docs/branch-strategy.md) for full details.
 - `/pr` - Push and create/update PR
 - `/review` - Code review
 - `/ship` - lint + test + commit + PR in one go
+- `/drive` - implement + ship + review loop (end-to-end)
