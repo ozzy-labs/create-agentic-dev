@@ -56,6 +56,43 @@ const ALL_PRESETS: Record<string, Preset> = {
   cursor: cursorPreset,
 };
 
+// Validate that all preset `requires` entries reference known presets (fail-fast at import time)
+for (const [name, preset] of Object.entries(ALL_PRESETS)) {
+  if (!preset.requires) continue;
+  for (const req of preset.requires) {
+    if (!(req in ALL_PRESETS)) {
+      throw new Error(`Preset "${name}" requires unknown preset "${req}"`);
+    }
+  }
+}
+
+/** IaC tools and the cloud providers they require. */
+const IAC_CLOUD_REQUIREMENTS: Record<string, { clouds: string[]; label: string }> = {
+  cdk: { clouds: ["aws"], label: "CDK" },
+  cloudformation: { clouds: ["aws"], label: "CloudFormation" },
+  bicep: { clouds: ["azure"], label: "Bicep" },
+};
+
+/** Validate wizard answers and return warnings for questionable (but allowed) combinations. */
+export function validateAnswers(answers: WizardAnswers): string[] {
+  const warnings: string[] = [];
+
+  for (const iac of answers.iac) {
+    const req = IAC_CLOUD_REQUIREMENTS[iac];
+    if (!req) continue;
+    const hasRequired = req.clouds.some((cloud) =>
+      answers.clouds.includes(cloud as WizardAnswers["clouds"][number]),
+    );
+    if (!hasRequired) {
+      warnings.push(
+        `${req.label} is typically used with ${req.clouds.join("/")} — no matching cloud provider selected`,
+      );
+    }
+  }
+
+  return warnings;
+}
+
 /**
  * Collapse multiple IaC infra placeholder contributions into a single entry.
  * Returns a new array — does not mutate the input.

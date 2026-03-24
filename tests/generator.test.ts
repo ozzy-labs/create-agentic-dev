@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generate, resolvePresets } from "../src/generator.js";
+import { generate, resolvePresets, validateAnswers } from "../src/generator.js";
 import type { WizardAnswers } from "../src/types.js";
 import { makeAnswers } from "./helpers.js";
 
@@ -113,6 +113,48 @@ describe("resolvePresets", () => {
   it("does not force languages for cloud-only selections", () => {
     const result = resolvePresets(makeAnswers({ clouds: ["aws", "azure", "gcp"] }));
     expect(result).toEqual(["base", "aws", "azure", "gcp", "claude-code"]);
+  });
+});
+
+// --- validateAnswers ---
+
+describe("validateAnswers", () => {
+  it("returns no warnings for valid combinations", () => {
+    expect(validateAnswers(makeAnswers({ clouds: ["aws"], iac: ["cdk"] }))).toEqual([]);
+    expect(validateAnswers(makeAnswers({ clouds: ["aws"], iac: ["cloudformation"] }))).toEqual([]);
+    expect(validateAnswers(makeAnswers({ clouds: ["azure"], iac: ["bicep"] }))).toEqual([]);
+    expect(validateAnswers(makeAnswers({ clouds: ["aws"], iac: ["terraform"] }))).toEqual([]);
+    expect(validateAnswers(makeAnswers())).toEqual([]);
+  });
+
+  it("warns when CDK is selected without AWS", () => {
+    const warnings = validateAnswers(makeAnswers({ clouds: ["azure"], iac: ["cdk"] }));
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain("CDK");
+    expect(warnings[0]).toContain("aws");
+  });
+
+  it("warns when CloudFormation is selected without AWS", () => {
+    const warnings = validateAnswers(makeAnswers({ clouds: ["gcp"], iac: ["cloudformation"] }));
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain("CloudFormation");
+    expect(warnings[0]).toContain("aws");
+  });
+
+  it("warns when Bicep is selected without Azure", () => {
+    const warnings = validateAnswers(makeAnswers({ clouds: ["aws"], iac: ["bicep"] }));
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain("Bicep");
+    expect(warnings[0]).toContain("azure");
+  });
+
+  it("returns multiple warnings for multiple mismatches", () => {
+    const warnings = validateAnswers(makeAnswers({ clouds: [], iac: ["cdk", "bicep"] }));
+    expect(warnings).toHaveLength(2);
+  });
+
+  it("no warning for Terraform (multi-cloud)", () => {
+    expect(validateAnswers(makeAnswers({ clouds: ["gcp"], iac: ["terraform"] }))).toEqual([]);
   });
 });
 

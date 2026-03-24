@@ -5,7 +5,7 @@ import { parseArgs } from "node:util";
 import * as p from "@clack/prompts";
 import pc from "picocolors";
 import { runWizard } from "./cli.js";
-import { generate } from "./generator.js";
+import { generate, validateAnswers } from "./generator.js";
 import { detectLocale, setLocale, t } from "./i18n/index.js";
 import { createDiskWriter } from "./utils.js";
 
@@ -28,6 +28,11 @@ async function main(): Promise<void> {
     ? path.resolve(process.cwd(), path.dirname(positionalArg))
     : process.cwd();
   const answers = await runWizard(defaultName);
+
+  const warnings = validateAnswers(answers);
+  for (const warning of warnings) {
+    p.log.warn(pc.yellow(warning));
+  }
 
   const outDir = path.resolve(parentDir, answers.projectName);
   const relPath = path.relative(process.cwd(), outDir) || ".";
