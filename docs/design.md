@@ -110,20 +110,6 @@ Application order: `base → typescript → python → react → nextjs → fast
 | devcontainer: Claude credential mounts | `.devcontainer/devcontainer.json` (merge) |
 | .gitignore | `.claude/settings.local.json` |
 
-**Cline** — adds:
-
-| Element | Files |
-|---------|-------|
-| Project rules (instruction file) | `.clinerules/project.md` (template with section injection) |
-| MCP servers (Context7, Fetch) | Not generated (Cline manages MCP via VS Code UI) |
-
-**Cursor** — adds:
-
-| Element | Files |
-|---------|-------|
-| Project rules (instruction file, MDC format) | `.cursor/rules/project.mdc` (YAML frontmatter + Markdown with section injection) |
-| MCP servers (Context7, Fetch) | `.cursor/mcp.json` (via mcpServers) |
-
 **Codex CLI** — adds:
 
 | Element | Files |
@@ -154,6 +140,20 @@ Application order: `base → typescript → python → react → nextjs → fast
 |---------|-------|
 | Copilot instructions (instruction file) | `.github/copilot-instructions.md` (template with section injection) |
 | MCP servers (Context7, Fetch) | via agent's MCP config |
+
+**Cline** — adds:
+
+| Element | Files |
+|---------|-------|
+| Project rules (instruction file) | `.clinerules/project.md` (template with section injection) |
+| MCP servers (Context7, Fetch) | Not generated (Cline manages MCP via VS Code UI) |
+
+**Cursor** — adds:
+
+| Element | Files |
+|---------|-------|
+| Project rules (instruction file, MDC format) | `.cursor/rules/project.mdc` (YAML frontmatter + Markdown with section injection) |
+| MCP servers (Context7, Fetch) | `.cursor/mcp.json` (via mcpServers) |
 
 Agent プリセットは `mcpServers` フィールドで MCP サーバーを定義する。Generator が全プリセットの MCP サーバーを収集し、Agent の設定ファイルに出力する。
 
