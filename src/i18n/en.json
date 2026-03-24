@@ -69,5 +69,18 @@
   "nextSteps": {
     "title": "Next steps"
   },
+  "dryRun": {
+    "preview": "Preview: {{count}} files would be generated",
+    "noWrite": "Dry run — no files were written."
+  },
+  "setup": {
+    "gitInit": "Initializing git repository...",
+    "gitInitDone": "Git repository initialized",
+    "gitInitFailed": "git init failed (skipped)",
+    "pnpmInstall": "Installing dependencies (pnpm install)...",
+    "pnpmInstallDone": "Dependencies installed",
+    "pnpmInstallFailed": "pnpm install failed (skipped)",
+    "manualHint": "Run manually: cd {{path}} && pnpm install"
+  },
   "outro": "Done! Happy coding."
 }

@@ -69,5 +69,18 @@
   "nextSteps": {
     "title": "次のステップ"
   },
+  "dryRun": {
+    "preview": "プレビュー: {{count}} ファイルが生成されます",
+    "noWrite": "ドライラン — ファイルは書き込まれませんでした。"
+  },
+  "setup": {
+    "gitInit": "Git リポジトリを初期化中...",
+    "gitInitDone": "Git リポジトリを初期化しました",
+    "gitInitFailed": "git init に失敗しました（スキップ）",
+    "pnpmInstall": "依存パッケージをインストール中 (pnpm install)...",
+    "pnpmInstallDone": "依存パッケージをインストールしました",
+    "pnpmInstallFailed": "pnpm install に失敗しました（スキップ）",
+    "manualHint": "手動で実行してください: cd {{path}} && pnpm install"
+  },
   "outro": "完了！Happy coding."
 }
