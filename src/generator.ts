@@ -4,6 +4,7 @@ import { amazonQPreset } from "./presets/amazon-q.js";
 import { awsPreset } from "./presets/aws.js";
 import { azurePreset } from "./presets/azure.js";
 import { basePreset } from "./presets/base.js";
+import { batchPreset } from "./presets/batch.js";
 import { bicepPreset } from "./presets/bicep.js";
 import { cdkPreset } from "./presets/cdk.js";
 import { claudeCodePreset } from "./presets/claude-code.js";
@@ -17,10 +18,12 @@ import { fastapiPreset } from "./presets/fastapi.js";
 import { gcpPreset } from "./presets/gcp.js";
 import { geminiPreset } from "./presets/gemini.js";
 import { nextjsPreset } from "./presets/nextjs.js";
+import { nuxtPreset } from "./presets/nuxt.js";
 import { pythonPreset } from "./presets/python.js";
 import { reactPreset } from "./presets/react.js";
 import { terraformPreset } from "./presets/terraform.js";
 import { typescriptPreset } from "./presets/typescript.js";
+import { vuePreset } from "./presets/vue.js";
 import { expandSetupScript } from "./setup.js";
 import type {
   FileWriter,
@@ -38,8 +41,11 @@ const ALL_PRESETS: Record<string, Preset> = {
   python: pythonPreset,
   react: reactPreset,
   nextjs: nextjsPreset,
+  vue: vuePreset,
+  nuxt: nuxtPreset,
   fastapi: fastapiPreset,
   express: expressPreset,
+  batch: batchPreset,
   aws: awsPreset,
   azure: azurePreset,
   gcp: gcpPreset,
@@ -136,8 +142,11 @@ const PRESET_ORDER = [
   "python",
   "react",
   "nextjs",
+  "vue",
+  "nuxt",
   "fastapi",
   "express",
+  "batch",
   "aws",
   "azure",
   "gcp",
@@ -520,6 +529,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   const workspacePackages: string[] = [];
   if (answers.frontend !== "none") workspacePackages.push("web");
   if (answers.backend === "express") workspacePackages.push("api");
+  if (answers.backend === "batch") workspacePackages.push("worker");
   if (workspacePackages.length > 0) {
     const yamlLines = ["packages:"];
     for (const pkg of workspacePackages) {

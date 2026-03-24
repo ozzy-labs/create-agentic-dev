@@ -511,6 +511,206 @@ describe("pairwise: fastapi + cdk", () => {
   });
 });
 
+// --- Vue + FastAPI (web/ + api/ coexistence) ---
+
+describe("pairwise: vue + fastapi", () => {
+  const answers = makeAnswers({ frontend: "vue", backend: "fastapi" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("web/src/App.vue")).toBe(true);
+    expect(result.hasFile("api/src/main.py")).toBe(true);
+    expect(result.hasFile("api/pyproject.toml")).toBe(true);
+  });
+
+  it("workspace includes web only (FastAPI uses uv, not pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).not.toContain("- api");
+  });
+
+  it("includes both TypeScript (via Vue) and Python (via FastAPI) tools", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    expect(toml.tools.python).toBe("3.12");
+  });
+
+  it("CLAUDE.md contains both Vue and FastAPI sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Vue");
+    expect(claude).toContain("FastAPI");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Vue + Express (web/ + api/ coexistence, both in pnpm workspace) ---
+
+describe("pairwise: vue + express", () => {
+  const answers = makeAnswers({ frontend: "vue", backend: "express" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("web/src/App.vue")).toBe(true);
+    expect(result.hasFile("api/src/app.ts")).toBe(true);
+    expect(result.hasFile("api/package.json")).toBe(true);
+  });
+
+  it("workspace includes both web and api (Express uses pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- api");
+  });
+
+  it("CLAUDE.md contains both Vue and Express sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Vue");
+    expect(claude).toContain("Express");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Nuxt + Express (web/ + api/, both TypeScript) ---
+
+describe("pairwise: nuxt + express", () => {
+  const answers = makeAnswers({ frontend: "nuxt", backend: "express" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/nuxt.config.ts")).toBe(true);
+    expect(result.hasFile("api/src/app.ts")).toBe(true);
+  });
+
+  it("workspace includes both web and api", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- api");
+  });
+
+  it("CLAUDE.md contains both Nuxt and Express sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Nuxt");
+    expect(claude).toContain("Express");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Nuxt + FastAPI (web/ + api/, TypeScript + Python) ---
+
+describe("pairwise: nuxt + fastapi", () => {
+  const answers = makeAnswers({ frontend: "nuxt", backend: "fastapi" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/nuxt.config.ts")).toBe(true);
+    expect(result.hasFile("api/src/main.py")).toBe(true);
+  });
+
+  it("workspace includes web only (FastAPI uses uv, not pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).not.toContain("- api");
+  });
+
+  it("includes both TypeScript and Python tools", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools["npm:@biomejs/biome"]).toBe("2");
+    expect(toml.tools.python).toBe("3.12");
+  });
+
+  it("CLAUDE.md contains both Nuxt and FastAPI sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Nuxt");
+    expect(claude).toContain("FastAPI");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Vue + CDK (web/ + infra/ coexistence) ---
+
+describe("pairwise: vue + cdk", () => {
+  const answers = makeAnswers({ frontend: "vue", clouds: ["aws"], iac: ["cdk"] });
+  const result = generate(answers);
+
+  it("includes both web/ and infra/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("infra/bin/app.ts")).toBe(true);
+  });
+
+  it("workspace includes web only (infra uses independent npm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).not.toContain("- infra");
+  });
+});
+
+// --- Batch + React (web/ + worker/ coexistence) ---
+
+describe("pairwise: batch + react", () => {
+  const answers = makeAnswers({ frontend: "react", backend: "batch" });
+  const result = generate(answers);
+
+  it("includes both web/ and worker/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("web/package.json")).toBe(true);
+    expect(result.hasFile("worker/src/index.ts")).toBe(true);
+    expect(result.hasFile("worker/package.json")).toBe(true);
+  });
+
+  it("workspace includes both web and worker", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- worker");
+  });
+
+  it("root package.json has both orchestration and worker scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["build:web"]).toBe("pnpm --filter web build");
+    expect(scripts["dev:worker"]).toBeDefined();
+    expect(scripts["test:worker"]).toBeDefined();
+    expect(scripts["build:worker"]).toBeDefined();
+  });
+
+  it("CLAUDE.md contains both React and batch/worker sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("React");
+    expect(claude).toContain("Worker");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Batch + CDK (worker/ + infra/ coexistence) ---
+
+describe("pairwise: batch + cdk", () => {
+  const answers = makeAnswers({ backend: "batch", clouds: ["aws"], iac: ["cdk"] });
+  const result = generate(answers);
+
+  it("includes both worker/ and infra/ directories", () => {
+    expect(result.hasFile("worker/src/index.ts")).toBe(true);
+    expect(result.hasFile("worker/package.json")).toBe(true);
+    expect(result.hasFile("infra/bin/app.ts")).toBe(true);
+    expect(result.hasFile("infra/package.json")).toBe(true);
+  });
+
+  it("workspace includes worker only (infra uses independent npm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- worker");
+    expect(workspace).not.toContain("- infra");
+  });
+
+  it("has CI steps from both presets", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Typecheck (Worker tsc)");
+    expect(stepNames).toContain("Test (Worker vitest)");
+    expect(stepNames).toContain("Test (infra CDK)");
+  });
+});
+
 // --- AWS + Azure (multi-cloud MCP and mounts) ---
 
 describe("pairwise: aws + azure", () => {

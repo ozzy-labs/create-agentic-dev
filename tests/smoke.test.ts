@@ -422,6 +422,66 @@ const patterns: PatternDef[] = [
     },
   },
   {
+    name: "vue",
+    answers: { frontend: "vue" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "test", "build", "build:web"],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
+    name: "nuxt",
+    answers: { frontend: "nuxt" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist", "**/.nuxt"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "test", "build", "build:web"],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
     name: "fastapi",
     answers: { backend: "fastapi" },
     vscodeSettings: {
@@ -522,6 +582,73 @@ const patterns: PatternDef[] = [
         "build:api",
         "typecheck:api",
       ],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
+    name: "batch",
+    answers: { backend: "batch" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: [
+        "lint",
+        "typecheck",
+        "dev:worker",
+        "test:worker",
+        "build:worker",
+        "typecheck:worker",
+      ],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
+    name: "react + batch",
+    answers: { frontend: "react", backend: "batch" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "dev:worker", "test:worker", "build:web"],
       scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
     },
   },

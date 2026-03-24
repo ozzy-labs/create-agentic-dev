@@ -20,14 +20,17 @@
       "hint": "フロントエンドアプリの雛形を追加",
       "none": { "label": "なし" },
       "react": { "label": "React + Vite", "hint": "TypeScript が強制されます" },
-      "nextjs": { "label": "Next.js", "hint": "TypeScript が強制されます" }
+      "nextjs": { "label": "Next.js", "hint": "TypeScript が強制されます" },
+      "vue": { "label": "Vue + Vite", "hint": "TypeScript が強制されます" },
+      "nuxt": { "label": "Nuxt", "hint": "TypeScript が強制されます" }
     },
     "backend": {
       "message": "バックエンドアプリ",
       "hint": "バックエンドアプリの雛形を追加",
       "none": { "label": "なし" },
       "fastapi": { "label": "FastAPI", "hint": "Python が強制されます" },
-      "express": { "label": "Express", "hint": "TypeScript が強制されます" }
+      "express": { "label": "Express", "hint": "TypeScript が強制されます" },
+      "batch": { "label": "バッチ/ワーカー", "hint": "TypeScript が強制されます" }
     },
     "clouds": {
       "message": "クラウドプロバイダー",

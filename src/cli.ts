@@ -56,9 +56,12 @@ function resolvedLanguages(
   // Frontend frameworks force TypeScript
   if (frontend === "react") add("typescript", t("wizard.frontend.react.label"));
   if (frontend === "nextjs") add("typescript", t("wizard.frontend.nextjs.label"));
+  if (frontend === "vue") add("typescript", t("wizard.frontend.vue.label"));
+  if (frontend === "nuxt") add("typescript", t("wizard.frontend.nuxt.label"));
   // Backend frameworks force their language
   if (backend === "fastapi") add("python", t("wizard.backend.fastapi.label"));
   if (backend === "express") add("typescript", t("wizard.backend.express.label"));
+  if (backend === "batch") add("typescript", t("wizard.backend.batch.label"));
   // CDK forces TypeScript
   if (iac.includes("cdk")) add("typescript", t("wizard.iac.cdk.label"));
   return resolved;
@@ -96,6 +99,16 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               label: t("wizard.frontend.nextjs.label"),
               hint: t("wizard.frontend.nextjs.hint"),
             },
+            {
+              value: "vue" as const,
+              label: t("wizard.frontend.vue.label"),
+              hint: t("wizard.frontend.vue.hint"),
+            },
+            {
+              value: "nuxt" as const,
+              label: t("wizard.frontend.nuxt.label"),
+              hint: t("wizard.frontend.nuxt.hint"),
+            },
           ],
         }),
       backend: () =>
@@ -112,6 +125,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               value: "express" as const,
               label: t("wizard.backend.express.label"),
               hint: t("wizard.backend.express.hint"),
+            },
+            {
+              value: "batch" as const,
+              label: t("wizard.backend.batch.label"),
+              hint: t("wizard.backend.batch.hint"),
             },
           ],
         }),

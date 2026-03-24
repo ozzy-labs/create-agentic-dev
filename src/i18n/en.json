@@ -20,14 +20,17 @@
       "hint": "Add a frontend application scaffold",
       "none": { "label": "None" },
       "react": { "label": "React + Vite", "hint": "forces TypeScript" },
-      "nextjs": { "label": "Next.js", "hint": "forces TypeScript" }
+      "nextjs": { "label": "Next.js", "hint": "forces TypeScript" },
+      "vue": { "label": "Vue + Vite", "hint": "forces TypeScript" },
+      "nuxt": { "label": "Nuxt", "hint": "forces TypeScript" }
     },
     "backend": {
       "message": "Backend app",
       "hint": "Add a backend application scaffold",
       "none": { "label": "None" },
       "fastapi": { "label": "FastAPI", "hint": "forces Python" },
-      "express": { "label": "Express", "hint": "forces TypeScript" }
+      "express": { "label": "Express", "hint": "forces TypeScript" },
+      "batch": { "label": "Batch/Worker", "hint": "forces TypeScript" }
     },
     "clouds": {
       "message": "Cloud providers",

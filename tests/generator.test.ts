@@ -76,6 +76,18 @@ describe("resolvePresets", () => {
     expect(tsCount).toBe(1);
   });
 
+  it("forces typescript when vue is selected", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "vue" }));
+    expect(result).toContain("typescript");
+    expect(result).toContain("vue");
+  });
+
+  it("forces typescript when nuxt is selected", () => {
+    const result = resolvePresets(makeAnswers({ frontend: "nuxt" }));
+    expect(result).toContain("typescript");
+    expect(result).toContain("nuxt");
+  });
+
   it("includes fastapi and forces python", () => {
     const result = resolvePresets(makeAnswers({ backend: "fastapi" }));
     expect(result).toEqual(["base", "python", "fastapi", "claude-code"]);
@@ -84,6 +96,11 @@ describe("resolvePresets", () => {
   it("includes express and forces typescript", () => {
     const result = resolvePresets(makeAnswers({ backend: "express" }));
     expect(result).toEqual(["base", "typescript", "express", "claude-code"]);
+  });
+
+  it("includes batch and forces typescript", () => {
+    const result = resolvePresets(makeAnswers({ backend: "batch" }));
+    expect(result).toEqual(["base", "typescript", "batch", "claude-code"]);
   });
 
   it("includes both frontend and backend presets", () => {
@@ -195,12 +212,24 @@ describe("file list snapshots", () => {
       answers: { languages: ["python"], clouds: ["aws"], iac: ["cloudformation"] },
     },
     {
+      name: "vue",
+      answers: { frontend: "vue" },
+    },
+    {
+      name: "nuxt",
+      answers: { frontend: "nuxt" },
+    },
+    {
       name: "fastapi",
       answers: { backend: "fastapi" },
     },
     {
       name: "express",
       answers: { backend: "express" },
+    },
+    {
+      name: "batch",
+      answers: { backend: "batch" },
     },
     {
       name: "react + fastapi",
@@ -211,12 +240,24 @@ describe("file list snapshots", () => {
       answers: { frontend: "react", backend: "express" },
     },
     {
+      name: "react + batch",
+      answers: { frontend: "react", backend: "batch" },
+    },
+    {
       name: "nextjs + fastapi",
       answers: { frontend: "nextjs", backend: "fastapi" },
     },
     {
       name: "nextjs + express",
       answers: { frontend: "nextjs", backend: "express" },
+    },
+    {
+      name: "vue + fastapi",
+      answers: { frontend: "vue", backend: "fastapi" },
+    },
+    {
+      name: "nuxt + batch",
+      answers: { frontend: "nuxt", backend: "batch" },
     },
     {
       name: "express + cdk",

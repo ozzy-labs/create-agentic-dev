@@ -7,8 +7,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 interface MockAnswers {
   projectName?: string;
-  frontend?: "none" | "react" | "nextjs";
-  backend?: "none" | "fastapi" | "express";
+  frontend?: "none" | "react" | "nextjs" | "vue" | "nuxt";
+  backend?: "none" | "fastapi" | "express" | "batch";
   clouds?: Array<"aws" | "azure" | "gcp">;
   iac?: Array<"cdk" | "cloudformation" | "terraform" | "bicep">;
   languages?: Array<"typescript" | "python">;
@@ -103,8 +103,8 @@ function shouldShowLanguagePrompt(answers: MockAnswers): boolean {
   let hasTypeScript = false;
   let hasPython = false;
 
-  if (frontend === "react" || frontend === "nextjs") hasTypeScript = true;
-  if (backend === "express") hasTypeScript = true;
+  if (["react", "nextjs", "vue", "nuxt"].includes(frontend)) hasTypeScript = true;
+  if (backend === "express" || backend === "batch") hasTypeScript = true;
   if (iac.includes("cdk")) hasTypeScript = true;
   if (backend === "fastapi") hasPython = true;
 
