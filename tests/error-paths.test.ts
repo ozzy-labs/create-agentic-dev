@@ -1,11 +1,12 @@
 /**
- * Error path tests — verify error handling for invalid inputs and edge conditions.
+ * Error path and isolation tests.
  *
  * Validates:
  * - buildResult file-not-found errors (readText, readYaml, readToml)
- * - Generator behavior with unusual but valid inputs
  * - Conditional devDeps removal logic
  * - Owned file isolation (preset files don't leak)
+ * - Frontend sample file override behavior
+ * - Devcontainer port forwarding
  */
 import { describe, expect, it } from "vitest";
 import { generate } from "../src/generator.js";
@@ -44,18 +45,13 @@ describe("error: buildResult file access", () => {
 
 // --- Conditional devDeps removal ---
 
-describe("error: conditional devDeps removal", () => {
+describe("behavior: conditional devDeps removal", () => {
   it("removes tsdown when React overrides build script", () => {
     const result = generate(makeAnswers({ frontend: "react" }));
     const pkg = result.readJson("package.json") as Record<string, unknown>;
-    const devDeps = pkg.devDependencies as Record<string, string> | undefined;
+    const devDeps = (pkg.devDependencies ?? {}) as Record<string, string>;
     // React overrides build to "pnpm run build:web", removing tsdown usage
-    // tsdown is a conditional dep — should be removed if not referenced
-    if (devDeps && "tsdown" in devDeps) {
-      const scripts = pkg.scripts as Record<string, string>;
-      const allScripts = Object.values(scripts).join(" ");
-      expect(allScripts).toContain("tsdown");
-    }
+    expect(devDeps.tsdown).toBeUndefined();
   });
 
   it("keeps vitest when tests exist", () => {
@@ -63,15 +59,14 @@ describe("error: conditional devDeps removal", () => {
     const pkg = result.readJson("package.json") as Record<string, unknown>;
     const devDeps = (pkg.devDependencies ?? {}) as Record<string, string>;
     const scripts = (pkg.scripts ?? {}) as Record<string, string>;
-    if ("vitest" in devDeps) {
-      expect(scripts.test).toBeDefined();
-    }
+    expect(devDeps.vitest).toBeDefined();
+    expect(scripts.test).toBeDefined();
   });
 });
 
 // --- Owned file isolation ---
 
-describe("error: owned file isolation", () => {
+describe("isolation: owned file isolation", () => {
   it("React files only exist when React is selected", () => {
     const withReact = generate(makeAnswers({ frontend: "react" }));
     const withoutReact = generate(makeAnswers({ languages: ["typescript"] }));
@@ -147,7 +142,7 @@ describe("error: owned file isolation", () => {
 
 // --- Frontend removes language sample files ---
 
-describe("error: frontend overrides language sample files", () => {
+describe("behavior: frontend overrides language sample files", () => {
   it("React removes src/index.ts and tests/index.test.ts", () => {
     const result = generate(makeAnswers({ frontend: "react" }));
     expect(result.hasFile("src/index.ts")).toBe(false);
@@ -169,7 +164,7 @@ describe("error: frontend overrides language sample files", () => {
 
 // --- Port forwarding ---
 
-describe("error: devcontainer port forwarding", () => {
+describe("behavior: devcontainer port forwarding", () => {
   it("no forwardPorts without backend", () => {
     const result = generate(makeAnswers({ languages: ["typescript"] }));
     const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
@@ -190,7 +185,7 @@ describe("error: devcontainer port forwarding", () => {
     expect(ports).toContain(8000);
   });
 
-  it("Express + FastAPI forwards both ports", () => {
+  it("React + Express forwards port 3000", () => {
     const result = generate(makeAnswers({ frontend: "react", backend: "express" }));
     const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
     const ports = dc.forwardPorts as number[];
