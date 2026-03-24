@@ -9,7 +9,14 @@
  */
 import { describe, expect, it } from "vitest";
 import { generate, resolvePresets } from "../src/generator.js";
-import { makeAnswers } from "./helpers.js";
+import {
+  expectAllJsonValid,
+  expectAllTomlValid,
+  expectAllYamlValid,
+  expectNoLeftoverPlaceholders,
+  expectNoUnreplacedVars,
+  makeAnswers,
+} from "./helpers.js";
 
 // --- No agent selected ---
 
@@ -38,14 +45,8 @@ describe("edge: no agent selected", () => {
   });
 
   it("generates valid JSON/YAML files", () => {
-    for (const file of result.fileList()) {
-      if (file.endsWith(".json")) {
-        expect(() => result.readJson(file), `${file} should be valid JSON`).not.toThrow();
-      }
-      if (file.endsWith(".yaml")) {
-        expect(() => result.readYaml(file), `${file} should be valid YAML`).not.toThrow();
-      }
-    }
+    expectAllJsonValid(result);
+    expectAllYamlValid(result);
   });
 });
 
@@ -105,32 +106,12 @@ describe("edge: all agents selected", () => {
   });
 
   it("all JSON files are valid", () => {
-    for (const file of result.fileList()) {
-      if (file.endsWith(".json")) {
-        expect(() => result.readJson(file), `${file} should be valid JSON`).not.toThrow();
-      }
-    }
+    expectAllJsonValid(result);
   });
 
-  it("no leftover placeholders in any instruction file", () => {
-    const instructionFiles = [
-      "CLAUDE.md",
-      "AGENTS.md",
-      "GEMINI.md",
-      ".amazonq/rules/project.md",
-      ".github/copilot-instructions.md",
-      ".clinerules/project.md",
-      ".cursor/rules/project.mdc",
-    ];
-    for (const file of instructionFiles) {
-      const content = result.readText(file);
-      expect(content, `${file} should not have leftover placeholders`).not.toContain(
-        "<!-- SECTION:",
-      );
-      expect(content, `${file} should not have unreplaced template vars`).not.toContain(
-        "{{projectName}}",
-      );
-    }
+  it("no leftover placeholders or unreplaced vars", () => {
+    expectNoLeftoverPlaceholders(result);
+    expectNoUnreplacedVars(result);
   });
 });
 
@@ -153,49 +134,20 @@ describe("edge: maximum preset combination", () => {
   });
 
   it("all JSON files are valid", () => {
-    for (const file of result.fileList()) {
-      if (file.endsWith(".json")) {
-        expect(() => result.readJson(file), `${file} should be valid JSON`).not.toThrow();
-      }
-    }
+    expectAllJsonValid(result);
   });
 
   it("all YAML files are valid", () => {
-    for (const file of result.fileList()) {
-      if (file.endsWith(".yaml")) {
-        expect(() => result.readYaml(file), `${file} should be valid YAML`).not.toThrow();
-      }
-    }
+    expectAllYamlValid(result);
   });
 
   it("all TOML files are valid", () => {
-    for (const file of result.fileList()) {
-      if (file.endsWith(".toml")) {
-        expect(() => result.readToml(file), `${file} should be valid TOML`).not.toThrow();
-      }
-    }
+    expectAllTomlValid(result);
   });
 
-  it("no leftover {{projectName}} in any file", () => {
-    for (const file of result.fileList()) {
-      const content = result.readText(file);
-      if (content.includes("{{projectName}}")) {
-        // pnpm-lock.yaml is copied as-is and may contain template vars (expected)
-        if (file === "pnpm-lock.yaml") continue;
-        expect.fail(`${file} contains unreplaced {{projectName}}`);
-      }
-    }
-  });
-
-  it("no leftover <!-- SECTION: --> placeholders in markdown files", () => {
-    for (const file of result.fileList()) {
-      if (file.endsWith(".md") || file.endsWith(".mdc")) {
-        const content = result.readText(file);
-        expect(content, `${file} should not have leftover section placeholders`).not.toContain(
-          "<!-- SECTION:",
-        );
-      }
-    }
+  it("no leftover vars or placeholders", () => {
+    expectNoUnreplacedVars(result);
+    expectNoLeftoverPlaceholders(result);
   });
 
   it("includes all 4 CD workflows", () => {
