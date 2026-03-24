@@ -22,11 +22,11 @@ The interactive wizard asks 7 questions in an app-first flow:
 4. **Cloud providers** — AWS / Azure / Google Cloud (multi-select)
 5. **Infrastructure as Code** — CDK / CloudFormation / Terraform / Bicep (filtered by cloud)
 6. **Language toolchains** — TypeScript / Python (excluding auto-resolved)
-7. **AI Agent tools** — Claude Code (multi-select)
+7. **AI Agent tools** — Claude Code / Codex CLI / Gemini CLI / Amazon Q / Copilot (multi-select)
 
 ## Presets
 
-15 composable presets across 7 layers. Each provides owned files + merge contributions
+20 composable presets across 7 layers. Each provides owned files + merge contributions
 to shared files (package.json, .mise.toml, lefthook.yaml, VSCode, devcontainer,
 README.md, CI workflow).
 
@@ -38,7 +38,7 @@ README.md, CI workflow).
 | Cloud | AWS, Azure, Google Cloud |
 | IaC | CDK, CloudFormation, Terraform, Bicep |
 | Language | TypeScript, Python |
-| Agent | Claude Code (CLAUDE.md, skills, rules, MCP) |
+| Agent | Claude Code, Codex CLI, Gemini CLI, Amazon Q, Copilot |
 
 See [docs/design.md](docs/design.md) for the full preset details and dependency chains.
 
