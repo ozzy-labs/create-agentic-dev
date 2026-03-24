@@ -60,17 +60,29 @@ export function buildResult(files: Map<string, string>): GenerateResult {
     readJson: (p: string) => {
       const c = files.get(p);
       if (c === undefined) throw new Error(`File not found: ${p}`);
-      return JSON.parse(c) as unknown;
+      try {
+        return JSON.parse(c) as unknown;
+      } catch (e) {
+        throw new Error(`Invalid JSON in ${p}: ${e instanceof Error ? e.message : String(e)}`);
+      }
     },
     readYaml: (p: string) => {
       const c = files.get(p);
       if (c === undefined) throw new Error(`File not found: ${p}`);
-      return parseYaml(c) as unknown;
+      try {
+        return parseYaml(c) as unknown;
+      } catch (e) {
+        throw new Error(`Invalid YAML in ${p}: ${e instanceof Error ? e.message : String(e)}`);
+      }
     },
     readToml: (p: string) => {
       const c = files.get(p);
       if (c === undefined) throw new Error(`File not found: ${p}`);
-      return parseToml(c) as unknown;
+      try {
+        return parseToml(c) as unknown;
+      } catch (e) {
+        throw new Error(`Invalid TOML in ${p}: ${e instanceof Error ? e.message : String(e)}`);
+      }
     },
   };
 }

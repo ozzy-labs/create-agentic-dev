@@ -132,9 +132,14 @@ export function resolvePresets(answers: WizardAnswers): string[] {
     selected.add(agent);
   }
 
-  // Resolve `requires` chains
+  // Resolve `requires` chains (with guard against circular dependencies)
+  const MAX_RESOLVE_ITERATIONS = 100;
   let changed = true;
+  let iterations = 0;
   while (changed) {
+    if (++iterations > MAX_RESOLVE_ITERATIONS) {
+      throw new Error("Circular dependency detected in preset requires chains");
+    }
     changed = false;
     for (const name of [...selected]) {
       const preset = ALL_PRESETS[name];
@@ -213,7 +218,14 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   // 2.5. Post-merge cleanup & lint:all generation for package.json
   const pkgContent = allFiles.get("package.json");
   if (pkgContent) {
-    const pkg = JSON.parse(pkgContent) as Record<string, Record<string, string>>;
+    let pkg: Record<string, Record<string, string>>;
+    try {
+      pkg = JSON.parse(pkgContent) as Record<string, Record<string, string>>;
+    } catch (e) {
+      throw new Error(
+        `Failed to parse merged package.json: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
     const scripts = pkg.scripts ?? {};
 
     // Remove devDependencies not referenced by any script (e.g. tsdown when React overrides build)
