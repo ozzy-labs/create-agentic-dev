@@ -909,7 +909,7 @@ describe("smoke: full-combo stress", () => {
         clouds: ["aws", "azure", "gcp"],
         iac: ["cdk", "cloudformation", "terraform"],
         languages: ["typescript", "python"],
-        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline"],
+        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline", "cursor"],
       }),
     );
 
@@ -928,6 +928,7 @@ describe("smoke: full-combo stress", () => {
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
     expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
     expect(result.hasFile(".clinerules/project.md")).toBe(true);
+    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(true);
 
     // JSON files are valid
     readValidJson(result, "package.json");
@@ -939,7 +940,7 @@ describe("smoke: full-combo stress", () => {
 
     // No leftover section placeholders
     for (const file of result.fileList()) {
-      if (file.endsWith(".md")) {
+      if (file.endsWith(".md") || file.endsWith(".mdc")) {
         const content = result.readText(file);
         expect(content, `${file} should not have leftover placeholders`).not.toContain(
           "<!-- SECTION:",
@@ -964,7 +965,7 @@ describe("smoke: full-combo stress", () => {
         clouds: ["aws", "azure", "gcp"],
         iac: ["bicep", "terraform"],
         languages: ["typescript", "python"],
-        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline"],
+        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline", "cursor"],
       }),
     );
 
@@ -982,6 +983,7 @@ describe("smoke: full-combo stress", () => {
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
     expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
     expect(result.hasFile(".clinerules/project.md")).toBe(true);
+    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(true);
 
     // JSON files are valid
     readValidJson(result, "package.json");
@@ -991,7 +993,7 @@ describe("smoke: full-combo stress", () => {
 
     // No leftover section placeholders
     for (const file of result.fileList()) {
-      if (file.endsWith(".md")) {
+      if (file.endsWith(".md") || file.endsWith(".mdc")) {
         const content = result.readText(file);
         expect(content, `${file} should not have leftover placeholders`).not.toContain(
           "<!-- SECTION:",

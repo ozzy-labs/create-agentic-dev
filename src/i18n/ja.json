@@ -51,7 +51,8 @@
       "gemini": { "label": "Gemini CLI", "hint": "GEMINI.md, MCP" },
       "amazon-q": { "label": "Amazon Q Developer", "hint": "プロジェクトルール, MCP" },
       "copilot": { "label": "GitHub Copilot", "hint": "copilot-instructions.md, MCP" },
-      "cline": { "label": "Cline", "hint": ".clinerules, MCP (UI で設定)" }
+      "cline": { "label": "Cline", "hint": ".clinerules, MCP (UI で設定)" },
+      "cursor": { "label": "Cursor", "hint": ".cursor/rules, MCP" }
     }
   },
   "overwrite": {
