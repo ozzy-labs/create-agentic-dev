@@ -7,6 +7,7 @@ import { basePreset } from "./presets/base.js";
 import { bicepPreset } from "./presets/bicep.js";
 import { cdkPreset } from "./presets/cdk.js";
 import { claudeCodePreset } from "./presets/claude-code.js";
+import { clinePreset } from "./presets/cline.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
 import { codexPreset } from "./presets/codex.js";
 import { copilotPreset } from "./presets/copilot.js";
@@ -50,6 +51,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   gemini: geminiPreset,
   "amazon-q": amazonQPreset,
   copilot: copilotPreset,
+  cline: clinePreset,
 };
 
 /**
@@ -97,6 +99,7 @@ const PRESET_ORDER = [
   "gemini",
   "amazon-q",
   "copilot",
+  "cline",
 ];
 
 /** Resolve which presets to apply based on wizard answers, including dependency chains. */
@@ -328,6 +331,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     gemini: "GEMINI.md",
     "amazon-q": ".amazonq/rules/project.md",
     copilot: ".github/copilot-instructions.md",
+    cline: ".clinerules/project.md",
   };
   const instructionTargets = presetNames
     .filter((name) => name in AGENT_INSTRUCTION_FILES)

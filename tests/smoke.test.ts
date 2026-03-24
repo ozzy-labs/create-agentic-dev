@@ -909,7 +909,7 @@ describe("smoke: full-combo stress", () => {
         clouds: ["aws", "azure", "gcp"],
         iac: ["cdk", "cloudformation", "terraform"],
         languages: ["typescript", "python"],
-        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot"],
+        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline"],
       }),
     );
 
@@ -927,6 +927,7 @@ describe("smoke: full-combo stress", () => {
     expect(result.hasFile("GEMINI.md")).toBe(true);
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
     expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
+    expect(result.hasFile(".clinerules/project.md")).toBe(true);
 
     // JSON files are valid
     readValidJson(result, "package.json");
@@ -963,7 +964,7 @@ describe("smoke: full-combo stress", () => {
         clouds: ["aws", "azure", "gcp"],
         iac: ["bicep", "terraform"],
         languages: ["typescript", "python"],
-        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot"],
+        agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline"],
       }),
     );
 
@@ -980,6 +981,7 @@ describe("smoke: full-combo stress", () => {
     expect(result.hasFile("GEMINI.md")).toBe(true);
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
     expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
+    expect(result.hasFile(".clinerules/project.md")).toBe(true);
 
     // JSON files are valid
     readValidJson(result, "package.json");
