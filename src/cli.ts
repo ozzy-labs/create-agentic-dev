@@ -192,6 +192,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               label: t("wizard.agents.cline.label"),
               hint: t("wizard.agents.cline.hint"),
             },
+            {
+              value: "cursor" as const,
+              label: t("wizard.agents.cursor.label"),
+              hint: t("wizard.agents.cursor.hint"),
+            },
           ],
           required: false,
         }),

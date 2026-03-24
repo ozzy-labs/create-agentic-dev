@@ -11,6 +11,7 @@ import { clinePreset } from "./presets/cline.js";
 import { cloudformationPreset } from "./presets/cloudformation.js";
 import { codexPreset } from "./presets/codex.js";
 import { copilotPreset } from "./presets/copilot.js";
+import { cursorPreset } from "./presets/cursor.js";
 import { expressPreset } from "./presets/express.js";
 import { fastapiPreset } from "./presets/fastapi.js";
 import { gcpPreset } from "./presets/gcp.js";
@@ -52,6 +53,7 @@ const ALL_PRESETS: Record<string, Preset> = {
   "amazon-q": amazonQPreset,
   copilot: copilotPreset,
   cline: clinePreset,
+  cursor: cursorPreset,
 };
 
 /**
@@ -100,6 +102,7 @@ const PRESET_ORDER = [
   "amazon-q",
   "copilot",
   "cline",
+  "cursor",
 ];
 
 /** Resolve which presets to apply based on wizard answers, including dependency chains. */
@@ -300,6 +303,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
       gemini: { path: ".gemini/settings.json", format: "json" },
       "amazon-q": { path: ".amazonq/mcp.json", format: "json" },
       copilot: { path: ".copilot/mcp-config.json", format: "json" },
+      cursor: { path: ".cursor/mcp.json", format: "json" },
     };
     for (const name of presetNames) {
       const config = AGENT_MCP_FILES[name];
@@ -332,6 +336,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     "amazon-q": ".amazonq/rules/project.md",
     copilot: ".github/copilot-instructions.md",
     cline: ".clinerules/project.md",
+    cursor: ".cursor/rules/project.mdc",
   };
   const instructionTargets = presetNames
     .filter((name) => name in AGENT_INSTRUCTION_FILES)
@@ -380,7 +385,10 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   // Remove any remaining unused placeholders from all Markdown files
   // and clean up list items that became content-empty after removal
   for (const [filePath, content] of allFiles) {
-    if (filePath.endsWith(".md") && content.includes("<!-- SECTION:")) {
+    if (
+      (filePath.endsWith(".md") || filePath.endsWith(".mdc")) &&
+      content.includes("<!-- SECTION:")
+    ) {
       const cleaned = content
         .replaceAll(/<!-- SECTION:\w+ -->\n?/g, "")
         .replaceAll(/^(?:\d+\.|-)\s+\*\*[^*]+\*\*:\s*\n(?=\n|#|$)/gm, "");
