@@ -439,7 +439,7 @@ create-agentic-dev/
 │       ├── azure.ts
 │       ├── gcp.ts
 │       ├── cdk.ts
-���       ├── cloudformation.ts
+│       ├── cloudformation.ts
 │       ├── terraform.ts
 │       ├── bicep.ts
 │       ├── claude-code.ts
