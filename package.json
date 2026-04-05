@@ -4,14 +4,14 @@
   "description": "Scaffold an AI-agent-native development environment with interactive presets",
   "type": "module",
   "bin": {
-    "create-agentic-dev": "./dist/index.js"
+    "create-agentic-dev": "./dist/index.mjs"
   },
   "files": [
     "dist",
     "templates"
   ],
   "scripts": {
-    "prepare": "lefthook install",
+    "prepare": "lefthook install || true",
     "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "biome check .",
@@ -31,6 +31,10 @@
     "node": ">=22"
   },
   "packageManager": "pnpm@10.32.1",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -59,7 +63,7 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^4.1.1",
-    "tsdown": "^0.12.0",
+    "tsdown": "^0.21.7",
     "typescript": "^5.8.0",
     "vitest": "^4.1.1"
   }
