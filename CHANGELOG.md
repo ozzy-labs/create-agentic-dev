@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/ozzy-labs/create-agentic-dev/compare/create-agentic-dev-v0.1.1...create-agentic-dev-v0.1.2) (2026-04-05)
+
+
+### Bug Fixes
+
+* combine release-please and publish into single workflow ([#149](https://github.com/ozzy-labs/create-agentic-dev/issues/149)) ([6a50502](https://github.com/ozzy-labs/create-agentic-dev/commit/6a50502d7483aec2332e0b6bfc9ff3bdea92e5f2))
+
 ## [0.1.1](https://github.com/ozzy-labs/create-agentic-dev/compare/create-agentic-dev-v0.1.0...create-agentic-dev-v0.1.1) (2026-04-05)
 
 
