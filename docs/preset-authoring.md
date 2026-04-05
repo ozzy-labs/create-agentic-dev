@@ -310,7 +310,7 @@ ciSteps: {
   setupSteps: [
     {
       name: "uv cache",
-      uses: "actions/cache@5a3ec84eff668545956fd18022155c47e93e2684",
+      uses: "actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830",
       with: {
         path: "~/.cache/uv",
         key: "uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}",
