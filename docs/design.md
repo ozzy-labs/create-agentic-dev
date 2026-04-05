@@ -4,7 +4,7 @@
 
 `create-agentic-dev` is a CLI tool that scaffolds AI-agent-native development projects with interactive presets.
 
-- **Distribution**: npm package (`npm create agentic-dev`)
+- **Distribution**: npm package (`npm create @ozzylabs/agentic-dev`)
 - **Prompt library**: @clack/prompts
 - **Architecture**: Preset Composition (composable presets merged into final project)
 - **Relationship**: Companion to [agentic-dev-template](https://github.com/ozzy-3/agentic-dev-template)
@@ -571,7 +571,7 @@ No arg parser needed — only `process.argv[2]` for project name.
 ### Execution flow
 
 ```text
-npm create agentic-dev [my-app]
+npm create @ozzylabs/agentic-dev [my-app]
   │
   ├─ src/index.ts          # Get project name from process.argv
   ├─ src/cli.ts            # Run wizard with @clack/prompts
@@ -688,7 +688,7 @@ npm create agentic-dev [my-app]
 |------|-------|
 | Package name | `create-agentic-dev` |
 | Registry | npm public |
-| Usage | `npm create agentic-dev` / `npx create-agentic-dev` |
+| Usage | `npm create @ozzylabs/agentic-dev` / `npx @ozzylabs/create-agentic-dev` |
 | Release trigger | GitHub Release (tag `v*`) → auto publish |
 | Provenance | Enabled (`--provenance`) for supply chain security |
 

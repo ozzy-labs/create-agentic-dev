@@ -15,7 +15,7 @@ body:
       label: Steps to Reproduce
       description: Steps to reproduce the behavior.
       value: |
-        1. Run `npm create agentic-dev my-app`
+        1. Run `npm create @ozzylabs/agentic-dev my-app`
         2. Select ...
         3. See error
     validations:
@@ -38,7 +38,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: "Output of `npx create-agentic-dev --version` or package.json version."
+      description: "Output of `npx @ozzylabs/create-agentic-dev --version` or package.json version."
       placeholder: "0.1.0"
     validations:
       required: false

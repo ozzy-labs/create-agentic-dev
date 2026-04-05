@@ -1,5 +1,5 @@
 {
-  "name": "create-agentic-dev",
+  "name": "@ozzylabs/create-agentic-dev",
   "version": "0.1.0",
   "description": "Scaffold an AI-agent-native development environment with interactive presets",
   "type": "module",
@@ -36,6 +36,9 @@
     "provenance": true
   },
   "license": "MIT",
+  "author": "ozzy-labs",
+  "homepage": "https://github.com/ozzy-3/create-agentic-dev#readme",
+  "bugs": "https://github.com/ozzy-3/create-agentic-dev/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/ozzy-3/create-agentic-dev.git"

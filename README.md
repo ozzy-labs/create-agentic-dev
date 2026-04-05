@@ -7,7 +7,7 @@ Companion to [agentic-dev-template](https://github.com/ozzy-3/agentic-dev-templa
 ## Quick Start
 
 ```bash
-npm create agentic-dev my-app
+npm create @ozzylabs/agentic-dev my-app
 cd my-app
 bash scripts/setup.sh
 ```
