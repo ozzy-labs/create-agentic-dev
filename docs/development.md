@@ -99,4 +99,5 @@ After making changes to the CLI or templates, verify the generated output by ins
 
 - [Design Document](design.md) — Architecture, preset composition, and testing strategy
 - [Preset Authoring Guide](preset-authoring.md) — How to add a new preset
+- [Releasing](releasing.md) — Release process and npm Trusted Publishing setup
 - [Contributing](../CONTRIBUTING.md) — Branch conventions, PR process, and project structure

@@ -19,6 +19,13 @@ jobs:
           install: true
           cache: true
 
+      - uses: actions/setup-node@49933ea5288caeca8642195f882660b323136e2a # v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install latest npm (>= 11.5.1 required for trusted publishing)
+        run: npm install -g npm@latest
+
       - name: pnpm cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         with:
@@ -40,9 +47,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Setup npm auth
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish to npm
         run: npm publish --provenance --access public
