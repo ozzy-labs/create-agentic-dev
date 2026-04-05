@@ -69,7 +69,7 @@ export const pythonPreset: Preset = {
     "agent-instructions": [
       {
         placeholder: "<!-- SECTION:TECH_STACK -->",
-        content: "- **Language**: Python 3.12+ (uv)",
+        content: "- **Python**: 3.12+ (uv)",
       },
       {
         placeholder: "<!-- SECTION:TECH_STACK_LINTING -->",

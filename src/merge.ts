@@ -56,9 +56,21 @@ export function expandMarkdown(template: string, sections: MarkdownSection[]): s
     grouped.set(placeholder, list);
   }
   for (const [placeholder, contents] of grouped) {
-    // Deduplicate identical lines and filter empty strings
+    // Deduplicate identical non-empty lines, preserving internal blank lines
     const allLines = contents.flatMap((c) => c.split("\n"));
-    const unique = [...new Set(allLines)].filter((l) => l !== "");
+    const seen = new Set<string>();
+    const unique: string[] = [];
+    for (const line of allLines) {
+      if (line === "") {
+        unique.push(line);
+      } else if (!seen.has(line)) {
+        seen.add(line);
+        unique.push(line);
+      }
+    }
+    // Trim leading/trailing blank lines
+    while (unique.length > 0 && unique[0] === "") unique.shift();
+    while (unique.length > 0 && unique[unique.length - 1] === "") unique.pop();
 
     // Replace each occurrence individually, detecting context per-occurrence
     let searchFrom = 0;

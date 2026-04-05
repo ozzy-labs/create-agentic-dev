@@ -257,12 +257,17 @@ describe("content: CD workflow structure", () => {
     expect(cd.jobs, "should have jobs").toBeDefined();
   });
 
-  it("cd-terraform.yaml has valid YAML structure", () => {
-    const result = generate(makeAnswers({ clouds: ["aws"], iac: ["terraform"] }));
-    const cd = result.readYaml(".github/workflows/cd-terraform.yaml") as Record<string, unknown>;
-    expect(cd.name, "should have a workflow name").toBeDefined();
-    expect(cd.on, "should have triggers").toBeDefined();
-    expect(cd.jobs, "should have jobs").toBeDefined();
+  it("cd-terraform-{cloud}.yaml has valid YAML structure per cloud", () => {
+    const result = generate(makeAnswers({ clouds: ["aws", "azure", "gcp"], iac: ["terraform"] }));
+    for (const cloud of ["aws", "azure", "gcp"]) {
+      const cd = result.readYaml(`.github/workflows/cd-terraform-${cloud}.yaml`) as Record<
+        string,
+        unknown
+      >;
+      expect(cd.name, `${cloud}: should have a workflow name`).toBeDefined();
+      expect(cd.on, `${cloud}: should have triggers`).toBeDefined();
+      expect(cd.jobs, `${cloud}: should have jobs`).toBeDefined();
+    }
   });
 
   it("cd-cloudformation.yaml has valid YAML structure", () => {

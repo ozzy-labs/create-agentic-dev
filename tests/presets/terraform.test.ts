@@ -8,7 +8,7 @@ describe("generate (terraform)", () => {
 
   it("includes Terraform owned files", () => {
     expect(result.hasFile(".tflint.hcl")).toBe(true);
-    expect(result.hasFile(".github/workflows/cd-terraform.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-terraform-aws.yaml")).toBe(true);
   });
 
   it("merges Terraform tools into .mise.toml", () => {

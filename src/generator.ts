@@ -229,12 +229,22 @@ function expandMarkdownTemplates(
   allFiles: Map<string, string>,
   presets: Preset[],
   vars: Record<string, string>,
+  extraSections?: Map<string, MarkdownSection[]>,
 ): void {
   // Collect sections from all presets
   const markdownSections = new Map<string, MarkdownSection[]>();
   for (const preset of presets) {
     if (!preset.markdown) continue;
     for (const [key, sections] of Object.entries(preset.markdown)) {
+      const existing = markdownSections.get(key) ?? [];
+      existing.push(...sections);
+      markdownSections.set(key, existing);
+    }
+  }
+
+  // Merge extra sections from generator (e.g. Terraform CD)
+  if (extraSections) {
+    for (const [key, sections] of extraSections) {
       const existing = markdownSections.get(key) ?? [];
       existing.push(...sections);
       markdownSections.set(key, existing);
@@ -279,7 +289,7 @@ function expandMarkdownTemplates(
     }
   }
 
-  // Remove any remaining unused placeholders and empty list items
+  // Remove any remaining unused placeholders, empty list items, and empty table sections
   for (const [filePath, content] of allFiles) {
     if (
       (filePath.endsWith(".md") || filePath.endsWith(".mdc")) &&
@@ -287,7 +297,9 @@ function expandMarkdownTemplates(
     ) {
       const cleaned = content
         .replaceAll(/<!-- SECTION:\w+ -->\n?/g, "")
-        .replaceAll(/^(?:\d+\.|-)\s+\*\*[^*]+\*\*:\s*\n(?=\n|#|$)/gm, "");
+        .replaceAll(/^(?:\d+\.|-)\s+\*\*[^*]+\*\*:\s*\n(?=\n|#|$)/gm, "")
+        .replaceAll(/^### .+\n\n\| .+ \|\n\|[-| ]+\|\n(?=\n|$)/gm, "")
+        .replaceAll(/\n{3,}/g, "\n\n");
       allFiles.set(filePath, cleaned);
     }
   }
@@ -325,6 +337,144 @@ function generateTflintConfig(
       "# NOTE: Plugin versions are not managed by Renovate.\n# Update version numbers manually, then run `tflint --init` to download them.\n";
     allFiles.set(".tflint.hcl", `${header}\n${plugins.join("\n\n")}\n`);
   }
+}
+
+// --- Terraform CD (cloud-aware) ---
+
+const TERRAFORM_CD_COMMON_HEADER = `name: "CD: Terraform ({{CLOUD_LABEL}})"
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+  group: cd-terraform-{{CLOUD_ID}}-\${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Setup mise
+        uses: jdx/mise-action@5083fe46f0db0d17c4a46080674d3981cf8e538e
+        with:
+          install: "true"
+          cache: "true"
+`;
+
+const TERRAFORM_CD_AUTH: Record<
+  string,
+  { id: string; label: string; steps: string; cdVars: string }
+> = {
+  aws: {
+    id: "aws",
+    label: "AWS",
+    steps: `
+      # Required repository variables:
+      #   AWS_ROLE_ARN  - IAM role ARN for OIDC authentication
+      #   AWS_REGION    - AWS region (e.g., ap-northeast-1)
+      # See: https://github.com/aws-actions/configure-aws-credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722
+        with:
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          role-to-assume: \${{ vars.AWS_ROLE_ARN }}
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          aws-region: \${{ vars.AWS_REGION }}
+`,
+    cdVars:
+      "| `AWS_ROLE_ARN` | デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
+  },
+  azure: {
+    id: "azure",
+    label: "Azure",
+    steps: `
+      # Required repository variables:
+      #   AZURE_CLIENT_ID       - Azure AD application client ID
+      #   AZURE_TENANT_ID       - Azure AD tenant ID
+      #   AZURE_SUBSCRIPTION_ID - Azure subscription ID
+      # See: https://github.com/azure/login
+      - name: Azure login (OIDC)
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        with:
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          client-id: \${{ vars.AZURE_CLIENT_ID }}
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          tenant-id: \${{ vars.AZURE_TENANT_ID }}
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          subscription-id: \${{ vars.AZURE_SUBSCRIPTION_ID }}
+`,
+    cdVars:
+      "| `AZURE_CLIENT_ID` | Azure OIDC 認証用クライアント ID |\n| `AZURE_TENANT_ID` | Azure テナント ID |\n| `AZURE_SUBSCRIPTION_ID` | Azure サブスクリプション ID |",
+  },
+  gcp: {
+    id: "gcp",
+    label: "Google Cloud",
+    steps: `
+      # Required repository variables:
+      #   GCP_WORKLOAD_IDENTITY_PROVIDER - Workload Identity Provider resource name
+      #   GCP_SERVICE_ACCOUNT            - Service account email
+      # See: https://github.com/google-github-actions/auth
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193
+        with:
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          workload_identity_provider: \${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
+          service_account: \${{ vars.GCP_SERVICE_ACCOUNT }}
+`,
+    cdVars:
+      "| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Workload Identity Provider リソース名 |\n| `GCP_SERVICE_ACCOUNT` | サービスアカウント メール |",
+  },
+};
+
+const TERRAFORM_CD_DEPLOY = `
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform apply
+        run: terraform apply tfplan
+`;
+
+/** Generate cloud-specific Terraform CD workflows and CD_SECTION markdown entries. */
+function generateTerraformCd(
+  allFiles: Map<string, string>,
+  clouds: WizardAnswers["clouds"],
+): MarkdownSection[] {
+  const cdSections: MarkdownSection[] = [];
+
+  for (const cloud of clouds) {
+    const auth = TERRAFORM_CD_AUTH[cloud];
+    if (!auth) continue;
+
+    // Generate CD workflow file
+    const workflow = TERRAFORM_CD_COMMON_HEADER.replaceAll("{{CLOUD_LABEL}}", auth.label)
+      .replaceAll("{{CLOUD_ID}}", auth.id)
+      .concat(auth.steps, TERRAFORM_CD_DEPLOY);
+    allFiles.set(`.github/workflows/cd-terraform-${auth.id}.yaml`, workflow);
+
+    // Collect CD_SECTION markdown entries
+    cdSections.push({
+      placeholder: "<!-- SECTION:CD_SECTION -->",
+      content: auth.cdVars,
+    });
+  }
+
+  return cdSections;
 }
 
 // --- Main entry point ---
@@ -380,8 +530,31 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   // 4. Distribute MCP servers to agent config files
   distributeMcpServers(allFiles, presets);
 
-  // 5. Expand Markdown templates
-  expandMarkdownTemplates(allFiles, presets, vars);
+  // 5. Generate Terraform CD workflows (must run before markdown expansion for CD_SECTION)
+  const extraSections = new Map<string, MarkdownSection[]>();
+  if (presetNames.includes("terraform")) {
+    const tfCdSections = generateTerraformCd(allFiles, answers.clouds);
+    if (tfCdSections.length > 0) {
+      extraSections.set("README.md", tfCdSections);
+    }
+  }
+
+  // 5a. Expand Markdown templates
+  expandMarkdownTemplates(allFiles, presets, vars, extraSections);
+
+  // 5b. Remove root src/tests from Project Structure when frontend overrides them
+  if (answers.frontend !== "none") {
+    for (const [filePath, content] of allFiles) {
+      if (filePath.endsWith(".md") || filePath.endsWith(".mdc")) {
+        const cleaned = content
+          .replaceAll(/^src\/\s+-> Source code\n/gm, "")
+          .replaceAll(/^tests\/\s+-> Tests\n/gm, "")
+          .replaceAll(/^├── src\/\s+# ソースコード\n/gm, "")
+          .replaceAll(/^├── tests\/\s+# テスト\n/gm, "");
+        if (cleaned !== content) allFiles.set(filePath, cleaned);
+      }
+    }
+  }
 
   // 6. Generate .tflint.hcl (if terraform is selected)
   if (presetNames.includes("terraform")) {

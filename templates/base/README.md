@@ -71,6 +71,12 @@ bash scripts/setup.sh
 |---------|------|
 <!-- SECTION:TEST_COMMANDS -->
 
+### 開発
+
+| コマンド | 説明 |
+|---------|------|
+<!-- SECTION:DEV_COMMANDS -->
+
 <!-- SECTION:CD_SECTION -->
 
 ## Conventional Commits

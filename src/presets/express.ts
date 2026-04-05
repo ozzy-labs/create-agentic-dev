@@ -113,8 +113,11 @@ export const expressPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
-        content:
-          "| `pnpm run test:api` | API テスト（vitest） |\n| `pnpm run dev:api` | API 開発サーバー起動（port 3000） |",
+        content: "| `pnpm run test:api` | API テスト（vitest） |",
+      },
+      {
+        placeholder: "<!-- SECTION:DEV_COMMANDS -->",
+        content: "| `pnpm run dev:api` | API 開発サーバー起動（port 3000） |",
       },
     ],
   },

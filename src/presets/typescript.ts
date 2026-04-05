@@ -84,7 +84,7 @@ export const typescriptPreset: Preset = {
     "agent-instructions": [
       {
         placeholder: "<!-- SECTION:TECH_STACK -->",
-        content: '- **Language**: TypeScript (ESM, strict mode, `"type": "module"`)',
+        content: '- **TypeScript**: ESM, strict mode, `"type": "module"`',
       },
       {
         placeholder: "<!-- SECTION:TECH_STACK_LINTING -->",

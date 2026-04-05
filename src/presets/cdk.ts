@@ -147,8 +147,12 @@ export const cdkPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
+        content: "| `pnpm run test:infra` | CDK インフラテスト |",
+      },
+      {
+        placeholder: "<!-- SECTION:DEV_COMMANDS -->",
         content:
-          "| `pnpm run test:infra` | CDK インフラテスト |\n| `pnpm run cdk:synth` | CDK テンプレート合成 |\n| `pnpm run cdk:diff` | CDK 差分確認 |",
+          "| `pnpm run cdk:synth` | CDK テンプレート合成 |\n| `pnpm run cdk:diff` | CDK 差分確認 |",
       },
       {
         placeholder: "<!-- SECTION:CD_SECTION -->",

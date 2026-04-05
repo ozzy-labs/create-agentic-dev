@@ -899,7 +899,8 @@ describe("smoke: CD workflows", () => {
     );
     expect(result.hasFile(".github/workflows/cd-cdk.yaml")).toBe(true);
     expect(result.hasFile(".github/workflows/cd-cloudformation.yaml")).toBe(true);
-    expect(result.hasFile(".github/workflows/cd-terraform.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-terraform-aws.yaml")).toBe(true);
+    expect(result.hasFile(".github/workflows/cd-terraform-azure.yaml")).toBe(true);
     expect(result.hasFile(".github/workflows/cd-bicep.yaml")).toBe(true);
   });
 

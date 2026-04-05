@@ -53,7 +53,7 @@ export const reactPreset: Preset = {
         content: "| `pnpm --filter web install` | フロントエンド依存パッケージインストール |",
       },
       {
-        placeholder: "<!-- SECTION:TEST_COMMANDS -->",
+        placeholder: "<!-- SECTION:DEV_COMMANDS -->",
         content:
           "| `pnpm run build:web` | フロントエンドビルド |\n| `pnpm run dev` | Vite 開発サーバー起動 |",
       },

@@ -126,8 +126,11 @@ export const fastapiPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
-        content:
-          "| `pnpm run test:api` | API テスト（pytest） |\n| `pnpm run dev:api` | API 開発サーバー起動（port 8000） |",
+        content: "| `pnpm run test:api` | API テスト（pytest） |",
+      },
+      {
+        placeholder: "<!-- SECTION:DEV_COMMANDS -->",
+        content: "| `pnpm run dev:api` | API 開発サーバー起動（port 8000） |",
       },
     ],
   },

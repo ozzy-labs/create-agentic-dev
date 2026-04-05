@@ -111,8 +111,11 @@ export const batchPreset: Preset = {
       },
       {
         placeholder: "<!-- SECTION:TEST_COMMANDS -->",
-        content:
-          "| `pnpm run test:worker` | Worker テスト（vitest） |\n| `pnpm run dev:worker` | Worker 開発モード（tsx watch） |",
+        content: "| `pnpm run test:worker` | Worker テスト（vitest） |",
+      },
+      {
+        placeholder: "<!-- SECTION:DEV_COMMANDS -->",
+        content: "| `pnpm run dev:worker` | Worker 開発モード（tsx watch） |",
       },
     ],
   },
