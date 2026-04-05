@@ -42,6 +42,12 @@ describe("t()", () => {
     // biome-ignore lint/suspicious/noExplicitAny: testing invalid key at runtime
     expect(t("nonexistent.key" as any)).toBe("nonexistent.key");
   });
+
+  it("returns key when path resolves to an object instead of a string", () => {
+    // "wizard.projectName" resolves to an object { message, placeholder, ... }, not a string
+    // biome-ignore lint/suspicious/noExplicitAny: testing non-leaf key at runtime
+    expect(t("wizard.projectName" as any)).toBe("wizard.projectName");
+  });
 });
 
 describe("setLocale / getLocale", () => {

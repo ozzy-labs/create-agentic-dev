@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generate, resolvePresets, validateAnswers } from "../src/generator.js";
-import type { WizardAnswers } from "../src/types.js";
+import type { FileWriter, WizardAnswers } from "../src/types.js";
 import { makeAnswers } from "./helpers.js";
 
 describe("resolvePresets", () => {
@@ -283,4 +283,23 @@ describe("file list snapshots", () => {
       expect(result.fileList()).toMatchSnapshot();
     });
   }
+});
+
+describe("generate with writer option", () => {
+  it("writes all files via the provided writer", () => {
+    const written = new Map<string, string>();
+    const writer: FileWriter = {
+      write(filePath, content) {
+        written.set(filePath, content);
+      },
+    };
+
+    const result = generate(makeAnswers({ languages: ["typescript"] }), { writer });
+
+    expect(written.size).toBeGreaterThan(0);
+    expect(written.size).toBe(result.fileList().length);
+    for (const file of result.fileList()) {
+      expect(written.has(file)).toBe(true);
+    }
+  });
 });

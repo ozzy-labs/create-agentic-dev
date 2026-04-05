@@ -273,6 +273,30 @@ describe("CLI Wizard E2E", () => {
 
       expect(logInfoCalls.some((msg) => msg.includes("TypeScript"))).toBe(true);
     });
+
+    it("Vue forces TypeScript", async () => {
+      setupMock({ frontend: "vue", agents: [] });
+
+      await runWizard();
+
+      expect(logInfoCalls.some((msg) => msg.includes("TypeScript"))).toBe(true);
+    });
+
+    it("Nuxt forces TypeScript", async () => {
+      setupMock({ frontend: "nuxt", agents: [] });
+
+      await runWizard();
+
+      expect(logInfoCalls.some((msg) => msg.includes("TypeScript"))).toBe(true);
+    });
+
+    it("Batch forces TypeScript", async () => {
+      setupMock({ backend: "batch", agents: [] });
+
+      await runWizard();
+
+      expect(logInfoCalls.some((msg) => msg.includes("TypeScript"))).toBe(true);
+    });
   });
 
   describe("language manual selection", () => {
