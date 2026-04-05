@@ -20,10 +20,10 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        uses: {{actionsCheckout}}
 
       - name: Setup mise
-        uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac
+        uses: {{actionsMise}}
         with:
           install: "true"
           cache: "true"
@@ -35,7 +35,7 @@ jobs:
       #   AZURE_RESOURCE_GROUP  - Target resource group name
       # See: https://github.com/azure/login
       - name: Azure login (OIDC)
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        uses: {{actionsAzureLogin}}
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}

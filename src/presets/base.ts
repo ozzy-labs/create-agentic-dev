@@ -1,3 +1,4 @@
+import { ACTIONS } from "../action-versions.js";
 import type { Preset } from "../types.js";
 import { readTemplateFiles } from "../utils.js";
 
@@ -89,7 +90,7 @@ export const basePreset: Preset = {
     setupSteps: [
       {
         name: "pnpm cache",
-        uses: "actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830",
+        uses: ACTIONS.cache,
         with: {
           path: "~/.local/share/pnpm/store",
           // biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression

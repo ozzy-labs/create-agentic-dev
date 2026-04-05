@@ -1,3 +1,4 @@
+import { ACTIONS } from "./action-versions.js";
 import { buildCiWorkflow } from "./ci.js";
 import { expandMarkdown, formatMcpJson, formatMcpToml, mergeFile } from "./merge.js";
 import { ALL_PRESETS, PRESET_ORDER } from "./presets/index.js";
@@ -341,7 +342,8 @@ function generateTflintConfig(
 
 // --- Terraform CD (cloud-aware) ---
 
-const TERRAFORM_CD_COMMON_HEADER = `name: "CD: Terraform ({{CLOUD_LABEL}})"
+function terraformCdHeader(): string {
+  return `name: "CD: Terraform ({{CLOUD_LABEL}})"
 
 on:
   workflow_run:
@@ -364,49 +366,51 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        uses: ${ACTIONS.checkout}
 
       - name: Setup mise
-        uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac
+        uses: ${ACTIONS.mise}
         with:
           install: "true"
           cache: "true"
 `;
+}
 
-const TERRAFORM_CD_AUTH: Record<
+function terraformCdAuth(): Record<
   string,
   { id: string; label: string; steps: string; cdVars: string }
-> = {
-  aws: {
-    id: "aws",
-    label: "AWS",
-    steps: `
+> {
+  return {
+    aws: {
+      id: "aws",
+      label: "AWS",
+      steps: `
       # Required repository variables:
       #   AWS_ROLE_ARN  - IAM role ARN for OIDC authentication
       #   AWS_REGION    - AWS region (e.g., ap-northeast-1)
       # See: https://github.com/aws-actions/configure-aws-credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722
+        uses: ${ACTIONS.awsCredentials}
         with:
           # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
           role-to-assume: \${{ vars.AWS_ROLE_ARN }}
           # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
           aws-region: \${{ vars.AWS_REGION }}
 `,
-    cdVars:
-      "| `AWS_ROLE_ARN` | デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
-  },
-  azure: {
-    id: "azure",
-    label: "Azure",
-    steps: `
+      cdVars:
+        "| `AWS_ROLE_ARN` | デプロイ用 IAM ロール ARN（OIDC 認証） |\n| `AWS_REGION` | AWS リージョン（例: `ap-northeast-1`） |",
+    },
+    azure: {
+      id: "azure",
+      label: "Azure",
+      steps: `
       # Required repository variables:
       #   AZURE_CLIENT_ID       - Azure AD application client ID
       #   AZURE_TENANT_ID       - Azure AD tenant ID
       #   AZURE_SUBSCRIPTION_ID - Azure subscription ID
       # See: https://github.com/azure/login
       - name: Azure login (OIDC)
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        uses: ${ACTIONS.azureLogin}
         with:
           # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
           client-id: \${{ vars.AZURE_CLIENT_ID }}
@@ -415,29 +419,30 @@ const TERRAFORM_CD_AUTH: Record<
           # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
           subscription-id: \${{ vars.AZURE_SUBSCRIPTION_ID }}
 `,
-    cdVars:
-      "| `AZURE_CLIENT_ID` | Azure OIDC 認証用クライアント ID |\n| `AZURE_TENANT_ID` | Azure テナント ID |\n| `AZURE_SUBSCRIPTION_ID` | Azure サブスクリプション ID |",
-  },
-  gcp: {
-    id: "gcp",
-    label: "Google Cloud",
-    steps: `
+      cdVars:
+        "| `AZURE_CLIENT_ID` | Azure OIDC 認証用クライアント ID |\n| `AZURE_TENANT_ID` | Azure テナント ID |\n| `AZURE_SUBSCRIPTION_ID` | Azure サブスクリプション ID |",
+    },
+    gcp: {
+      id: "gcp",
+      label: "Google Cloud",
+      steps: `
       # Required repository variables:
       #   GCP_WORKLOAD_IDENTITY_PROVIDER - Workload Identity Provider resource name
       #   GCP_SERVICE_ACCOUNT            - Service account email
       # See: https://github.com/google-github-actions/auth
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193
+        uses: ${ACTIONS.gcpAuth}
         with:
           # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
           workload_identity_provider: \${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           # biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub Actions expression syntax
           service_account: \${{ vars.GCP_SERVICE_ACCOUNT }}
 `,
-    cdVars:
-      "| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Workload Identity Provider リソース名 |\n| `GCP_SERVICE_ACCOUNT` | サービスアカウント メール |",
-  },
-};
+      cdVars:
+        "| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Workload Identity Provider リソース名 |\n| `GCP_SERVICE_ACCOUNT` | サービスアカウント メール |",
+    },
+  };
+}
 
 const TERRAFORM_CD_DEPLOY = `
       - name: Terraform init
@@ -457,12 +462,14 @@ function generateTerraformCd(
 ): MarkdownSection[] {
   const cdSections: MarkdownSection[] = [];
 
+  const authMap = terraformCdAuth();
   for (const cloud of clouds) {
-    const auth = TERRAFORM_CD_AUTH[cloud];
+    const auth = authMap[cloud];
     if (!auth) continue;
 
     // Generate CD workflow file
-    const workflow = TERRAFORM_CD_COMMON_HEADER.replaceAll("{{CLOUD_LABEL}}", auth.label)
+    const workflow = terraformCdHeader()
+      .replaceAll("{{CLOUD_LABEL}}", auth.label)
       .replaceAll("{{CLOUD_ID}}", auth.id)
       .concat(auth.steps, TERRAFORM_CD_DEPLOY);
     allFiles.set(`.github/workflows/cd-terraform-${auth.id}.yaml`, workflow);
@@ -492,7 +499,15 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     return preset;
   });
 
-  const vars: Record<string, string> = { projectName: answers.projectName };
+  const vars: Record<string, string> = {
+    projectName: answers.projectName,
+    actionsCheckout: ACTIONS.checkout,
+    actionsMise: ACTIONS.mise,
+    actionsCache: ACTIONS.cache,
+    actionsAwsCredentials: ACTIONS.awsCredentials,
+    actionsAzureLogin: ACTIONS.azureLogin,
+    actionsGcpAuth: ACTIONS.gcpAuth,
+  };
 
   // 1. Collect all owned files
   const allFiles = new Map<string, string>();

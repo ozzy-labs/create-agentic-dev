@@ -1,4 +1,5 @@
 import { stringify as stringifyYaml } from "yaml";
+import { ACTIONS } from "./action-versions.js";
 import type { CiContribution, CiStep } from "./types.js";
 
 interface CiWorkflowOptions {
@@ -39,11 +40,11 @@ export function buildCiWorkflow({ contributions, hasTest, hasBuild }: CiWorkflow
   const commonSetup: CiStep[] = [
     {
       name: "Checkout",
-      uses: "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5",
+      uses: ACTIONS.checkout,
     },
     {
       name: "Setup mise",
-      uses: "jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac",
+      uses: ACTIONS.mise,
       with: { install: "true", cache: "true" },
     },
   ];
