@@ -77,7 +77,7 @@ export const bicepPreset: Preset = {
         name: "Lint (Bicep)",
         run: "find infra -name '*.bicep' -print0 | xargs -0 -I{} az bicep build --file {} --stdout > /dev/null",
       },
-      { name: "Security (Trivy IaC)", run: "trivy config --exit-code 1 infra/" },
+      { name: "Security (Trivy IaC: Bicep)", run: "trivy config --exit-code 1 infra/" },
     ],
   },
 };
