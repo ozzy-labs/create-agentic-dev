@@ -549,6 +549,43 @@ const patterns: PatternDef[] = [
     },
   },
   {
+    name: "hono",
+    answers: { backend: "hono" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: [
+        "lint",
+        "typecheck",
+        "dev:api",
+        "test:api",
+        "build:api",
+        "typecheck:api",
+      ],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
     name: "express",
     answers: { backend: "express" },
     vscodeSettings: {

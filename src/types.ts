@@ -3,7 +3,7 @@
 export interface WizardAnswers {
   projectName: string;
   frontend: "none" | "react" | "nextjs" | "vue" | "nuxt";
-  backend: "none" | "fastapi" | "express" | "batch";
+  backend: "none" | "hono" | "fastapi" | "express" | "batch";
   clouds: Array<"aws" | "azure" | "gcp">;
   iac: Array<"cdk" | "cloudformation" | "terraform" | "bicep">;
   languages: Array<"typescript" | "python">;

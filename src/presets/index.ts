@@ -16,6 +16,7 @@ import { expressPreset } from "./express.js";
 import { fastapiPreset } from "./fastapi.js";
 import { gcpPreset } from "./gcp.js";
 import { geminiPreset } from "./gemini.js";
+import { honoPreset } from "./hono.js";
 import { nextjsPreset } from "./nextjs.js";
 import { nuxtPreset } from "./nuxt.js";
 import { pythonPreset } from "./python.js";
@@ -36,6 +37,7 @@ const PRESET_ENTRIES: ReadonlyArray<readonly [string, Preset]> = [
   ["nextjs", nextjsPreset],
   ["vue", vuePreset],
   ["nuxt", nuxtPreset],
+  ["hono", honoPreset],
   ["fastapi", fastapiPreset],
   ["express", expressPreset],
   ["batch", batchPreset],

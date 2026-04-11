@@ -299,6 +299,97 @@ describe("pairwise: fastapi + react", () => {
   });
 });
 
+// --- Hono + React (web/ + api/ coexistence, both in pnpm workspace) ---
+
+describe("pairwise: hono + react", () => {
+  const answers = makeAnswers({ frontend: "react", backend: "hono" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("web/package.json")).toBe(true);
+    expect(result.hasFile("api/src/app.ts")).toBe(true);
+    expect(result.hasFile("api/package.json")).toBe(true);
+  });
+
+  it("workspace includes both web and api (Hono uses pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- api");
+  });
+
+  it("root package.json has both orchestration and API scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["build:web"]).toBe("pnpm --filter web build");
+    expect(scripts["dev:api"]).toBeDefined();
+    expect(scripts["test:api"]).toBeDefined();
+    expect(scripts["build:api"]).toBeDefined();
+  });
+
+  it("has CI steps from both presets", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Lint (Biome)");
+    expect(stepNames).toContain("Typecheck (API tsc)");
+    expect(stepNames).toContain("Test (API vitest)");
+    expect(stepNames).toContain("Build (API)");
+  });
+
+  it("CLAUDE.md contains both React and Hono sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("React");
+    expect(claude).toContain("Hono");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Hono + CDK (api/ + infra/ coexistence) ---
+
+describe("pairwise: hono + cdk", () => {
+  const answers = makeAnswers({ backend: "hono", clouds: ["aws"], iac: ["cdk"] });
+  const result = generate(answers);
+
+  it("includes both api/ and infra/ directories", () => {
+    expect(result.hasFile("api/src/app.ts")).toBe(true);
+    expect(result.hasFile("api/package.json")).toBe(true);
+    expect(result.hasFile("infra/bin/app.ts")).toBe(true);
+    expect(result.hasFile("infra/package.json")).toBe(true);
+  });
+
+  it("workspace includes api only (infra uses independent npm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- api");
+    expect(workspace).not.toContain("- infra");
+  });
+
+  it("biome.json excludes both api/dist/ and cdk.out/", () => {
+    const biome = result.readJson("biome.json") as Record<string, unknown>;
+    const files = biome.files as Record<string, string[]>;
+    expect(files.includes).toContain("!**/api/dist/");
+    expect(files.includes).toContain("!**/cdk.out/");
+  });
+
+  it("root package.json has both API and CDK scripts", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["dev:api"]).toBeDefined();
+    expect(scripts["cdk:synth"]).toBeDefined();
+  });
+
+  it("has CI steps from both presets", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Typecheck (API tsc)");
+    expect(stepNames).toContain("Test (API vitest)");
+    expect(stepNames).toContain("Test (infra CDK)");
+  });
+});
+
 // --- Express + React (web/ + api/ coexistence, both in pnpm workspace) ---
 
 describe("pairwise: express + react", () => {

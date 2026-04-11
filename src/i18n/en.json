@@ -28,6 +28,7 @@
       "message": "Backend app",
       "hint": "Add a backend application scaffold",
       "none": { "label": "None" },
+      "hono": { "label": "Hono", "hint": "forces TypeScript" },
       "fastapi": { "label": "FastAPI", "hint": "forces Python" },
       "express": { "label": "Express", "hint": "forces TypeScript" },
       "batch": { "label": "Batch/Worker", "hint": "forces TypeScript" }

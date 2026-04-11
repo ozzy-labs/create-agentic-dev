@@ -60,6 +60,7 @@ function resolvedLanguages(
   if (frontend === "nuxt") add("typescript", t("wizard.frontend.nuxt.label"));
   // Backend frameworks force their language
   if (backend === "fastapi") add("python", t("wizard.backend.fastapi.label"));
+  if (backend === "hono") add("typescript", t("wizard.backend.hono.label"));
   if (backend === "express") add("typescript", t("wizard.backend.express.label"));
   if (backend === "batch") add("typescript", t("wizard.backend.batch.label"));
   // CDK forces TypeScript
@@ -116,6 +117,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
           message: `${t("wizard.backend.message")} ${pc.dim(t("wizard.backend.hint"))}`,
           options: [
             { value: "none" as const, label: t("wizard.backend.none.label") },
+            {
+              value: "hono" as const,
+              label: t("wizard.backend.hono.label"),
+              hint: t("wizard.backend.hono.hint"),
+            },
             {
               value: "fastapi" as const,
               label: t("wizard.backend.fastapi.label"),
