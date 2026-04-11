@@ -6,7 +6,7 @@ export const gcpPreset: Preset = {
   merge: {
     ".mise.toml": {
       tools: {
-        gcloud: "latest",
+        gcloud: "2",
       },
     },
     ".devcontainer/devcontainer.json": {

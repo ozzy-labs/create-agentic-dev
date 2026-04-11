@@ -8,7 +8,7 @@ describe("generate (gcp)", () => {
 
   it("merges gcloud into .mise.toml", () => {
     const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
-    expect(toml.tools.gcloud).toBe("latest");
+    expect(toml.tools.gcloud).toBe("2");
   });
 
   it("merges google-cloud MCP server into .mcp.json", () => {

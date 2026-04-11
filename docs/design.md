@@ -16,8 +16,8 @@
 | # | Question | Type | Options |
 |---|----------|------|---------|
 | 1 | Project name | Text input | — |
-| 2 | Frontend app | Single-select | None / React + Vite / Next.js |
-| 3 | Backend app | Single-select | None / FastAPI / Express |
+| 2 | Frontend app | Single-select | None / React + Vite / Next.js / Vue + Vite / Nuxt |
+| 3 | Backend app | Single-select | None / FastAPI / Express / Batch |
 | 4 | Cloud providers | Multi-select | AWS / Azure / Google Cloud |
 | 5 | Infrastructure as Code | Multi-select | None / CDK / CloudFormation / Terraform / Bicep (filtered by selected cloud providers) |
 | 6 | Language toolchains (complement) | Multi-select | TypeScript / Python (auto-resolved languages are excluded) |
