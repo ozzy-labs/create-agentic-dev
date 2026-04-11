@@ -21,6 +21,7 @@ function defaults(overrides: Partial<WizardAnswers>): WizardAnswers {
     clouds: [],
     iac: [],
     languages: [],
+    testing: [],
     agents: ["claude-code"],
     ...overrides,
   };
@@ -66,23 +67,45 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
 
+  [
+    "09-sveltekit",
+    {
+      projectName: "sveltekit-app",
+      frontend: "sveltekit",
+    },
+  ],
+  [
+    "10-astro",
+    {
+      projectName: "astro-app",
+      frontend: "astro",
+    },
+  ],
+
   // ── Backend ──
   [
-    "09-express",
+    "11-hono",
+    {
+      projectName: "hono-app",
+      backend: "hono",
+    },
+  ],
+  [
+    "12-express",
     {
       projectName: "express-app",
       backend: "express",
     },
   ],
   [
-    "10-fastapi",
+    "13-fastapi",
     {
       projectName: "fastapi-app",
       backend: "fastapi",
     },
   ],
   [
-    "11-batch",
+    "14-batch",
     {
       projectName: "batch-app",
       backend: "batch",
@@ -91,7 +114,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
 
   // ── Frontend + Backend ──
   [
-    "12-react-express",
+    "15-react-express",
     {
       projectName: "react-express",
       frontend: "react",
@@ -99,7 +122,15 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "13-nextjs-fastapi",
+    "16-react-hono",
+    {
+      projectName: "react-hono",
+      frontend: "react",
+      backend: "hono",
+    },
+  ],
+  [
+    "17-nextjs-fastapi",
     {
       projectName: "nextjs-fastapi",
       frontend: "nextjs",
@@ -109,7 +140,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
 
   // ── Cloud + IaC ──
   [
-    "14-aws-cdk",
+    "18-aws-cdk",
     {
       projectName: "aws-cdk",
       clouds: ["aws"],
@@ -118,7 +149,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "15-aws-terraform",
+    "19-aws-terraform",
     {
       projectName: "aws-terraform",
       clouds: ["aws"],
@@ -127,7 +158,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "16-azure-bicep",
+    "20-azure-bicep",
     {
       projectName: "azure-bicep",
       clouds: ["azure"],
@@ -136,7 +167,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "17-gcp-terraform",
+    "21-gcp-terraform",
     {
       projectName: "gcp-terraform",
       clouds: ["gcp"],
@@ -145,7 +176,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "18-multi-cloud-terraform",
+    "22-multi-cloud-terraform",
     {
       projectName: "multi-cloud",
       clouds: ["aws", "azure", "gcp"],
@@ -154,7 +185,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "19-aws-cdk-cloudformation",
+    "23-aws-cdk-cloudformation",
     {
       projectName: "aws-dual-iac",
       clouds: ["aws"],
@@ -163,9 +194,27 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
 
+  // ── Testing ──
+  [
+    "24-playwright",
+    {
+      projectName: "playwright-app",
+      languages: ["typescript"],
+      testing: ["playwright"],
+    },
+  ],
+  [
+    "25-react-playwright",
+    {
+      projectName: "react-playwright",
+      frontend: "react",
+      testing: ["playwright"],
+    },
+  ],
+
   // ── Full-stack combinations ──
   [
-    "20-react-express-aws-cdk",
+    "26-react-express-aws-cdk",
     {
       projectName: "fullstack-aws",
       frontend: "react",
@@ -176,7 +225,19 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "21-nextjs-fastapi-azure",
+    "27-react-hono-aws-cdk-playwright",
+    {
+      projectName: "fullstack-modern",
+      frontend: "react",
+      backend: "hono",
+      clouds: ["aws"],
+      iac: ["cdk"],
+      testing: ["playwright"],
+      agents: ["claude-code", "copilot"],
+    },
+  ],
+  [
+    "28-nextjs-fastapi-azure",
     {
       projectName: "fullstack-azure",
       frontend: "nextjs",
@@ -189,7 +250,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
 
   // ── Agent variations ──
   [
-    "22-all-agents",
+    "29-all-agents",
     {
       projectName: "all-agents",
       languages: ["typescript"],
@@ -199,7 +260,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
 
   // ── Cross-layer combinations ──
   [
-    "23-vue-fastapi",
+    "30-vue-fastapi",
     {
       projectName: "vue-fastapi",
       frontend: "vue",
@@ -207,7 +268,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "24-nuxt-express",
+    "31-nuxt-express",
     {
       projectName: "nuxt-express",
       frontend: "nuxt",
@@ -215,7 +276,15 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "25-batch-aws-cdk",
+    "32-sveltekit-hono",
+    {
+      projectName: "sveltekit-hono",
+      frontend: "sveltekit",
+      backend: "hono",
+    },
+  ],
+  [
+    "33-batch-aws-cdk",
     {
       projectName: "batch-aws-cdk",
       backend: "batch",
@@ -224,7 +293,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
     },
   ],
   [
-    "26-aws-only",
+    "34-aws-only",
     {
       projectName: "aws-only",
       clouds: ["aws"],
@@ -234,7 +303,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
 
   // ── Kitchen sink ──
   [
-    "27-kitchen-sink",
+    "35-kitchen-sink",
     {
       projectName: "kitchen-sink",
       frontend: "react",
@@ -242,6 +311,7 @@ const projects: [string, Partial<WizardAnswers>][] = [
       clouds: ["aws", "azure", "gcp"],
       iac: ["cdk", "cloudformation", "terraform", "bicep"],
       languages: ["python"],
+      testing: ["playwright"],
       agents: ["claude-code", "codex", "gemini", "amazon-q", "copilot", "cline", "cursor"],
     },
   ],

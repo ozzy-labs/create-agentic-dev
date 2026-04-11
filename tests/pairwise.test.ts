@@ -736,6 +736,87 @@ describe("pairwise: vue + cdk", () => {
   });
 });
 
+// --- SvelteKit + Hono (web/ + api/, both in pnpm workspace) ---
+
+describe("pairwise: sveltekit + hono", () => {
+  const answers = makeAnswers({ frontend: "sveltekit", backend: "hono" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/svelte.config.js")).toBe(true);
+    expect(result.hasFile("api/src/app.ts")).toBe(true);
+    expect(result.hasFile("api/package.json")).toBe(true);
+  });
+
+  it("workspace includes both web and api", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- api");
+  });
+
+  it("CLAUDE.md contains both SvelteKit and Hono sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("SvelteKit");
+    expect(claude).toContain("Hono");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- Astro + FastAPI (web/ + api/, TypeScript + Python) ---
+
+describe("pairwise: astro + fastapi", () => {
+  const answers = makeAnswers({ frontend: "astro", backend: "fastapi" });
+  const result = generate(answers);
+
+  it("includes both web/ and api/ directories", () => {
+    expect(result.hasFile("web/astro.config.ts")).toBe(true);
+    expect(result.hasFile("api/src/main.py")).toBe(true);
+  });
+
+  it("workspace includes web only (FastAPI uses uv, not pnpm)", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).not.toContain("- api");
+  });
+
+  it("CLAUDE.md contains both Astro and FastAPI sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("Astro");
+    expect(claude).toContain("FastAPI");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
+// --- React + Playwright (web/ + e2e/ coexistence) ---
+
+describe("pairwise: react + playwright", () => {
+  const answers = makeAnswers({ frontend: "react", testing: ["playwright"] });
+  const result = generate(answers);
+
+  it("includes both web/ and e2e/ directories", () => {
+    expect(result.hasFile("web/vite.config.ts")).toBe(true);
+    expect(result.hasFile("e2e/playwright.config.ts")).toBe(true);
+  });
+
+  it("workspace includes both web and e2e", () => {
+    const workspace = result.readText("pnpm-workspace.yaml");
+    expect(workspace).toContain("- web");
+    expect(workspace).toContain("- e2e");
+  });
+
+  it("distributes Playwright MCP server", () => {
+    const mcp = result.readJson(".mcp.json") as Record<string, Record<string, unknown>>;
+    expect(mcp.mcpServers.playwright).toBeDefined();
+  });
+
+  it("CLAUDE.md contains both React and Playwright sections", () => {
+    const claude = result.readText("CLAUDE.md");
+    expect(claude).toContain("React");
+    expect(claude).toContain("Playwright");
+    expect(claude).not.toContain("<!-- SECTION:");
+  });
+});
+
 // --- Batch + React (web/ + worker/ coexistence) ---
 
 describe("pairwise: batch + react", () => {
