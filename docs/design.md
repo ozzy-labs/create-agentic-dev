@@ -7,7 +7,7 @@
 - **Distribution**: npm package (`npm create @ozzylabs/agentic-dev`)
 - **Prompt library**: @clack/prompts
 - **Architecture**: Preset Composition (composable presets merged into final project)
-- **Relationship**: Companion to [agentic-dev-template](https://github.com/ozzy-3/agentic-dev-template)
+- **Relationship**: Companion to [agentic-dev-template](https://github.com/ozzy-labs/agentic-dev-template)
 
 ## Wizard Selections
 

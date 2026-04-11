@@ -37,11 +37,11 @@
   },
   "license": "MIT",
   "author": "ozzy-labs",
-  "homepage": "https://github.com/ozzy-3/create-agentic-dev#readme",
-  "bugs": "https://github.com/ozzy-3/create-agentic-dev/issues",
+  "homepage": "https://github.com/ozzy-labs/create-agentic-dev#readme",
+  "bugs": "https://github.com/ozzy-labs/create-agentic-dev/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ozzy-3/create-agentic-dev.git"
+    "url": "https://github.com/ozzy-labs/create-agentic-dev.git"
   },
   "keywords": [
     "create",
