@@ -600,7 +600,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   // 9. Generate pnpm-workspace.yaml
   const workspacePackages: string[] = [];
   if (answers.frontend !== "none") workspacePackages.push("web");
-  if (answers.backend === "express") workspacePackages.push("api");
+  if (answers.backend === "hono" || answers.backend === "express") workspacePackages.push("api");
   if (answers.backend === "batch") workspacePackages.push("worker");
   if (workspacePackages.length > 0) {
     const yamlLines = ["packages:"];

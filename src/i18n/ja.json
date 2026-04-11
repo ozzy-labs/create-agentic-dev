@@ -28,6 +28,7 @@
       "message": "バックエンドアプリ",
       "hint": "バックエンドアプリの雛形を追加",
       "none": { "label": "なし" },
+      "hono": { "label": "Hono", "hint": "TypeScript が強制されます" },
       "fastapi": { "label": "FastAPI", "hint": "Python が強制されます" },
       "express": { "label": "Express", "hint": "TypeScript が強制されます" },
       "batch": { "label": "バッチ/ワーカー", "hint": "TypeScript が強制されます" }
