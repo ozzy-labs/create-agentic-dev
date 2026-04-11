@@ -1,6 +1,6 @@
 {
   "name": "@ozzylabs/create-agentic-dev",
-  "version": "0.1.2",
+  "version": "0.0.0",
   "description": "Scaffold an AI-agent-native development environment with interactive presets",
   "type": "module",
   "bin": {
