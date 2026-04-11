@@ -2,7 +2,7 @@
 
 Scaffold an AI-agent-native development environment with interactive presets.
 
-Companion to [agentic-dev-template](https://github.com/ozzy-3/agentic-dev-template).
+Companion to [agentic-dev-template](https://github.com/ozzy-labs/agentic-dev-template).
 
 ## Quick Start
 
@@ -17,28 +17,28 @@ bash scripts/setup.sh
 The interactive wizard asks 7 questions in an app-first flow:
 
 1. **Project name**
-2. **Frontend** — None / React + Vite / Next.js
-3. **Backend** — None / FastAPI / Express
+2. **Frontend** — None / React + Vite / Next.js / Vue / Nuxt
+3. **Backend** — None / FastAPI / Express / Batch
 4. **Cloud providers** — AWS / Azure / Google Cloud (multi-select)
 5. **Infrastructure as Code** — CDK / CloudFormation / Terraform / Bicep (filtered by cloud)
 6. **Language toolchains** — TypeScript / Python (excluding auto-resolved)
-7. **AI Agent tools** — Claude Code / Codex CLI / Gemini CLI / Amazon Q / Copilot (multi-select)
+7. **AI Agent tools** — Claude Code / Codex CLI / Gemini CLI / Amazon Q / Copilot / Cline / Cursor (multi-select)
 
 ## Presets
 
-20 composable presets across 7 layers. Each provides owned files + merge contributions
+24 composable presets across 7 layers. Each provides owned files + merge contributions
 to shared files (package.json, .mise.toml, lefthook.yaml, VSCode, devcontainer,
 README.md, CI workflow).
 
 | Layer | Presets |
 |-------|--------|
 | Base | Always included (git hooks, linters, devcontainer) |
-| Frontend | React + Vite, Next.js |
-| Backend | FastAPI, Express |
+| Frontend | React + Vite, Next.js, Vue, Nuxt |
+| Backend | FastAPI, Express, Batch |
 | Cloud | AWS, Azure, Google Cloud |
 | IaC | CDK, CloudFormation, Terraform, Bicep |
 | Language | TypeScript, Python |
-| Agent | Claude Code, Codex CLI, Gemini CLI, Amazon Q, Copilot |
+| Agent | Claude Code, Codex CLI, Gemini CLI, Amazon Q, Copilot, Cline, Cursor |
 
 See [docs/design.md](docs/design.md) for the full preset details and dependency chains.
 

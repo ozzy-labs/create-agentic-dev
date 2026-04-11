@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-`create-agentic-dev`: CLI tool that scaffolds AI-agent-native development projects with interactive presets. Companion to [agentic-dev-template](https://github.com/ozzy-3/agentic-dev-template).
+`create-agentic-dev`: CLI tool that scaffolds AI-agent-native development projects with interactive presets. Companion to [agentic-dev-template](https://github.com/ozzy-labs/agentic-dev-template).
 
 ## Tech Stack
 
