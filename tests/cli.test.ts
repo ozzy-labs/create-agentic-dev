@@ -55,7 +55,7 @@ vi.mock("@clack/prompts", () => {
 
 // Import after mocking
 import * as p from "@clack/prompts";
-import { runWizard } from "../src/cli.js";
+import { runApplyWizard, runWizard } from "../src/cli.js";
 
 /** Configure mock answers and set up prompt return values. */
 function setupMock(answers: MockAnswers): void {
@@ -482,6 +482,58 @@ describe("CLI Wizard E2E", () => {
 
       expect(result.fileList().length).toBeGreaterThan(0);
       expect(result.hasFile("package.json")).toBe(true);
+    });
+  });
+});
+
+// --- Apply Wizard Tests ---
+
+describe("Apply Wizard E2E", () => {
+  /** Configure mock for runApplyWizard (only clouds + agents). */
+  function setupApplyMock(answers: {
+    clouds?: MockAnswers["clouds"];
+    agents?: MockAnswers["agents"];
+  }): void {
+    logInfoCalls = [];
+
+    const multiselectMock = vi.mocked(p.multiselect);
+    multiselectMock.mockReset();
+    // Apply wizard: 1. clouds, 2. agents
+    multiselectMock
+      .mockResolvedValueOnce(answers.clouds ?? [])
+      .mockResolvedValueOnce(answers.agents ?? []);
+  }
+
+  it("returns correct ApplyAnswers with minimal selections", async () => {
+    setupApplyMock({ agents: ["claude-code"] });
+
+    const result = await runApplyWizard();
+
+    expect(result).toEqual({
+      clouds: [],
+      agents: ["claude-code"],
+    });
+  });
+
+  it("returns selected clouds and agents", async () => {
+    setupApplyMock({ clouds: ["aws", "gcp"], agents: ["claude-code", "cursor"] });
+
+    const result = await runApplyWizard();
+
+    expect(result).toEqual({
+      clouds: ["aws", "gcp"],
+      agents: ["claude-code", "cursor"],
+    });
+  });
+
+  it("returns empty arrays when nothing selected", async () => {
+    setupApplyMock({});
+
+    const result = await runApplyWizard();
+
+    expect(result).toEqual({
+      clouds: [],
+      agents: [],
     });
   });
 });
