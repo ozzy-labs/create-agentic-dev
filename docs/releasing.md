@@ -9,7 +9,7 @@
 | ジョブ | 役割 |
 |-------|------|
 | `release-please` | main への push で version bump PR を自動作成（CHANGELOG 生成含む） |
-| `publish` | release-please がリリースを作成した場合のみ lint → test → build → npm publish を実行 |
+| `publish` | release-please がリリースを作成した場合のみ build → npm publish を実行（lint/test は CI で検証済み） |
 
 npm への公開は [Trusted Publishing (OIDC)](https://docs.npmjs.com/trusted-publishers/) を使用する。NPM_TOKEN は不要。
 
