@@ -20,48 +20,51 @@ npm への公開は [Trusted Publishing (OIDC)](https://docs.npmjs.com/trusted-p
 3. PR をマージすると GitHub Release + git tag が自動作成される
 4. `release.yaml` が npm publish を自動実行する（OIDC 認証）
 
-## 初回リリース手順
+## 手動リリース
 
-npm の Trusted Publishing はパッケージが npm に存在している必要があるため、初回のみ手動で publish する。
+Trusted Publishing が使えない場合や、緊急で手動リリースが必要な場合の手順。
 
-### 1. Release Please PR をマージする
+### 前提条件
 
-main への push 後に Release Please が作成する PR をマージする。これにより:
+- npm アカウントで 2FA（セキュリティキー / パスキー）が有効であること
+- npm は TOTP（認証アプリ）の新規登録を廃止済み。WebAuthn（Touch ID / Windows Hello / YubiKey 等）のみ対応
+- クラシックトークンは 2025 年 12 月に廃止済み
 
-- `package.json` の version が更新される
-- `CHANGELOG.md` が生成される
-- GitHub Release + git tag（例: `v0.1.0`）が作成される
-- `release.yaml` の `publish` ジョブが実行されるが、Trusted Publishing 未設定のため npm publish は失敗する（想定通り）
-
-### 2. ローカルから手動 publish
+### 手順
 
 ```bash
-git pull
-git checkout v0.1.0     # Release Please が作成したタグ
-pnpm build
-npm login               # npmjs.com にブラウザ認証
-npm publish --access public
+npm login               # ブラウザ認証
+npm publish --access public --provenance false
 ```
 
-### 3. npmjs.com で Trusted Publishing を設定
+- `--provenance false`: provenance 生成は GitHub Actions OIDC 専用。ローカルでは無効化が必要
+- publish 時にブラウザが開き、WebAuthn 認証を求められる
+
+### 代替: Granular Access Token
+
+2FA を設定できない環境では、Granular Access Token で publish できる:
+
+1. npmjs.com → Access Tokens → Generate New Token → Granular Access Token
+2. **Bypass two-factor authentication** にチェック
+3. Packages: Read and write、Orgs: `@ozzylabs`
+4. publish:
+
+```bash
+npm publish --access public --provenance false --//registry.npmjs.org/:_authToken=<token>
+```
+
+## Trusted Publishing の設定
+
+npmjs.com でパッケージの Trusted Publishing を設定する手順（初回のみ）:
 
 1. <https://www.npmjs.com/package/@ozzylabs/create-agentic-dev/access> にアクセス
 2. **Trusted Publisher** セクションで **GitHub Actions** を選択
-3. 以下を入力（大文字小文字を区別）:
+3. 以下を入力:
    - **Repository owner**: `ozzy-labs`
    - **Repository name**: `create-agentic-dev`
    - **Workflow filename**: `release.yaml`
+   - **Environment name**: （空欄）
 4. 保存する
-
-### 4. 動作確認（任意）
-
-設定後に `release.yaml` を手動で再実行して、OIDC 認証で publish が成功することを確認する:
-
-```bash
-gh run rerun <run-id>
-```
-
-以降のリリースは全自動で行われる。
 
 ## バージョニング
 
