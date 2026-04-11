@@ -17,7 +17,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "lint:all": "pnpm run lint && pnpm run typecheck && pnpm run lint:md && pnpm run lint:yaml && pnpm run lint:shell && pnpm run lint:toml && pnpm run lint:secrets",
-    "lint:md": "markdownlint-cli2 '**/*.md' '#**/node_modules' '#**/templates'",
+    "lint:md": "markdownlint-cli2 '**/*.md' '#**/node_modules' '#**/templates' '#CHANGELOG.md'",
     "lint:yaml": "yamllint -c .yamllint.yaml .",
     "lint:shell": "shellcheck scripts/*.sh && shfmt -d scripts/",
     "lint:toml": "taplo format --check ./*.toml",
