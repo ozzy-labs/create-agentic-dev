@@ -82,6 +82,19 @@ describe("generate (cdk)", () => {
     expect(devDeps.vitest).toBe("^4.0.0");
   });
 
+  it("infra/bin/app.ts includes cdk-nag AwsSolutionsChecks", () => {
+    const appTs = result.readText("infra/bin/app.ts");
+    expect(appTs).toContain('import { AwsSolutionsChecks } from "cdk-nag"');
+    expect(appTs).toContain("AwsSolutionsChecks");
+    expect(appTs).toContain("Aspects.of(app).add");
+  });
+
+  it("infra/package.json includes cdk-nag dependency", () => {
+    const infraPkg = result.readJson("infra/package.json") as Record<string, unknown>;
+    const deps = infraPkg.dependencies as Record<string, string>;
+    expect(deps["cdk-nag"]).toBeDefined();
+  });
+
   it("infra/bin/app.ts does not import source-map-support", () => {
     const appTs = result.readText("infra/bin/app.ts");
     expect(appTs).not.toContain("source-map-support");
