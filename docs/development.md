@@ -2,14 +2,14 @@
 
 ## Prerequisites
 
-- Node.js >= 20 (recommended: 24)
+- Node.js >= 22 (recommended: 24)
 - [pnpm](https://pnpm.io/) 10
 - [mise](https://mise.jdx.dev/) (version management)
 
 ## Development Setup
 
 ```bash
-git clone https://github.com/ozzy-3/create-agentic-dev.git
+git clone https://github.com/ozzy-labs/create-agentic-dev.git
 cd create-agentic-dev
 mise install
 pnpm install

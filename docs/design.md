@@ -549,12 +549,12 @@ No arg parser needed — only `process.argv[2]` for project name.
 
 ```json
 {
-  "name": "create-agentic-dev",
+  "name": "@ozzylabs/create-agentic-dev",
   "version": "0.1.0",
   "description": "Scaffold an AI-agent-native development environment with interactive presets",
   "type": "module",
   "bin": {
-    "create-agentic-dev": "./dist/index.js"
+    "create-agentic-dev": "./dist/index.mjs"
   },
   "files": [
     "dist",
@@ -686,7 +686,7 @@ npm create @ozzylabs/agentic-dev [my-app]
 
 | Item | Value |
 |------|-------|
-| Package name | `create-agentic-dev` |
+| Package name | `@ozzylabs/create-agentic-dev` |
 | Registry | npm public |
 | Usage | `npm create @ozzylabs/agentic-dev` / `npx @ozzylabs/create-agentic-dev` |
 | Release trigger | GitHub Release (tag `v*`) → auto publish |
@@ -702,28 +702,27 @@ npm create @ozzylabs/agentic-dev [my-app]
 
 ### CI workflows
 
-**ci.yaml** — on push / PR:
+**ci.yaml** — on push to main / PR:
 
-1. lint (Biome)
+1. lint (Biome + Markdown + YAML + Shell + TOML + GitHub Actions)
 2. typecheck (tsc --noEmit)
-3. test (vitest)
-4. build (tsdown)
+3. security (Gitleaks)
+4. test with coverage (vitest)
+5. build (tsdown)
 
-**release.yaml** — on GitHub Release published:
+**release.yaml** — on push to main / workflow_dispatch:
 
-1. lint + typecheck + test + build
-2. `npm publish --provenance --access public`
-   - Requires `NPM_TOKEN` secret
-   - Requires `id-token: write` permission (provenance)
+- `release-please` job: Conventional Commits を解析して Release PR を自動作成・更新
+- `publish` job (release 作成時のみ): build → `npm publish --provenance --access public`
+  - Trusted Publishing (OIDC) で認証（NPM_TOKEN 不要）
+  - `id-token: write` permission が必要
 
-**release-please.yaml** — on push to main:
+**pr-check.yaml** — on pull_request:
 
-1. Conventional Commits を解析してバージョンバンプと CHANGELOG を自動生成
-2. Release PR を作成・更新
-3. Release PR マージ時に GitHub Release を作成 → release.yaml が npm publish を実行
+- PR タイトルとブランチ名の Conventional Commits 規約チェック
 
 ### Release process
 
 1. Conventional Commits で main にマージ
 2. release-please が Release PR を自動作成（CHANGELOG + version bump）
-3. Release PR をマージ → GitHub Release 作成 → release.yaml が npm publish
+3. Release PR をマージ → GitHub Release 作成 → release.yaml の publish ジョブが npm publish
