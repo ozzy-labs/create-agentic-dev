@@ -11,6 +11,7 @@ export function makeAnswers(overrides: Partial<WizardAnswers> = {}): WizardAnswe
     clouds: [],
     iac: [],
     languages: [],
+    testing: [],
     agents: ["claude-code"],
     ...overrides,
   };

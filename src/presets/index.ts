@@ -20,6 +20,7 @@ import { geminiPreset } from "./gemini.js";
 import { honoPreset } from "./hono.js";
 import { nextjsPreset } from "./nextjs.js";
 import { nuxtPreset } from "./nuxt.js";
+import { playwrightPreset } from "./playwright.js";
 import { pythonPreset } from "./python.js";
 import { reactPreset } from "./react.js";
 import { sveltekitPreset } from "./sveltekit.js";
@@ -52,6 +53,7 @@ const PRESET_ENTRIES: ReadonlyArray<readonly [string, Preset]> = [
   ["cloudformation", cloudformationPreset],
   ["terraform", terraformPreset],
   ["bicep", bicepPreset],
+  ["playwright", playwrightPreset],
   ["claude-code", claudeCodePreset],
   ["codex", codexPreset],
   ["gemini", geminiPreset],

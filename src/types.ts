@@ -7,6 +7,7 @@ export interface WizardAnswers {
   clouds: Array<"aws" | "azure" | "gcp">;
   iac: Array<"cdk" | "cloudformation" | "terraform" | "bicep">;
   languages: Array<"typescript" | "python">;
+  testing: Array<"playwright">;
   agents: Array<"claude-code" | "codex" | "gemini" | "amazon-q" | "copilot" | "cline" | "cursor">;
 }
 

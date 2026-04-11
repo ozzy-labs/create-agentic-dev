@@ -50,6 +50,11 @@
       "terraform": { "label": "Terraform" },
       "bicep": { "label": "Bicep", "hint": "Azure" }
     },
+    "testing": {
+      "message": "テストツール",
+      "hint": "E2E テスト環境を追加",
+      "playwright": { "label": "Playwright", "hint": "TypeScript が強制されます" }
+    },
     "agents": {
       "message": "AI エージェントツール",
       "hint": "エージェント固有のプロジェクト設定・ルール・MCP サーバーを追加",

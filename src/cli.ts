@@ -210,6 +210,18 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
           required: false,
         });
       },
+      testing: () =>
+        p.multiselect({
+          message: `${t("wizard.testing.message")} ${pc.dim(t("wizard.testing.hint"))}`,
+          options: [
+            {
+              value: "playwright" as const,
+              label: t("wizard.testing.playwright.label"),
+              hint: t("wizard.testing.playwright.hint"),
+            },
+          ],
+          required: false,
+        }),
       agents: () =>
         p.multiselect({
           message: `${t("wizard.agents.message")} ${pc.dim(t("wizard.agents.hint"))}`,
@@ -268,6 +280,7 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
     clouds: (answers.clouds ?? []) as WizardAnswers["clouds"],
     iac: (answers.iac ?? []) as WizardAnswers["iac"],
     languages: (answers.languages ?? []) as WizardAnswers["languages"],
+    testing: (answers.testing ?? []) as WizardAnswers["testing"],
     agents: (answers.agents ?? []) as WizardAnswers["agents"],
   };
 }

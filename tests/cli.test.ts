@@ -7,11 +7,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 interface MockAnswers {
   projectName?: string;
-  frontend?: "none" | "react" | "nextjs" | "vue" | "nuxt";
-  backend?: "none" | "fastapi" | "express" | "batch";
+  frontend?: "none" | "react" | "nextjs" | "vue" | "nuxt" | "sveltekit" | "astro";
+  backend?: "none" | "hono" | "fastapi" | "express" | "batch";
   clouds?: Array<"aws" | "azure" | "gcp">;
   iac?: Array<"cdk" | "cloudformation" | "terraform" | "bicep">;
   languages?: Array<"typescript" | "python">;
+  testing?: Array<"playwright">;
   agents?: Array<"claude-code" | "codex" | "gemini" | "amazon-q" | "copilot" | "cline" | "cursor">;
 }
 
@@ -85,7 +86,9 @@ function setupMock(answers: MockAnswers): void {
   if (needsLanguagePrompt) {
     multiselectReturns.push(answers.languages ?? []);
   }
-  // 4. agents
+  // 4. testing
+  multiselectReturns.push(answers.testing ?? []);
+  // 5. agents
   multiselectReturns.push(answers.agents ?? ["claude-code"]);
 
   multiselectMock.mockReset();
@@ -103,8 +106,9 @@ function shouldShowLanguagePrompt(answers: MockAnswers): boolean {
   let hasTypeScript = false;
   let hasPython = false;
 
-  if (["react", "nextjs", "vue", "nuxt"].includes(frontend)) hasTypeScript = true;
-  if (backend === "express" || backend === "batch") hasTypeScript = true;
+  if (["react", "nextjs", "vue", "nuxt", "sveltekit", "astro"].includes(frontend))
+    hasTypeScript = true;
+  if (backend === "hono" || backend === "express" || backend === "batch") hasTypeScript = true;
   if (iac.includes("cdk")) hasTypeScript = true;
   if (backend === "fastapi") hasPython = true;
 
@@ -132,6 +136,7 @@ describe("CLI Wizard E2E", () => {
         clouds: [],
         iac: [],
         languages: [],
+        testing: [],
         agents: ["claude-code"],
       });
     });
@@ -380,6 +385,7 @@ describe("CLI Wizard E2E", () => {
         clouds: ["aws"],
         iac: ["cdk"],
         languages: [],
+        testing: [],
         agents: ["claude-code", "copilot"],
       });
     });
@@ -402,6 +408,7 @@ describe("CLI Wizard E2E", () => {
         clouds: ["aws", "azure", "gcp"],
         iac: ["terraform"],
         languages: ["typescript"],
+        testing: [],
         agents: ["claude-code"],
       });
     });

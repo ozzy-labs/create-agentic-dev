@@ -102,6 +102,10 @@ export function resolvePresets(answers: WizardAnswers): string[] {
     selected.add(iac);
   }
 
+  for (const testing of answers.testing) {
+    selected.add(testing);
+  }
+
   for (const agent of answers.agents) {
     selected.add(agent);
   }
@@ -604,6 +608,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
   if (answers.frontend !== "none") workspacePackages.push("web");
   if (answers.backend === "hono" || answers.backend === "express") workspacePackages.push("api");
   if (answers.backend === "batch") workspacePackages.push("worker");
+  if (answers.testing.includes("playwright")) workspacePackages.push("e2e");
   if (workspacePackages.length > 0) {
     const yamlLines = ["packages:"];
     for (const pkg of workspacePackages) {
@@ -655,6 +660,7 @@ export function generateApply(answers: ApplyAnswers): GenerateResult {
     clouds: answers.clouds,
     iac: [],
     languages: [],
+    testing: [],
     agents: answers.agents,
   };
 
