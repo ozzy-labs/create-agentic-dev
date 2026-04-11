@@ -9,51 +9,43 @@ permissions:
   pull-requests: read
 
 jobs:
-  pr-title-check:
-    name: PR Title Format Check
+  pr-conventions:
+    name: PR Conventions Check
     runs-on: ubuntu-latest
     steps:
-      - name: Check PR title format
+      - name: Check PR title and branch name
         uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9
         with:
           script: |
+            const types = 'feat|fix|docs|style|refactor|perf|test|build|ci|chore';
+            const errors = [];
+
+            // PR title check
             const title = context.payload.pull_request.title;
-            const pattern = /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?!?:\s.+/;
-
-            if (!pattern.test(title)) {
-              core.setFailed(
-                `PR title does not follow Conventional Commits format.\n\n` +
-                `Expected format: type(scope): description\n` +
-                `Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore\n\n` +
-                `Current title: ${title}`
+            const titlePattern = new RegExp(`^(${types})(\\(.+\\))?!?:\\s.+`);
+            if (!titlePattern.test(title)) {
+              errors.push(
+                `PR title does not follow Conventional Commits format.\n` +
+                `Expected: type(scope): description\n` +
+                `Current: ${title}`
               );
-            } else {
-              core.info('PR title follows Conventional Commits format');
             }
 
-  branch-name-check:
-    name: Branch Name Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check branch name format
-        uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9
-        with:
-          script: |
+            // Branch name check
             const branch = context.payload.pull_request.head.ref;
-            const pattern = /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)\/.+/;
-
-            if (branch === 'main') {
-              core.info('Branch is main, skipping check');
-              return;
+            if (branch !== 'main') {
+              const branchPattern = new RegExp(`^(${types})\\/.+`);
+              if (!branchPattern.test(branch)) {
+                errors.push(
+                  `Branch name does not follow naming convention.\n` +
+                  `Expected: type/description\n` +
+                  `Current: ${branch}`
+                );
+              }
             }
 
-            if (!pattern.test(branch)) {
-              core.setFailed(
-                `Branch name does not follow naming convention.\n\n` +
-                `Expected format: type/description\n` +
-                `Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore\n\n` +
-                `Current branch: ${branch}`
-              );
+            if (errors.length > 0) {
+              core.setFailed(errors.join('\n\n'));
             } else {
-              core.info('Branch name follows naming convention');
+              core.info('PR title and branch name follow conventions');
             }

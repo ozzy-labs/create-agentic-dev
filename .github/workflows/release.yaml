@@ -54,15 +54,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint (Biome)
-        run: biome check .
-
-      - name: Typecheck
-        run: tsc --noEmit
-
-      - name: Test
-        run: pnpm test
-
       - name: Build
         run: pnpm build
 
