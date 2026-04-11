@@ -1,5 +1,6 @@
 import type { Preset } from "../types.js";
 import { amazonQPreset } from "./amazon-q.js";
+import { astroPreset } from "./astro.js";
 import { awsPreset } from "./aws.js";
 import { azurePreset } from "./azure.js";
 import { basePreset } from "./base.js";
@@ -21,6 +22,7 @@ import { nextjsPreset } from "./nextjs.js";
 import { nuxtPreset } from "./nuxt.js";
 import { pythonPreset } from "./python.js";
 import { reactPreset } from "./react.js";
+import { sveltekitPreset } from "./sveltekit.js";
 import { terraformPreset } from "./terraform.js";
 import { typescriptPreset } from "./typescript.js";
 import { vuePreset } from "./vue.js";
@@ -37,6 +39,8 @@ const PRESET_ENTRIES: ReadonlyArray<readonly [string, Preset]> = [
   ["nextjs", nextjsPreset],
   ["vue", vuePreset],
   ["nuxt", nuxtPreset],
+  ["sveltekit", sveltekitPreset],
+  ["astro", astroPreset],
   ["hono", honoPreset],
   ["fastapi", fastapiPreset],
   ["express", expressPreset],

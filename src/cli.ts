@@ -58,6 +58,8 @@ function resolvedLanguages(
   if (frontend === "nextjs") add("typescript", t("wizard.frontend.nextjs.label"));
   if (frontend === "vue") add("typescript", t("wizard.frontend.vue.label"));
   if (frontend === "nuxt") add("typescript", t("wizard.frontend.nuxt.label"));
+  if (frontend === "sveltekit") add("typescript", t("wizard.frontend.sveltekit.label"));
+  if (frontend === "astro") add("typescript", t("wizard.frontend.astro.label"));
   // Backend frameworks force their language
   if (backend === "fastapi") add("python", t("wizard.backend.fastapi.label"));
   if (backend === "hono") add("typescript", t("wizard.backend.hono.label"));
@@ -109,6 +111,16 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               value: "nuxt" as const,
               label: t("wizard.frontend.nuxt.label"),
               hint: t("wizard.frontend.nuxt.hint"),
+            },
+            {
+              value: "sveltekit" as const,
+              label: t("wizard.frontend.sveltekit.label"),
+              hint: t("wizard.frontend.sveltekit.hint"),
+            },
+            {
+              value: "astro" as const,
+              label: t("wizard.frontend.astro.label"),
+              hint: t("wizard.frontend.astro.hint"),
             },
           ],
         }),

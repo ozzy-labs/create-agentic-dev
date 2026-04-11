@@ -482,6 +482,66 @@ const patterns: PatternDef[] = [
     },
   },
   {
+    name: "sveltekit",
+    answers: { frontend: "sveltekit" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "test", "build", "build:web"],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
+    name: "astro",
+    answers: { frontend: "astro" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome", "source.fixAll.biome", "**/dist"],
+      mustExclude: ["charliermarsh.ruff", "mypy-type-checker", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "test", "build", "build:web"],
+      scriptsMustExclude: ["lint:python", "lint:mypy", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
+  {
     name: "fastapi",
     answers: { backend: "fastapi" },
     vscodeSettings: {

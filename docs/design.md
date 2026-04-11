@@ -16,7 +16,7 @@
 | # | Question | Type | Options |
 |---|----------|------|---------|
 | 1 | Project name | Text input | — |
-| 2 | Frontend app | Single-select | None / React + Vite / Next.js / Vue + Vite / Nuxt |
+| 2 | Frontend app | Single-select | None / React + Vite / Next.js / Vue + Vite / Nuxt / SvelteKit / Astro |
 | 3 | Backend app | Single-select | None / Hono / FastAPI / Express / Batch |
 | 4 | Cloud providers | Multi-select | AWS / Azure / Google Cloud |
 | 5 | Infrastructure as Code | Multi-select | None / CDK / CloudFormation / Terraform / Bicep (filtered by selected cloud providers) |
@@ -27,7 +27,7 @@ Language は FW 選択で自動解決された言語を除外して表示する�
 
 ## Presets
 
-25 presets, mapped 1:1 to wizard selections.
+27 presets, mapped 1:1 to wizard selections.
 
 | Preset | Trigger | Requires |
 |--------|---------|----------|
@@ -38,6 +38,8 @@ Language は FW 選択で自動解決された言語を除外して表示する�
 | `nextjs` | Frontend: Next.js | `typescript` (forced) |
 | `vue` | Frontend: Vue 3 + Vite | `typescript` (forced) |
 | `nuxt` | Frontend: Nuxt 3 | `typescript` (forced) |
+| `sveltekit` | Frontend: SvelteKit | `typescript` (forced) |
+| `astro` | Frontend: Astro | `typescript` (forced) |
 | `hono` | Backend: Hono | `typescript` (forced) |
 | `fastapi` | Backend: FastAPI | `python` (forced) |
 | `express` | Backend: Express | `typescript` (forced) |
@@ -62,7 +64,7 @@ Language は FW 選択で自動解決された言語を除外して表示する�
 | レイヤー | カテゴリ | 選択方式 | プリセット |
 |---------|---------|---------|-----------|
 | 0 | Base | 常に適用 | `base` |
-| 1 | Frontend | 単一選択（排他） | `react`, `nextjs`, `vue`, `nuxt` |
+| 1 | Frontend | 単一選択（排他） | `react`, `nextjs`, `vue`, `nuxt`, `sveltekit`, `astro` |
 | 2 | Backend | 単一選択（排他） | `hono`, `fastapi`, `express`, `batch` |
 | 3 | Cloud | 複数選択可 | `aws`, `azure`, `gcp` |
 | 4 | IaC | 複数選択可、Cloud に依存 | `cdk`, `cloudformation`, `terraform`, `bicep` |
@@ -78,7 +80,7 @@ Language は FW 選択で自動解決された言語を除外して表示する�
 
 **新プリセット追加時** は、いずれかのレイヤーに割り当てる。既存レイヤーに該当しない場合は、新レイヤーの追加とウィザードフローの更新を検討する。
 
-Application order: `base → typescript → python → react → nextjs → vue → nuxt → hono → fastapi → express → batch → aws → azure → gcp → cdk → cloudformation → terraform → bicep → claude-code → codex → gemini → amazon-q → copilot → cline → cursor`
+Application order: `base → typescript → python → react → nextjs → vue → nuxt → sveltekit → astro → hono → fastapi → express → batch → aws → azure → gcp → cdk → cloudformation → terraform → bicep → claude-code → codex → gemini → amazon-q → copilot → cline → cursor`
 
 ### Always Included (base)
 
@@ -195,6 +197,26 @@ Agent プリセットは `mcpServers` フィールドで MCP サーバーを定�
 **Next.js** — adds: Next.js + React dependencies, App Router scaffold, configuration in `web/`
 
 ### Backend Selection
+
+**SvelteKit** (forces TypeScript) — adds:
+
+| Element | Files |
+|---------|-------|
+| SvelteKit config | `web/svelte.config.js` |
+| Vite config | `web/vite.config.ts` |
+| App HTML template | `web/src/app.html` |
+| Page component | `web/src/routes/+page.svelte` |
+| Lib index | `web/src/lib/index.ts` |
+| Package (web) | `web/package.json` |
+
+**Astro** (forces TypeScript) — adds:
+
+| Element | Files |
+|---------|-------|
+| Astro config | `web/astro.config.ts` |
+| Index page | `web/src/pages/index.astro` |
+| Layout | `web/src/layouts/Layout.astro` |
+| Package (web) | `web/package.json` |
 
 **FastAPI** (forces Python) — adds:
 
@@ -373,6 +395,8 @@ interface Preset {
 ```text
 React ──────→ TypeScript (forced)
 Next.js ────→ TypeScript (forced)
+SvelteKit ──→ TypeScript (forced)
+Astro ──────→ TypeScript (forced)
 FastAPI ────→ Python (forced)
 Hono ───────→ TypeScript (forced)
 Express ────→ TypeScript (forced)
@@ -405,7 +429,7 @@ GCP ────────→ gcloud CLI
 
 | 要素 | レイヤー | 備考 |
 |-----|---------|------|
-| Remix | 1 (Frontend) | React メタフレームワーク。必要になったら追加 |
+| Remix | 1 (Frontend) | React Router v7 との統合が進んでおり、差別化を確認してから追加 |
 
 ## Adding a New Preset
 
@@ -641,15 +665,17 @@ npm create @ozzylabs/agentic-dev [my-app]
 | 4 | TS + Python | — | — | — | — | Both languages |
 | 5 | (auto) | React | — | — | — | Frontend SPA |
 | 6 | (auto) | Next.js | — | — | — | Frontend SSR |
-| 7 | (auto) | — | FastAPI | — | — | Backend (Python) |
-| 8 | (auto) | — | Hono | — | — | Backend (Hono) |
-| 9 | (auto) | — | Express | — | — | Backend (TS) |
-| 10 | (auto) | — | — | AWS | CDK | IaC (CDK) |
-| 11 | Python | — | — | — | CFn | IaC (CFn) |
-| 12 | — | — | — | — | Terraform | IaC (multi-cloud) |
-| 13 | — | — | — | Azure | Bicep | IaC (Bicep) |
-| 14 | (auto) | React | FastAPI | AWS | CDK | Full config (monorepo) |
-| 15 | (auto) | React | Express | AWS | CDK | Full config (all TS workspace) |
+| 7 | (auto) | SvelteKit | — | — | — | Frontend (SvelteKit) |
+| 8 | (auto) | Astro | — | — | — | Frontend (Astro) |
+| 9 | (auto) | — | FastAPI | — | — | Backend (Python) |
+| 10 | (auto) | — | Hono | — | — | Backend (Hono) |
+| 11 | (auto) | — | Express | — | — | Backend (TS) |
+| 12 | (auto) | — | — | AWS | CDK | IaC (CDK) |
+| 13 | Python | — | — | — | CFn | IaC (CFn) |
+| 14 | — | — | — | — | Terraform | IaC (multi-cloud) |
+| 15 | — | — | — | Azure | Bicep | IaC (Bicep) |
+| 16 | (auto) | React | FastAPI | AWS | CDK | Full config (monorepo) |
+| 17 | (auto) | React | Express | AWS | CDK | Full config (all TS workspace) |
 
 ### Verification per pattern
 

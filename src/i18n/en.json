@@ -22,7 +22,9 @@
       "react": { "label": "React + Vite", "hint": "forces TypeScript" },
       "nextjs": { "label": "Next.js", "hint": "forces TypeScript" },
       "vue": { "label": "Vue + Vite", "hint": "forces TypeScript" },
-      "nuxt": { "label": "Nuxt", "hint": "forces TypeScript" }
+      "nuxt": { "label": "Nuxt", "hint": "forces TypeScript" },
+      "sveltekit": { "label": "SvelteKit", "hint": "forces TypeScript" },
+      "astro": { "label": "Astro", "hint": "forces TypeScript" }
     },
     "backend": {
       "message": "Backend app",

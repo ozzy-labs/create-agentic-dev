@@ -22,7 +22,9 @@
       "react": { "label": "React + Vite", "hint": "TypeScript が強制されます" },
       "nextjs": { "label": "Next.js", "hint": "TypeScript が強制されます" },
       "vue": { "label": "Vue + Vite", "hint": "TypeScript が強制されます" },
-      "nuxt": { "label": "Nuxt", "hint": "TypeScript が強制されます" }
+      "nuxt": { "label": "Nuxt", "hint": "TypeScript が強制されます" },
+      "sveltekit": { "label": "SvelteKit", "hint": "TypeScript が強制されます" },
+      "astro": { "label": "Astro", "hint": "TypeScript が強制されます" }
     },
     "backend": {
       "message": "バックエンドアプリ",
