@@ -23,6 +23,7 @@ export const basePreset: Preset = {
         "lint:docker": "hadolint --failure-threshold warning .devcontainer/Dockerfile",
         "lint:actions": "actionlint",
         "lint:secrets": "gitleaks detect --no-banner",
+        "lint:trivy": "trivy fs --scanners vuln --exit-code 1 .",
       },
       devDependencies: {
         "@commitlint/cli": "^20.0.0",
@@ -44,6 +45,7 @@ export const basePreset: Preset = {
         "github:reteps/dockerfmt": "0.3",
         hadolint: "2",
         actionlint: "1",
+        trivy: "0.62",
         gitleaks: "8",
         lefthook: "2",
       },
@@ -83,8 +85,26 @@ export const basePreset: Preset = {
     },
   },
   markdown: {
-    "agent-instructions": [],
-    "README.md": [],
+    "agent-instructions": [
+      {
+        placeholder: "<!-- SECTION:TECH_STACK_LINTING -->",
+        content: "  - Trivy (security scanning)",
+      },
+      {
+        placeholder: "<!-- SECTION:LINT_COMMANDS -->",
+        content: "pnpm run lint:trivy        # Trivy vulnerability scan (fs mode)",
+      },
+    ],
+    "README.md": [
+      {
+        placeholder: "<!-- SECTION:ROOT_FILES -->",
+        content: "├── trivy.yaml           # Trivy セキュリティスキャン設定",
+      },
+      {
+        placeholder: "<!-- SECTION:LINT_COMMANDS -->",
+        content: "| `pnpm run lint:trivy` | Trivy 脆弱性スキャン |",
+      },
+    ],
   },
   ciSteps: {
     setupSteps: [
@@ -115,6 +135,7 @@ export const basePreset: Preset = {
       },
       { name: "Lint (GitHub Actions)", run: "actionlint" },
       { name: "Security (Gitleaks)", run: "gitleaks detect --no-banner" },
+      { name: "Security (Trivy)", run: "trivy fs --scanners vuln --exit-code 1 ." },
     ],
   },
 };

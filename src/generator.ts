@@ -177,12 +177,14 @@ function postProcessPackageJson(pkgContent: string, presets: Preset[]): string {
       key.startsWith("lint:") &&
       key !== "lint:all" &&
       key !== "lint:fix" &&
-      key !== "lint:secrets"
+      key !== "lint:secrets" &&
+      key !== "lint:trivy"
     ) {
       lintParts.push(`pnpm run ${key}`);
     }
   }
   if (scripts["lint:secrets"]) lintParts.push("pnpm run lint:secrets");
+  if (scripts["lint:trivy"]) lintParts.push("pnpm run lint:trivy");
   if (lintParts.length > 0) {
     scripts["lint:all"] = lintParts.join(" && ");
   }

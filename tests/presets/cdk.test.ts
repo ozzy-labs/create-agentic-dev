@@ -44,6 +44,14 @@ describe("generate (cdk)", () => {
     expect(mcp.mcpServers.context7).toBeDefined();
   });
 
+  it("adds Trivy IaC CI step", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Security (Trivy IaC)");
+  });
+
   it("adds CDK CI steps with correct order (synth before cfn-lint)", () => {
     const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
     const jobs = ci.jobs as Record<string, Record<string, unknown>>;

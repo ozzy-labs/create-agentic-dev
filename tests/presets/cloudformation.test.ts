@@ -35,6 +35,14 @@ describe("generate (cloudformation)", () => {
     expect(stepNames).toContain("Lint (cfn-lint)");
   });
 
+  it("adds Trivy IaC CI step", () => {
+    const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
+    const jobs = ci.jobs as Record<string, Record<string, unknown>>;
+    const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
+    const stepNames = steps.map((s) => s.name);
+    expect(stepNames).toContain("Security (Trivy IaC)");
+  });
+
   it("merges ~/.aws mount into devcontainer", () => {
     const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
     const mounts = dc.mounts as string[];

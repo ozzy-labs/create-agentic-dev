@@ -166,7 +166,10 @@ export const cdkPreset: Preset = {
       { name: "Install infra dependencies", run: "cd infra && pnpm install --frozen-lockfile" },
       { name: "CDK synth", run: "cd infra && npx cdk synth" },
     ],
-    lintSteps: [{ name: "Lint (cfn-lint)", run: "cfn-lint" }],
+    lintSteps: [
+      { name: "Lint (cfn-lint)", run: "cfn-lint" },
+      { name: "Security (Trivy IaC)", run: "trivy config --exit-code 1 infra/cdk.out/" },
+    ],
     testSteps: [{ name: "Test (infra CDK)", run: "cd infra && pnpm test" }],
   },
   setupExtra: "cd infra && pnpm install",

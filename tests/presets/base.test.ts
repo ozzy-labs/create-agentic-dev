@@ -47,6 +47,30 @@ describe("generate (base only)", () => {
     expect(commands.markdownlint).toBeDefined();
   });
 
+  it("includes trivy.yaml config file", () => {
+    expect(result.hasFile("trivy.yaml")).toBe(true);
+  });
+
+  it("merges trivy tool into .mise.toml", () => {
+    const toml = result.readToml(".mise.toml") as Record<string, Record<string, string>>;
+    expect(toml.tools.trivy).toBe("0.62");
+  });
+
+  it("merges lint:trivy script into package.json", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["lint:trivy"]).toContain("trivy fs");
+  });
+
+  it("includes lint:trivy at end of lint:all", () => {
+    const pkg = result.readJson("package.json") as Record<string, unknown>;
+    const scripts = pkg.scripts as Record<string, string>;
+    expect(scripts["lint:all"]).toContain("lint:trivy");
+    expect(scripts["lint:all"].indexOf("lint:secrets")).toBeLessThan(
+      scripts["lint:all"].indexOf("lint:trivy"),
+    );
+  });
+
   it("generates CI workflow", () => {
     expect(result.hasFile(".github/workflows/ci.yaml")).toBe(true);
     const ci = result.readYaml(".github/workflows/ci.yaml") as Record<string, unknown>;
@@ -57,6 +81,7 @@ describe("generate (base only)", () => {
     expect(stepNames).toContain("Install dependencies");
     expect(stepNames).toContain("Lint (Markdown)");
     expect(stepNames).toContain("Security (Gitleaks)");
+    expect(stepNames).toContain("Security (Trivy)");
   });
 
   it("generates setup.sh", () => {

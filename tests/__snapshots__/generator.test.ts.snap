@@ -55,6 +55,7 @@ exports[`file list snapshots > azure + bicep 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -108,6 +109,7 @@ exports[`file list snapshots > base only 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
 ]
 `;
 
@@ -165,6 +167,7 @@ exports[`file list snapshots > batch 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
   "worker/package.json",
   "worker/src/index.ts",
@@ -234,6 +237,7 @@ exports[`file list snapshots > cdk 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -293,6 +297,7 @@ exports[`file list snapshots > cloudformation (ts) 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -364,6 +369,7 @@ exports[`file list snapshots > express + cdk 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -427,6 +433,7 @@ exports[`file list snapshots > express 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -500,6 +507,7 @@ exports[`file list snapshots > fastapi + cdk 1`] = `
   "tests/__init__.py",
   "tests/index.test.ts",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
 ]
@@ -563,6 +571,7 @@ exports[`file list snapshots > fastapi 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -629,6 +638,7 @@ exports[`file list snapshots > full config 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
   "web/index.html",
@@ -698,6 +708,7 @@ exports[`file list snapshots > gcp + terraform 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -759,6 +770,7 @@ exports[`file list snapshots > nextjs + express 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/next.config.ts",
   "web/package.json",
@@ -830,6 +842,7 @@ exports[`file list snapshots > nextjs + fastapi 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
   "web/next.config.ts",
@@ -893,6 +906,7 @@ exports[`file list snapshots > nextjs 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/next.config.ts",
   "web/package.json",
@@ -956,6 +970,7 @@ exports[`file list snapshots > nuxt + batch 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/nuxt.config.ts",
   "web/package.json",
@@ -1022,6 +1037,7 @@ exports[`file list snapshots > nuxt 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/nuxt.config.ts",
   "web/package.json",
@@ -1087,6 +1103,7 @@ exports[`file list snapshots > python + cloudformation 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -1146,6 +1163,7 @@ exports[`file list snapshots > python + terraform 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -1202,6 +1220,7 @@ exports[`file list snapshots > python 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "uv.lock",
 ]
 `;
@@ -1258,6 +1277,7 @@ exports[`file list snapshots > react + batch 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/index.html",
   "web/package.json",
@@ -1333,6 +1353,7 @@ exports[`file list snapshots > react + express 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/index.html",
   "web/package.json",
@@ -1406,6 +1427,7 @@ exports[`file list snapshots > react + fastapi 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
   "web/index.html",
@@ -1471,6 +1493,7 @@ exports[`file list snapshots > react 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/index.html",
   "web/package.json",
@@ -1539,6 +1562,7 @@ exports[`file list snapshots > terraform (ts) 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -1598,6 +1622,7 @@ exports[`file list snapshots > typescript + python 1`] = `
   "tests/__init__.py",
   "tests/index.test.ts",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
 ]
@@ -1655,6 +1680,7 @@ exports[`file list snapshots > typescript 1`] = `
   "scripts/setup.sh",
   "src/index.ts",
   "tests/index.test.ts",
+  "trivy.yaml",
   "tsconfig.json",
 ]
 `;
@@ -1719,6 +1745,7 @@ exports[`file list snapshots > vue + fastapi 1`] = `
   "scripts/setup.sh",
   "tests/__init__.py",
   "tests/test_placeholder.py",
+  "trivy.yaml",
   "tsconfig.json",
   "uv.lock",
   "web/env.d.ts",
@@ -1783,6 +1810,7 @@ exports[`file list snapshots > vue 1`] = `
   "scripts/apply-rulesets.sh",
   "scripts/configure-repo.sh",
   "scripts/setup.sh",
+  "trivy.yaml",
   "tsconfig.json",
   "web/env.d.ts",
   "web/index.html",
