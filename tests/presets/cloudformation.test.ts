@@ -40,7 +40,7 @@ describe("generate (cloudformation)", () => {
     const jobs = ci.jobs as Record<string, Record<string, unknown>>;
     const steps = jobs["lint-and-check"].steps as Array<Record<string, unknown>>;
     const stepNames = steps.map((s) => s.name);
-    expect(stepNames).toContain("Security (Trivy IaC)");
+    expect(stepNames).toContain("Security (Trivy IaC: CloudFormation)");
   });
 
   it("merges ~/.aws mount into devcontainer", () => {

@@ -168,7 +168,7 @@ export const cdkPreset: Preset = {
     ],
     lintSteps: [
       { name: "Lint (cfn-lint)", run: "cfn-lint" },
-      { name: "Security (Trivy IaC)", run: "trivy config --exit-code 1 infra/cdk.out/" },
+      { name: "Security (Trivy IaC: CDK)", run: "trivy config --exit-code 1 infra/cdk.out/" },
     ],
     testSteps: [{ name: "Test (infra CDK)", run: "cd infra && pnpm test" }],
   },

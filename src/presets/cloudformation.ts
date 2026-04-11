@@ -72,7 +72,7 @@ export const cloudformationPreset: Preset = {
   ciSteps: {
     lintSteps: [
       { name: "Lint (cfn-lint)", run: "cfn-lint" },
-      { name: "Security (Trivy IaC)", run: "trivy config --exit-code 1 infra/" },
+      { name: "Security (Trivy IaC: CloudFormation)", run: "trivy config --exit-code 1 infra/" },
     ],
   },
 };

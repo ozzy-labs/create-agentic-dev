@@ -76,7 +76,7 @@ export const terraformPreset: Preset = {
   ciSteps: {
     lintSteps: [
       { name: "Lint (Terraform)", run: "terraform fmt -check -recursive && tflint" },
-      { name: "Security (Trivy IaC)", run: "trivy config --exit-code 1 ." },
+      { name: "Security (Trivy IaC: Terraform)", run: "trivy config --exit-code 1 ." },
     ],
   },
 };
