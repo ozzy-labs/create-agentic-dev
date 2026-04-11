@@ -93,7 +93,11 @@ export function expandMarkdown(template: string, sections: MarkdownSection[]): s
         }
       }
 
-      const joined = unique.join(separator);
+      let joined = unique.join(separator);
+      // In block context, ensure blank line before Markdown headings (MD022)
+      if (separator === "\n") {
+        joined = joined.replace(/([^\n])\n(#{1,6} )/g, "$1\n\n$2");
+      }
       const replacement = needsLeadingSep ? `${separator}${joined}` : joined;
       result = result.slice(0, idx) + replacement + result.slice(idx + placeholder.length);
       searchFrom = idx + replacement.length;
