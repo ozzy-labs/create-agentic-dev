@@ -44,6 +44,12 @@ describe("generate (astro)", () => {
     expect(workspace).toContain("- web");
   });
 
+  it("adds port 4321 to devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const ports = dc.forwardPorts as number[];
+    expect(ports).toContain(4321);
+  });
+
   it("expands CLAUDE.md with Astro sections", () => {
     const claude = result.readText("CLAUDE.md");
     expect(claude).toContain("Astro");

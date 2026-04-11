@@ -7,6 +7,9 @@ export const reactPreset: Preset = {
   files: readTemplateFiles("react"),
   merge: {
     ".gitignore": "# React + Vite\n!web/src/vite-env.d.ts",
+    ".devcontainer/devcontainer.json": {
+      forwardPorts: [5173],
+    },
     "package.json": {
       scripts: {
         dev: "pnpm --filter web dev",

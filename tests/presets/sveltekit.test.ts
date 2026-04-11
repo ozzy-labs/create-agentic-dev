@@ -54,6 +54,12 @@ describe("generate (sveltekit)", () => {
     expect(files.includes).toContain("!**/.svelte-kit/");
   });
 
+  it("adds port 5173 to devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const ports = dc.forwardPorts as number[];
+    expect(ports).toContain(5173);
+  });
+
   it("generates pnpm-workspace.yaml with web", () => {
     expect(result.hasFile("pnpm-workspace.yaml")).toBe(true);
     const workspace = result.readText("pnpm-workspace.yaml");

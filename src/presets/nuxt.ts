@@ -14,6 +14,9 @@ export const nuxtPreset: Preset = {
       "search.exclude": { "**/.nuxt": true, "**/.output": true },
       "files.exclude": { "**/.nuxt": true, "**/.output": true },
     },
+    ".devcontainer/devcontainer.json": {
+      forwardPorts: [3000],
+    },
     "package.json": {
       scripts: {
         dev: "pnpm --filter web dev",

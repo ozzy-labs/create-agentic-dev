@@ -14,6 +14,9 @@ export const nextjsPreset: Preset = {
       "search.exclude": { "**/.next": true },
       "files.exclude": { "**/.next": true },
     },
+    ".devcontainer/devcontainer.json": {
+      forwardPorts: [3000],
+    },
     "package.json": {
       scripts: {
         dev: "pnpm --filter web dev",

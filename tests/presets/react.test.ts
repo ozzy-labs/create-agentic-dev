@@ -55,6 +55,12 @@ describe("generate (react)", () => {
     expect(devDeps.tsdown).toBeUndefined();
   });
 
+  it("adds port 5173 to devcontainer", () => {
+    const dc = result.readJson(".devcontainer/devcontainer.json") as Record<string, unknown>;
+    const ports = dc.forwardPorts as number[];
+    expect(ports).toContain(5173);
+  });
+
   it("overrides tsconfig for React with web/ paths", () => {
     const tsconfig = result.readJson("tsconfig.json") as Record<string, unknown>;
     const compilerOptions = tsconfig.compilerOptions as Record<string, unknown>;

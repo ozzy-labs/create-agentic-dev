@@ -14,6 +14,9 @@ export const sveltekitPreset: Preset = {
       "search.exclude": { "**/.svelte-kit": true },
       "files.exclude": { "**/.svelte-kit": true },
     },
+    ".devcontainer/devcontainer.json": {
+      forwardPorts: [5173],
+    },
     "package.json": {
       scripts: {
         dev: "pnpm --filter web dev",

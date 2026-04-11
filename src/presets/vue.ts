@@ -7,6 +7,9 @@ export const vuePreset: Preset = {
   files: readTemplateFiles("vue"),
   merge: {
     ".gitignore": "# Vue + Vite\n!web/env.d.ts",
+    ".devcontainer/devcontainer.json": {
+      forwardPorts: [5173],
+    },
     "package.json": {
       scripts: {
         dev: "pnpm --filter web dev",

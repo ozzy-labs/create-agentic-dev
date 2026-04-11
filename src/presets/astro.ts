@@ -6,6 +6,9 @@ export const astroPreset: Preset = {
   requires: ["typescript"],
   files: readTemplateFiles("astro"),
   merge: {
+    ".devcontainer/devcontainer.json": {
+      forwardPorts: [4321],
+    },
     "package.json": {
       scripts: {
         dev: "pnpm --filter web dev",
