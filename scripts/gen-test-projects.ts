@@ -22,7 +22,7 @@ function defaults(overrides: Partial<WizardAnswers>): WizardAnswers {
     iac: [],
     languages: [],
     testing: [],
-    agents: ["claude-code"],
+    agents: ["claude-code", "codex", "copilot", "gemini"],
     ...overrides,
   };
 }
@@ -298,6 +298,64 @@ const projects: [string, Partial<WizardAnswers>][] = [
       projectName: "aws-only",
       clouds: ["aws"],
       languages: ["typescript"],
+    },
+  ],
+
+  // ── Agent combinations ──
+  [
+    "36-claude-only",
+    {
+      projectName: "claude-only",
+      languages: ["typescript"],
+      agents: ["claude-code"],
+    },
+  ],
+  [
+    "37-codex-only",
+    {
+      projectName: "codex-only",
+      languages: ["typescript"],
+      agents: ["codex"],
+    },
+  ],
+  [
+    "38-copilot-only",
+    {
+      projectName: "copilot-only",
+      languages: ["typescript"],
+      agents: ["copilot"],
+    },
+  ],
+  [
+    "39-gemini-only",
+    {
+      projectName: "gemini-only",
+      languages: ["typescript"],
+      agents: ["gemini"],
+    },
+  ],
+  [
+    "40-claude-codex",
+    {
+      projectName: "claude-codex",
+      languages: ["typescript"],
+      agents: ["claude-code", "codex"],
+    },
+  ],
+  [
+    "41-copilot-gemini",
+    {
+      projectName: "copilot-gemini",
+      languages: ["typescript"],
+      agents: ["copilot", "gemini"],
+    },
+  ],
+  [
+    "42-non-claude-agents",
+    {
+      projectName: "non-claude-agents",
+      languages: ["typescript"],
+      agents: ["codex", "copilot", "gemini", "cline", "amazon-q"],
     },
   ],
 
