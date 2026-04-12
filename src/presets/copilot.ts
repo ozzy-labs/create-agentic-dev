@@ -5,7 +5,13 @@ export const copilotPreset: Preset = {
   name: "copilot",
   mcpConfigPath: { path: ".copilot/mcp-config.json", format: "json" },
   files: {},
-  merge: {},
+  merge: {
+    ".mise.toml": {
+      tools: {
+        "npm:@github/copilot": "latest",
+      },
+    },
+  },
   mcpServers: { ...DEFAULT_MCP_SERVERS },
   markdown: {
     "agent-instructions": [],

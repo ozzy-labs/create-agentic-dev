@@ -8,6 +8,11 @@ export const claudeCodePreset: Preset = {
   mcpConfigPath: { path: ".mcp.json", format: "json" },
   files: { ...readTemplateFiles("claude-code"), "CLAUDE.md": buildClaudeInstruction() },
   merge: {
+    ".mise.toml": {
+      tools: {
+        "npm:@anthropic-ai/claude-code": "latest",
+      },
+    },
     ".gitignore": ".claude/settings.local.json",
     ".devcontainer/devcontainer.json": {
       mounts: [

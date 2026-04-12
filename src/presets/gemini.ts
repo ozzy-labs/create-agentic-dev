@@ -8,6 +8,11 @@ export const geminiPreset: Preset = {
     ".gemini/settings.json": `${JSON.stringify({ context: { fileName: "AGENTS.md" } }, null, 2)}\n`,
   },
   merge: {
+    ".mise.toml": {
+      tools: {
+        "npm:@google/gemini-cli": "latest",
+      },
+    },
     ".gitignore": ".gemini/.env",
     ".devcontainer/devcontainer.json": {
       remoteEnv: {

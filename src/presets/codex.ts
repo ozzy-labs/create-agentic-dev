@@ -6,6 +6,11 @@ export const codexPreset: Preset = {
   mcpConfigPath: { path: ".codex/config.toml", format: "toml" },
   files: {},
   merge: {
+    ".mise.toml": {
+      tools: {
+        "npm:@openai/codex": "latest",
+      },
+    },
     ".devcontainer/devcontainer.json": {
       remoteEnv: {
         // biome-ignore lint/suspicious/noTemplateCurlyInString: devcontainer variable syntax

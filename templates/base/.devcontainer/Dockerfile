@@ -10,9 +10,6 @@ RUN apt-get update \
 # Install as vscode user
 USER vscode
 
-# Install Claude Code
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
 # Install mise
 RUN curl --proto '=https' --tlsv1.2 -fsSL https://mise.run | sh
 

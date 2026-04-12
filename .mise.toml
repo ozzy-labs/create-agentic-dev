@@ -16,3 +16,9 @@ gitleaks = "8"
 
 # Git hooks
 lefthook = "2"
+
+# AI agent CLIs
+"npm:@anthropic-ai/claude-code" = "latest"
+"npm:@openai/codex" = "latest"
+"npm:@github/copilot" = "latest"
+"npm:@google/gemini-cli" = "latest"
