@@ -44,7 +44,7 @@ Analyze the diff from the following perspectives:
   - Whether documentation descriptions (commands, APIs, configuration, structure) match the actual implementation
   - Whether new, changed, or removed features/commands are reflected in documentation
   - Whether code comments and JSDoc/docstrings are consistent with the implementation
-  - When linters/formatters are added or changed, whether all items in the [`docs/adding-tools.md`](../../docs/adding-tools.md) checklist have been updated
+  - When linters/formatters are added or changed, whether all items in the [`docs/adding-tools.md`](../../../docs/adding-tools.md) checklist have been updated
 
 ### Step 4: Report
 

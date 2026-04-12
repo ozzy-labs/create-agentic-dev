@@ -103,4 +103,4 @@ Then ask the user which action to take next:
 - **Never read or stage `.env` files**
 - **If `gh` CLI is not authenticated, display the error and abort**
 - **Do not begin code changes without plan approval**
-- **When adding or changing linters/formatters, follow the checklist in [`docs/adding-tools.md`](../../docs/adding-tools.md)**
+- **When adding or changing linters/formatters, follow the checklist in [`docs/adding-tools.md`](../../../docs/adding-tools.md)**

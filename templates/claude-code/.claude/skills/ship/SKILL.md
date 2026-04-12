@@ -10,7 +10,7 @@ allowed-tools: Bash, Read, Grep, Glob, AskUserQuestion
 
 ## Claude 固有ルール
 
-- 各子スキルは `.claude/skills/` パスから Read する（lint, test, commit）。読み込んだ子スキル内の「次のアクション提案」セクションは**すべて無視**する
+- 共有スキルのパス指定を上書き: lint → `.claude/skills/lint/SKILL.md`、test → `.claude/skills/test/SKILL.md`、commit → `.claude/skills/commit/SKILL.md` を Read する。読み込んだ子スキル内の「次のアクション提案」セクションは**すべて無視**する
 - PR ステップはインライン実行する（PR スキルには委譲しない）
 - 完了報告の直後に AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない
 
