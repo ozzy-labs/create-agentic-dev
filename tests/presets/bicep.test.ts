@@ -45,10 +45,10 @@ describe("generate (bicep)", () => {
     expect(stepNames).toContain("Security (Trivy IaC: Bicep)");
   });
 
-  it("expands CLAUDE.md with Bicep sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Bicep");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Bicep sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Bicep");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands README.md with Bicep sections", () => {

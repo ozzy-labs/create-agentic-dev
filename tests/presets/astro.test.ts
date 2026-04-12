@@ -50,10 +50,10 @@ describe("generate (astro)", () => {
     expect(ports).toContain(4321);
   });
 
-  it("expands CLAUDE.md with Astro sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Astro");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Astro sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Astro");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in templates", () => {

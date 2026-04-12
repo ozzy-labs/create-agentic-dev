@@ -62,11 +62,11 @@ describe("generate (playwright)", () => {
     expect(mcp.mcpServers.playwright).toBeDefined();
   });
 
-  it("expands CLAUDE.md with Playwright sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Playwright");
-    expect(claude).toContain("e2e/");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Playwright sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Playwright");
+    expect(agents).toContain("e2e/");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in e2e/package.json", () => {
@@ -92,11 +92,11 @@ describe("generate (react + playwright)", () => {
     expect(workspace).toContain("- e2e");
   });
 
-  it("CLAUDE.md contains both React and Playwright sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("React");
-    expect(claude).toContain("Playwright");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both React and Playwright sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("React");
+    expect(agents).toContain("Playwright");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("uses Vite port (5173) in playwright.config.ts for React", () => {

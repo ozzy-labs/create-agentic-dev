@@ -98,8 +98,12 @@ describe("generate (base only)", () => {
     expect(readme).not.toContain("{{projectName}}");
 
     const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("test-app");
+    expect(claude).toContain("@AGENTS.md");
     expect(claude).not.toContain("{{projectName}}");
+
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("test-app");
+    expect(agents).not.toContain("{{projectName}}");
   });
 
   it("generates CLAUDE.md with expanded placeholders", () => {

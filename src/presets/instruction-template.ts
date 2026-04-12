@@ -1,13 +1,13 @@
 /**
  * Instruction template builders for agent presets.
  *
- * All agent instruction files (CLAUDE.md, AGENTS.md, GEMINI.md, etc.) share
- * ~90% of their content. This module provides builder functions that generate
- * each variant from shared constants, eliminating template-level duplication.
+ * All agent instruction files share common content. This module provides
+ * builder functions that generate each variant from shared constants.
  *
- * Two builders:
- *  - buildEnglishInstruction() — 6 non-Claude agents (parameterised by title + MCP ref)
- *  - buildClaudeInstruction()  — Claude Code (Japanese, with Skills section)
+ * Three builders:
+ *  - buildAgentsMdInstruction() — Universal AGENTS.md (AAIF standard, SSOT)
+ *  - buildEnglishInstruction()  — Fallback for agents that can't read AGENTS.md (Cline, Amazon Q)
+ *  - buildClaudeInstruction()   — Slim CLAUDE.md (@AGENTS.md import + Claude-specific)
  */
 
 // ---------------------------------------------------------------------------
@@ -43,18 +43,24 @@ Types: \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`perf\`, \`test\`,
 Breaking changes: add \`!\` after type (e.g., \`feat!: ...\`) or \`BREAKING CHANGE:\` footer.`;
 
 // ---------------------------------------------------------------------------
-// English (non-Claude) instruction builder
+// Full English instruction template (shared by AGENTS.md and fallback files)
 // ---------------------------------------------------------------------------
 
 /**
- * Build instruction content for non-Claude agent presets.
- * Used by: Codex, Gemini, Copilot, Cline, Amazon Q, Cursor.
+ * Build a full English instruction template.
+ *
+ * @param title - Document title (e.g., "AGENTS.md", "Project Rules")
+ * @param mcpConfigRef - MCP config reference (e.g., "per agent tool settings")
+ * @param prefix - Optional prefix (e.g., YAML frontmatter for Cursor MDC)
+ * @param mcpDefaultServers - Optional default MCP server names to hardcode before the placeholder
  */
 export function buildEnglishInstruction(
   title: string,
   mcpConfigRef: string,
   prefix?: string,
+  mcpDefaultServers?: string,
 ): string {
+  const mcpServersPrefix = mcpDefaultServers ? `${mcpDefaultServers}` : "";
   return `${prefix ?? ""}# ${title}
 
 ## Project Overview
@@ -70,7 +76,7 @@ ${LINTING_TOOLS}
 <!-- SECTION:TECH_STACK -->
 - **Security scanning**: Gitleaks (secrets)
 <!-- SECTION:TECH_STACK_LINTING -->
-- **MCP servers**: <!-- SECTION:TECH_STACK_MCP --> — configured ${mcpConfigRef}
+- **MCP servers**: ${mcpServersPrefix}<!-- SECTION:TECH_STACK_MCP --> — configured ${mcpConfigRef}
 - **Git hooks**: lefthook (commit-msg: commitlint, pre-commit: linters + gitleaks, pre-push: <!-- SECTION:PRE_PUSH_HOOKS -->)
 
 ## Project Structure
@@ -123,6 +129,7 @@ See [\`docs/branch-strategy.md\`](docs/branch-strategy.md) for details.
 
 - Lefthook \`commit-msg\` hook validates Conventional Commits format
 - Lefthook \`pre-commit\` runs linters (auto-fixes staged)
+<!-- SECTION:GIT_WORKFLOW -->
 - CI validates all linters on PRs
 - Renovate manages dependency updates
 
@@ -131,12 +138,28 @@ See [\`docs/branch-strategy.md\`](docs/branch-strategy.md) for details.
 }
 
 // ---------------------------------------------------------------------------
-// Claude Code instruction builder
+// AGENTS.md (universal SSOT)
 // ---------------------------------------------------------------------------
 
-/** Build instruction content for Claude Code preset (Japanese). */
+/** Build AGENTS.md — the universal instruction file (AAIF standard). */
+export function buildAgentsMdInstruction(): string {
+  return buildEnglishInstruction(
+    "AGENTS.md",
+    "per agent tool settings",
+    undefined,
+    "Context7 (docs), Fetch (web)",
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Claude Code slim instruction builder
+// ---------------------------------------------------------------------------
+
+/** Build slim CLAUDE.md — imports @AGENTS.md and adds Claude-specific config. */
 export function buildClaudeInstruction(): string {
   return `# CLAUDE.md
+
+@AGENTS.md
 
 ## 基本ルール
 
@@ -144,32 +167,9 @@ export function buildClaudeInstruction(): string {
 - ユーザーへの確認には \`AskUserQuestion\` を使用する（テキスト出力で選択肢を列挙しない）
 - 推奨案とその理由を提示する
 
-## Project Overview
+## 環境
 
-{{projectName}}: AI-agent-native development project. WSL2/Ubuntu 24.04 + VSCode environment.
-
-## Tech Stack
-
-- **Version management**: mise (\`.mise.toml\`), gh is managed via devcontainer feature
-- **Tool policy**: Biome, lefthook 等の開発ツールは mise で管理（package.json の devDependencies には含めない）
-<!-- SECTION:TECH_STACK -->
-- **Linting/Formatting**:
-${LINTING_TOOLS}
-<!-- SECTION:TECH_STACK_LINTING -->
-- **Security scanning**: Gitleaks (secrets)
-<!-- SECTION:TECH_STACK_SECURITY -->
-- **MCP servers**: Context7 (docs), Fetch (web)<!-- SECTION:TECH_STACK_MCP --> — configured in \`.mcp.json\`
-- **Git hooks**: lefthook (commit-msg: commitlint, pre-commit: linters + gitleaks, pre-push: <!-- SECTION:PRE_PUSH_HOOKS -->)
-
-## Project Structure
-
-\`\`\`text
-scripts/      -> Shell scripts (setup, etc.)
-docs/         -> Documentation (branch strategy, etc.)
-.claude/      -> Claude Code project settings and skills
-<!-- SECTION:PROJECT_STRUCTURE -->
-<!-- SECTION:INFRA_STRUCTURE -->
-\`\`\`
+WSL2/Ubuntu 24.04 + VSCode。MCP サーバーは \`.mcp.json\` で設定。
 
 ## Skills
 
@@ -186,50 +186,5 @@ docs/         -> Documentation (branch strategy, etc.)
 
 - スキル完了時のネクストアクション提案には \`AskUserQuestion\` を使用する（テキスト出力で選択肢を列挙しない）
 - ネクストアクションはユーザーの確認なく実行しない
-
-## Key Commands
-
-\`\`\`bash
-# Setup
-scripts/setup.sh          # Full environment setup (初回はロックファイルのコミットも必要)
-mise install               # Install all tools
-<!-- SECTION:SETUP_COMMANDS -->
-
-# Lint & Format
-${LINT_COMMANDS}
-<!-- SECTION:LINT_COMMANDS -->
-# Test
-<!-- SECTION:TEST_COMMANDS -->
-\`\`\`
-
-## Coding Conventions
-
-- Indent: 2 spaces (JSON/YAML)
-- Line endings: LF only
-- All code must pass linters before committing
-- YAML ファイルの拡張子は \`.yaml\` に統一する（ツールが \`.yml\` を要求する場合は許容）
-- Shell: must pass shellcheck and shfmt
-- Dockerfile: must pass hadolint
-- GitHub Actions: must pass actionlint
-- Security: must pass Gitleaks secret detection
-<!-- SECTION:CODING_CONVENTIONS -->
-
-## Commit Convention
-
-${COMMIT_CONVENTION}
-
-## Branching
-
-GitHub Flow: \`main\` + feature branches. **squash merge のみ**。
-Branch naming: \`<type>/<short-description>\` (e.g., \`feat/add-auth\`, \`fix/login-error\`).
-詳細: [\`docs/branch-strategy.md\`](docs/branch-strategy.md)
-
-## Git Workflow
-
-- Lefthook \`commit-msg\` hook validates Conventional Commits format
-- Lefthook \`pre-commit\` runs linters (auto-fixes staged)
-<!-- SECTION:GIT_WORKFLOW -->
-- CI validates all linters on PRs
-- Renovate manages dependency updates
 `;
 }

@@ -79,11 +79,11 @@ describe("generate (vue)", () => {
     expect(workspace).toContain("- web");
   });
 
-  it("expands CLAUDE.md with Vue sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Vue");
-    expect(claude).toContain("Vite");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Vue sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Vue");
+    expect(agents).toContain("Vite");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in Vue templates", () => {

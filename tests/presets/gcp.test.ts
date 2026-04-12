@@ -29,9 +29,9 @@ describe("generate (gcp)", () => {
     expect(mounts.some((m: string) => m.includes(".azure"))).toBe(false);
   });
 
-  it("expands CLAUDE.md with Google Cloud MCP section", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Google Cloud");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Google Cloud MCP section", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Google Cloud");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });

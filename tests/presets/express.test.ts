@@ -85,11 +85,11 @@ describe("generate (express)", () => {
     expect(workspace).toContain("- api");
   });
 
-  it("expands CLAUDE.md with Express sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Express");
-    expect(claude).toContain("api/");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Express sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Express");
+    expect(agents).toContain("api/");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands README.md with Express sections", () => {

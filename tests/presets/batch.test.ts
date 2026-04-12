@@ -74,11 +74,11 @@ describe("generate (batch)", () => {
     expect(workspace).toContain("- worker");
   });
 
-  it("expands CLAUDE.md with batch/worker sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Worker");
-    expect(claude).toContain("worker/");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with batch/worker sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Worker");
+    expect(agents).toContain("worker/");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands README.md with batch/worker sections", () => {

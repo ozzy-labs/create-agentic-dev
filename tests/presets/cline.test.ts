@@ -26,9 +26,9 @@ describe("generate (cline)", () => {
     expect(rules).not.toContain("<!-- SECTION:PRE_PUSH_HOOKS -->");
   });
 
-  it("does not generate other agent files", () => {
+  it("does not generate other agent files (except universal AGENTS.md)", () => {
     expect(result.hasFile("CLAUDE.md")).toBe(false);
-    expect(result.hasFile("AGENTS.md")).toBe(false);
+    expect(result.hasFile("AGENTS.md")).toBe(true); // always generated when agents.length > 0
     expect(result.hasFile("GEMINI.md")).toBe(false);
     expect(result.hasFile(".mcp.json")).toBe(false);
   });

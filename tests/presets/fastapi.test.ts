@@ -82,11 +82,11 @@ describe("generate (fastapi)", () => {
     expect(result.hasFile("pnpm-workspace.yaml")).toBe(false);
   });
 
-  it("expands CLAUDE.md with FastAPI sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("FastAPI");
-    expect(claude).toContain("api/");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with FastAPI sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("FastAPI");
+    expect(agents).toContain("api/");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands README.md with FastAPI sections", () => {

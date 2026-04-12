@@ -5,14 +5,18 @@ import { makeAnswers } from "../helpers.js";
 describe("generate (gemini)", () => {
   const result = generate(makeAnswers({ agents: ["gemini"] }));
 
-  it("generates GEMINI.md instruction file", () => {
-    expect(result.hasFile("GEMINI.md")).toBe(true);
-    const gemini = result.readText("GEMINI.md");
-    expect(gemini).toContain("test-app");
-    expect(gemini).not.toContain("{{projectName}}");
+  it("does not generate GEMINI.md (reads AGENTS.md natively)", () => {
+    expect(result.hasFile("GEMINI.md")).toBe(false);
   });
 
-  it("writes MCP servers to .gemini/settings.json", () => {
+  it("generates AGENTS.md for Gemini to read natively", () => {
+    expect(result.hasFile("AGENTS.md")).toBe(true);
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("test-app");
+    expect(agents).not.toContain("{{projectName}}");
+  });
+
+  it("writes MCP servers and context config to .gemini/settings.json", () => {
     expect(result.hasFile(".gemini/settings.json")).toBe(true);
     const settings = result.readJson(".gemini/settings.json") as Record<
       string,
@@ -20,6 +24,8 @@ describe("generate (gemini)", () => {
     >;
     expect(settings.mcpServers.context7).toBeDefined();
     expect(settings.mcpServers.fetch).toBeDefined();
+    const context = settings.context as Record<string, string>;
+    expect(context.fileName).toBe("AGENTS.md");
   });
 
   it("adds GEMINI_API_KEY to devcontainer remoteEnv", () => {
@@ -33,15 +39,8 @@ describe("generate (gemini)", () => {
     expect(gitignore).toContain(".gemini/.env");
   });
 
-  it("expands GEMINI.md with agent-instructions sections", () => {
-    const gemini = result.readText("GEMINI.md");
-    expect(gemini).not.toContain("<!-- SECTION:TECH_STACK -->");
-    expect(gemini).not.toContain("<!-- SECTION:PRE_PUSH_HOOKS -->");
-  });
-
   it("does not generate Claude Code or Codex files", () => {
     expect(result.hasFile("CLAUDE.md")).toBe(false);
-    expect(result.hasFile("AGENTS.md")).toBe(false);
     expect(result.hasFile(".mcp.json")).toBe(false);
     expect(result.hasFile(".codex/config.toml")).toBe(false);
   });

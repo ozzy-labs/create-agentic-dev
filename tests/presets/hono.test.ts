@@ -85,11 +85,11 @@ describe("generate (hono)", () => {
     expect(workspace).toContain("- api");
   });
 
-  it("expands CLAUDE.md with Hono sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Hono");
-    expect(claude).toContain("api/");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Hono sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Hono");
+    expect(agents).toContain("api/");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands README.md with Hono sections", () => {

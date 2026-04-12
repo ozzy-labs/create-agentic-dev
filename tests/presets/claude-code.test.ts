@@ -41,9 +41,9 @@ describe("generate (claude-code)", () => {
     expect(gitignore).toContain(".claude/settings.local.json");
   });
 
-  it("expands CLAUDE.md with project name", () => {
+  it("CLAUDE.md is slim (no project name, only @AGENTS.md reference)", () => {
     const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("test-app");
+    expect(claude).toContain("@AGENTS.md");
     expect(claude).not.toContain("{{projectName}}");
   });
 

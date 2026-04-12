@@ -62,12 +62,12 @@ describe("generate (python)", () => {
     expect(pyproject).toContain("pytest");
   });
 
-  it("expands CLAUDE.md with Python sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Python");
-    expect(claude).toContain("Ruff");
-    expect(claude).toContain("mypy");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Python sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Python");
+    expect(agents).toContain("Ruff");
+    expect(agents).toContain("mypy");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("merges Python settings into VSCode settings", () => {

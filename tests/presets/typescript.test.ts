@@ -84,12 +84,12 @@ describe("generate (typescript)", () => {
     expect(stepNames).toContain("Lint (Markdown)");
   });
 
-  it("expands CLAUDE.md with TypeScript sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("TypeScript");
-    expect(claude).toContain("Biome");
-    expect(claude).toContain("typecheck (tsc)");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with TypeScript sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("TypeScript");
+    expect(agents).toContain("Biome");
+    expect(agents).toContain("typecheck (tsc)");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands git-workflow.md with Biome and typecheck", () => {

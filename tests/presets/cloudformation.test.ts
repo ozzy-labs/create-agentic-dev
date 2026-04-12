@@ -54,10 +54,10 @@ describe("generate (cloudformation)", () => {
     expect(result.hasFile(".tflint.hcl")).toBe(false);
   });
 
-  it("expands CLAUDE.md with CloudFormation sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("CloudFormation");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with CloudFormation sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("CloudFormation");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in CloudFormation template", () => {

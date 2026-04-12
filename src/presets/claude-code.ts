@@ -3,14 +3,10 @@ import { readTemplateFiles } from "../utils.js";
 import { buildClaudeInstruction } from "./instruction-template.js";
 import { DEFAULT_MCP_SERVERS } from "./shared.js";
 
-const templateFiles = readTemplateFiles("claude-code");
-templateFiles["CLAUDE.md"] = buildClaudeInstruction();
-
 export const claudeCodePreset: Preset = {
   name: "claude-code",
-  instructionFile: "CLAUDE.md",
   mcpConfigPath: { path: ".mcp.json", format: "json" },
-  files: templateFiles,
+  files: { ...readTemplateFiles("claude-code"), "CLAUDE.md": buildClaudeInstruction() },
   merge: {
     ".gitignore": ".claude/settings.local.json",
     ".devcontainer/devcontainer.json": {

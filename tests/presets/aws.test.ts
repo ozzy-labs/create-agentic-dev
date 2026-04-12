@@ -28,9 +28,9 @@ describe("generate (aws)", () => {
     expect(result.hasFile("infra/bin/app.ts")).toBe(false);
   });
 
-  it("expands CLAUDE.md with AWS MCP section", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("AWS IaC");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with AWS MCP section", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("AWS IaC");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });

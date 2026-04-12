@@ -47,11 +47,11 @@ describe("pairwise: typescript + python", () => {
     expect(stepNames).toContain("Test (pytest)");
   });
 
-  it("expands CLAUDE.md with both language sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("TypeScript");
-    expect(claude).toContain("Python");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with both language sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("TypeScript");
+    expect(agents).toContain("Python");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("expands git-workflow.md with both Biome/Ruff and typecheck/mypy", () => {
@@ -300,11 +300,11 @@ describe("pairwise: fastapi + react", () => {
     expect(stepNames).toContain("Test (API pytest)");
   });
 
-  it("CLAUDE.md contains both React and FastAPI sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("React");
-    expect(claude).toContain("FastAPI");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both React and FastAPI sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("React");
+    expect(agents).toContain("FastAPI");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -347,11 +347,11 @@ describe("pairwise: hono + react", () => {
     expect(stepNames).toContain("Build (API)");
   });
 
-  it("CLAUDE.md contains both React and Hono sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("React");
-    expect(claude).toContain("Hono");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both React and Hono sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("React");
+    expect(agents).toContain("Hono");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -449,11 +449,11 @@ describe("pairwise: express + react", () => {
     expect(stepNames).toContain("Build (API)");
   });
 
-  it("CLAUDE.md contains both React and Express sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("React");
-    expect(claude).toContain("Express");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both React and Express sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("React");
+    expect(agents).toContain("Express");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -543,11 +543,11 @@ describe("pairwise: nextjs + express", () => {
     expect(workspace).toContain("- api");
   });
 
-  it("CLAUDE.md contains both Next.js and Express sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Next.js");
-    expect(claude).toContain("Express");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Next.js and Express sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Next.js");
+    expect(agents).toContain("Express");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -574,11 +574,11 @@ describe("pairwise: nextjs + fastapi", () => {
     expect(toml.tools.python).toBe("3.12");
   });
 
-  it("CLAUDE.md contains both Next.js and FastAPI sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Next.js");
-    expect(claude).toContain("FastAPI");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Next.js and FastAPI sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Next.js");
+    expect(agents).toContain("FastAPI");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -636,11 +636,11 @@ describe("pairwise: vue + fastapi", () => {
     expect(toml.tools.python).toBe("3.12");
   });
 
-  it("CLAUDE.md contains both Vue and FastAPI sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Vue");
-    expect(claude).toContain("FastAPI");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Vue and FastAPI sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Vue");
+    expect(agents).toContain("FastAPI");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -663,11 +663,11 @@ describe("pairwise: vue + express", () => {
     expect(workspace).toContain("- api");
   });
 
-  it("CLAUDE.md contains both Vue and Express sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Vue");
-    expect(claude).toContain("Express");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Vue and Express sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Vue");
+    expect(agents).toContain("Express");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -688,11 +688,11 @@ describe("pairwise: nuxt + express", () => {
     expect(workspace).toContain("- api");
   });
 
-  it("CLAUDE.md contains both Nuxt and Express sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Nuxt");
-    expect(claude).toContain("Express");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Nuxt and Express sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Nuxt");
+    expect(agents).toContain("Express");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -719,11 +719,11 @@ describe("pairwise: nuxt + fastapi", () => {
     expect(toml.tools.python).toBe("3.12");
   });
 
-  it("CLAUDE.md contains both Nuxt and FastAPI sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Nuxt");
-    expect(claude).toContain("FastAPI");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Nuxt and FastAPI sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Nuxt");
+    expect(agents).toContain("FastAPI");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -763,11 +763,11 @@ describe("pairwise: sveltekit + hono", () => {
     expect(workspace).toContain("- api");
   });
 
-  it("CLAUDE.md contains both SvelteKit and Hono sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("SvelteKit");
-    expect(claude).toContain("Hono");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both SvelteKit and Hono sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("SvelteKit");
+    expect(agents).toContain("Hono");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -788,11 +788,11 @@ describe("pairwise: astro + fastapi", () => {
     expect(workspace).not.toContain("- api");
   });
 
-  it("CLAUDE.md contains both Astro and FastAPI sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Astro");
-    expect(claude).toContain("FastAPI");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both Astro and FastAPI sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Astro");
+    expect(agents).toContain("FastAPI");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -818,11 +818,11 @@ describe("pairwise: react + playwright", () => {
     expect(mcp.mcpServers.playwright).toBeDefined();
   });
 
-  it("CLAUDE.md contains both React and Playwright sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("React");
-    expect(claude).toContain("Playwright");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both React and Playwright sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("React");
+    expect(agents).toContain("Playwright");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -854,11 +854,11 @@ describe("pairwise: batch + react", () => {
     expect(scripts["build:worker"]).toBeDefined();
   });
 
-  it("CLAUDE.md contains both React and batch/worker sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("React");
-    expect(claude).toContain("Worker");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains both React and batch/worker sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("React");
+    expect(agents).toContain("Worker");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 

@@ -130,10 +130,10 @@ describe("generate (cdk)", () => {
     expect(mounts.some((m: string) => m.includes(".aws"))).toBe(true);
   });
 
-  it("expands CLAUDE.md with CDK sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("CDK");
-    expect(claude).toContain("cfn-lint");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with CDK sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("CDK");
+    expect(agents).toContain("cfn-lint");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });

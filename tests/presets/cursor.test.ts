@@ -5,18 +5,15 @@ import { makeAnswers } from "../helpers.js";
 describe("generate (cursor)", () => {
   const result = generate(makeAnswers({ agents: ["cursor"] }));
 
-  it("generates .cursor/rules/project.mdc instruction file", () => {
-    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(true);
-    const rules = result.readText(".cursor/rules/project.mdc");
-    expect(rules).toContain("test-app");
-    expect(rules).not.toContain("{{projectName}}");
+  it("does not generate .cursor/rules/project.mdc (reads AGENTS.md natively)", () => {
+    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(false);
   });
 
-  it("includes MDC frontmatter with description and globs", () => {
-    const rules = result.readText(".cursor/rules/project.mdc");
-    expect(rules).toMatch(/^---\n/);
-    expect(rules).toContain("description:");
-    expect(rules).toContain("globs:");
+  it("generates AGENTS.md for Cursor to read natively", () => {
+    expect(result.hasFile("AGENTS.md")).toBe(true);
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("test-app");
+    expect(agents).not.toContain("{{projectName}}");
   });
 
   it("writes MCP servers to .cursor/mcp.json", () => {
@@ -26,15 +23,8 @@ describe("generate (cursor)", () => {
     expect(mcp.mcpServers.fetch).toBeDefined();
   });
 
-  it("expands instruction file with agent-instructions sections", () => {
-    const rules = result.readText(".cursor/rules/project.mdc");
-    expect(rules).not.toContain("<!-- SECTION:TECH_STACK -->");
-    expect(rules).not.toContain("<!-- SECTION:PRE_PUSH_HOOKS -->");
-  });
-
   it("does not generate other agent files", () => {
     expect(result.hasFile("CLAUDE.md")).toBe(false);
-    expect(result.hasFile("AGENTS.md")).toBe(false);
     expect(result.hasFile("GEMINI.md")).toBe(false);
     expect(result.hasFile(".mcp.json")).toBe(false);
   });

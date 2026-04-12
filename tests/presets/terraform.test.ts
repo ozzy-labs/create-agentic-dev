@@ -50,11 +50,11 @@ describe("generate (terraform)", () => {
     expect(result.hasFile("infra/template.yaml")).toBe(false);
   });
 
-  it("expands CLAUDE.md with Terraform sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Terraform");
-    expect(claude).toContain("tflint");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Terraform sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Terraform");
+    expect(agents).toContain("tflint");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("includes lint:tf in lint:all", () => {

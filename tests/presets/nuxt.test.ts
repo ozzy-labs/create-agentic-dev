@@ -80,10 +80,10 @@ describe("generate (nuxt)", () => {
     expect(workspace).toContain("- web");
   });
 
-  it("expands CLAUDE.md with Nuxt sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Nuxt");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Nuxt sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Nuxt");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in Nuxt templates", () => {

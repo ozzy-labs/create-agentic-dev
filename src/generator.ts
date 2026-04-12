@@ -3,6 +3,7 @@ import { ACTIONS } from "./action-versions.js";
 import { buildCiWorkflow } from "./ci.js";
 import { expandMarkdown, formatMcpJson, formatMcpToml, mergeFile } from "./merge.js";
 import { ALL_PRESETS, PRESET_ORDER } from "./presets/index.js";
+import { buildAgentsMdInstruction } from "./presets/instruction-template.js";
 import { expandSetupScript } from "./setup.js";
 import type {
   ApplyAnswers,
@@ -242,12 +243,19 @@ function distributeMcpServers(allFiles: Map<string, string>, presets: Preset[]):
 
   for (const preset of presets) {
     if (preset.mcpConfigPath) {
-      allFiles.set(
-        preset.mcpConfigPath.path,
-        preset.mcpConfigPath.format === "toml"
-          ? formatMcpToml(allMcpServers)
-          : formatMcpJson(allMcpServers),
-      );
+      if (preset.mcpConfigPath.format === "toml") {
+        allFiles.set(preset.mcpConfigPath.path, formatMcpToml(allMcpServers));
+      } else {
+        // For JSON, merge mcpServers into existing content if present (e.g. Gemini context config)
+        const existing = allFiles.get(preset.mcpConfigPath.path);
+        if (existing) {
+          const parsed = JSON.parse(existing) as Record<string, unknown>;
+          parsed.mcpServers = allMcpServers;
+          allFiles.set(preset.mcpConfigPath.path, `${JSON.stringify(parsed, null, 2)}\n`);
+        } else {
+          allFiles.set(preset.mcpConfigPath.path, formatMcpJson(allMcpServers));
+        }
+      }
     }
   }
 }
@@ -279,10 +287,11 @@ function expandMarkdownTemplates(
     }
   }
 
-  // Distribute "agent-instructions" sections to each agent's instruction file
-  const instructionTargets = presets
-    .filter((p) => p.instructionFile)
-    .map((p) => p.instructionFile as string);
+  // Distribute "agent-instructions" sections to AGENTS.md (always) and agent-specific files
+  const instructionTargets = new Set(["AGENTS.md"]);
+  for (const p of presets) {
+    if (p.instructionFile) instructionTargets.add(p.instructionFile);
+  }
   const agentSections = markdownSections.get("agent-instructions");
   if (agentSections) {
     for (const target of instructionTargets) {
@@ -549,6 +558,11 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     allFiles.delete("tests/index.test.ts");
   }
 
+  // 1a. Generate AGENTS.md when any agent is selected (AAIF standard SSOT)
+  if (answers.agents.length > 0) {
+    allFiles.set("AGENTS.md", replaceVariables(buildAgentsMdInstruction(), vars));
+  }
+
   // 2. Merge shared files (JSON/YAML/TOML)
   const mergeContributions = new Map<string, unknown[]>();
   for (const preset of presets) {
@@ -649,14 +663,15 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
 
 /** File path prefixes/patterns that are agent-related output for --apply mode. */
 const APPLY_FILE_PATTERNS = [
-  "CLAUDE.md",
   "AGENTS.md",
-  "GEMINI.md",
+  "CLAUDE.md",
   ".claude/",
   ".amazonq/",
-  ".github/copilot-instructions.md",
   ".clinerules/",
+  ".codex/",
+  ".copilot/",
   ".cursor/",
+  ".gemini/",
   ".mcp.json",
 ];
 

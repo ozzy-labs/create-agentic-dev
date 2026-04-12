@@ -1,13 +1,11 @@
 import type { Preset } from "../types.js";
-import { buildEnglishInstruction } from "./instruction-template.js";
 import { DEFAULT_MCP_SERVERS } from "./shared.js";
 
 export const geminiPreset: Preset = {
   name: "gemini",
-  instructionFile: "GEMINI.md",
   mcpConfigPath: { path: ".gemini/settings.json", format: "json" },
   files: {
-    "GEMINI.md": buildEnglishInstruction("GEMINI.md", "in `.gemini/settings.json`"),
+    ".gemini/settings.json": `${JSON.stringify({ context: { fileName: "AGENTS.md" } }, null, 2)}\n`,
   },
   merge: {
     ".gitignore": ".gemini/.env",

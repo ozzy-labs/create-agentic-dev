@@ -62,11 +62,12 @@ describe("edge: all agents selected", () => {
   it("generates all agent instruction files", () => {
     expect(result.hasFile("CLAUDE.md")).toBe(true);
     expect(result.hasFile("AGENTS.md")).toBe(true);
-    expect(result.hasFile("GEMINI.md")).toBe(true);
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
-    expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
     expect(result.hasFile(".clinerules/project.md")).toBe(true);
-    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(true);
+    // Gemini, Copilot, Cursor read AGENTS.md natively — no separate instruction files
+    expect(result.hasFile("GEMINI.md")).toBe(false);
+    expect(result.hasFile(".github/copilot-instructions.md")).toBe(false);
+    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(false);
   });
 
   it("generates all MCP config files", () => {

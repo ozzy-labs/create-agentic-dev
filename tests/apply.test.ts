@@ -38,7 +38,8 @@ describe("generateApply", () => {
 
     expect(files.some((f) => f === "CLAUDE.md")).toBe(true);
     expect(files.some((f) => f === "AGENTS.md")).toBe(true);
-    expect(files.some((f) => f === "GEMINI.md")).toBe(true);
+    // Gemini reads AGENTS.md natively — no separate GEMINI.md
+    expect(files.some((f) => f === "GEMINI.md")).toBe(false);
     expect(files.some((f) => f.startsWith(".cursor/"))).toBe(true);
     expect(files.some((f) => f === ".mcp.json")).toBe(true);
   });
@@ -88,7 +89,9 @@ describe("generateApply", () => {
     const result = generateApply(makeApplyAnswers({ agents: ["amazon-q", "copilot"] }));
     const files = result.fileList();
     expect(files.some((f) => f.startsWith(".amazonq/"))).toBe(true);
-    expect(files.some((f) => f === ".github/copilot-instructions.md")).toBe(true);
+    // Copilot reads AGENTS.md natively — no separate copilot-instructions.md
+    expect(files.some((f) => f === ".github/copilot-instructions.md")).toBe(false);
+    expect(files.some((f) => f === ".copilot/mcp-config.json")).toBe(true);
   });
 
   it("Cline instruction files are included", () => {

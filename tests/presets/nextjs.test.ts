@@ -88,10 +88,10 @@ describe("generate (nextjs)", () => {
     expect(workspace).toContain("- web");
   });
 
-  it("expands CLAUDE.md with Next.js sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("Next.js");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with Next.js sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("Next.js");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in Next.js templates", () => {

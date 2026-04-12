@@ -973,13 +973,13 @@ describe("smoke: full config integration", () => {
     expect(scripts["lint:all"]).toContain("pnpm run lint:secrets");
   });
 
-  it("CLAUDE.md contains all preset sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("TypeScript");
-    expect(claude).toContain("Python");
-    expect(claude).toContain("React");
-    expect(claude).toContain("CDK");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("AGENTS.md contains all preset sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("TypeScript");
+    expect(agents).toContain("Python");
+    expect(agents).toContain("React");
+    expect(agents).toContain("CDK");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 });
 
@@ -1042,13 +1042,13 @@ describe("smoke: .gitignore preset isolation", () => {
 
 // --- CLAUDE.md MCP servers line ---
 
-describe("smoke: CLAUDE.md MCP servers", () => {
+describe("smoke: AGENTS.md MCP servers", () => {
   it("no empty entries when both AWS and Azure are selected", () => {
     const result = generate(
       makeAnswers({ languages: ["typescript"], clouds: ["aws", "azure"], iac: ["terraform"] }),
     );
-    const claude = result.readText("CLAUDE.md");
-    const mcpLine = claude.split("\n").find((l) => l.includes("MCP servers"));
+    const agents = result.readText("AGENTS.md");
+    const mcpLine = agents.split("\n").find((l) => l.includes("MCP servers"));
     expect(mcpLine).toBeDefined();
     expect(mcpLine).not.toMatch(/, ,/);
     expect(mcpLine).toContain("AWS IaC");
@@ -1059,8 +1059,8 @@ describe("smoke: CLAUDE.md MCP servers", () => {
     const result = generate(
       makeAnswers({ languages: ["typescript"], clouds: ["gcp"], iac: ["terraform"] }),
     );
-    const claude = result.readText("CLAUDE.md");
-    const mcpLine = claude.split("\n").find((l) => l.includes("MCP servers"));
+    const agents = result.readText("AGENTS.md");
+    const mcpLine = agents.split("\n").find((l) => l.includes("MCP servers"));
     expect(mcpLine).toBeDefined();
     expect(mcpLine).toContain("Google Cloud");
   });
@@ -1069,8 +1069,8 @@ describe("smoke: CLAUDE.md MCP servers", () => {
     const result = generate(
       makeAnswers({ languages: ["typescript"], clouds: ["aws"], iac: ["terraform"] }),
     );
-    const claude = result.readText("CLAUDE.md");
-    const mcpLine = claude.split("\n").find((l) => l.includes("MCP servers"));
+    const agents = result.readText("AGENTS.md");
+    const mcpLine = agents.split("\n").find((l) => l.includes("MCP servers"));
     expect(mcpLine).toBeDefined();
     expect(mcpLine).toContain("Fetch (web), AWS IaC");
   });
@@ -1079,7 +1079,7 @@ describe("smoke: CLAUDE.md MCP servers", () => {
 // --- Project Structure infra/ deduplication ---
 
 describe("smoke: infra/ structure deduplication", () => {
-  it("CLAUDE.md shows single infra/ line for multiple IaC presets", () => {
+  it("AGENTS.md shows single infra/ line for multiple IaC presets", () => {
     const result = generate(
       makeAnswers({
         languages: ["typescript"],
@@ -1087,8 +1087,8 @@ describe("smoke: infra/ structure deduplication", () => {
         iac: ["cdk", "cloudformation", "bicep"],
       }),
     );
-    const claude = result.readText("CLAUDE.md");
-    const infraLines = claude.split("\n").filter((l) => l.includes("infra/"));
+    const agents = result.readText("AGENTS.md");
+    const infraLines = agents.split("\n").filter((l) => l.includes("infra/"));
     const structureInfra = infraLines.filter((l) => l.includes("->"));
     expect(structureInfra.length, "Should have exactly one infra/ -> line in structure").toBe(1);
     expect(structureInfra[0]).toContain("CDK");
@@ -1149,11 +1149,12 @@ describe("smoke: full-combo stress", () => {
     // All agent configs exist
     expect(result.hasFile("CLAUDE.md")).toBe(true);
     expect(result.hasFile("AGENTS.md")).toBe(true);
-    expect(result.hasFile("GEMINI.md")).toBe(true);
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
-    expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
     expect(result.hasFile(".clinerules/project.md")).toBe(true);
-    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(true);
+    // Gemini, Copilot, Cursor read AGENTS.md natively
+    expect(result.hasFile("GEMINI.md")).toBe(false);
+    expect(result.hasFile(".github/copilot-instructions.md")).toBe(false);
+    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(false);
 
     // JSON files are valid
     readValidJson(result, "package.json");
@@ -1204,11 +1205,12 @@ describe("smoke: full-combo stress", () => {
     // All agent configs exist
     expect(result.hasFile("CLAUDE.md")).toBe(true);
     expect(result.hasFile("AGENTS.md")).toBe(true);
-    expect(result.hasFile("GEMINI.md")).toBe(true);
     expect(result.hasFile(".amazonq/rules/project.md")).toBe(true);
-    expect(result.hasFile(".github/copilot-instructions.md")).toBe(true);
     expect(result.hasFile(".clinerules/project.md")).toBe(true);
-    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(true);
+    // Gemini, Copilot, Cursor read AGENTS.md natively
+    expect(result.hasFile("GEMINI.md")).toBe(false);
+    expect(result.hasFile(".github/copilot-instructions.md")).toBe(false);
+    expect(result.hasFile(".cursor/rules/project.mdc")).toBe(false);
 
     // JSON files are valid
     readValidJson(result, "package.json");

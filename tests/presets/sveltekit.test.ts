@@ -66,10 +66,10 @@ describe("generate (sveltekit)", () => {
     expect(workspace).toContain("- web");
   });
 
-  it("expands CLAUDE.md with SvelteKit sections", () => {
-    const claude = result.readText("CLAUDE.md");
-    expect(claude).toContain("SvelteKit");
-    expect(claude).not.toContain("<!-- SECTION:");
+  it("expands AGENTS.md with SvelteKit sections", () => {
+    const agents = result.readText("AGENTS.md");
+    expect(agents).toContain("SvelteKit");
+    expect(agents).not.toContain("<!-- SECTION:");
   });
 
   it("replaces {{projectName}} in templates", () => {

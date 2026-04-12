@@ -117,8 +117,11 @@ describe("isolation: owned file isolation", () => {
     const withCodex = generate(makeAnswers({ agents: ["codex"] }));
     const withoutCodex = generate(makeAnswers({ agents: ["claude-code"] }));
 
+    expect(withCodex.hasFile(".codex/config.toml")).toBe(true);
+    expect(withoutCodex.hasFile(".codex/config.toml")).toBe(false);
+    // AGENTS.md is always generated when any agent is selected
     expect(withCodex.hasFile("AGENTS.md")).toBe(true);
-    expect(withoutCodex.hasFile("AGENTS.md")).toBe(false);
+    expect(withoutCodex.hasFile("AGENTS.md")).toBe(true);
   });
 
   it("Python files only exist when Python is selected", () => {
