@@ -14,7 +14,7 @@ import type {
   Preset,
   WizardAnswers,
 } from "./types.js";
-import { buildResult } from "./utils.js";
+import { buildResult, readTemplateFiles } from "./utils.js";
 
 /** IaC tools and the cloud providers they require. */
 const IAC_CLOUD_REQUIREMENTS: Record<string, { clouds: string[]; label: string }> = {
@@ -558,9 +558,13 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
     allFiles.delete("tests/index.test.ts");
   }
 
-  // 1a. Generate AGENTS.md when any agent is selected (AAIF standard SSOT)
+  // 1a. Generate AGENTS.md and .agents/skills/ when any agent is selected
   if (answers.agents.length > 0) {
     allFiles.set("AGENTS.md", replaceVariables(buildAgentsMdInstruction(), vars));
+    const agentSkillFiles = readTemplateFiles("agent-skills");
+    for (const [filePath, content] of Object.entries(agentSkillFiles)) {
+      allFiles.set(filePath, replaceVariables(content, vars));
+    }
   }
 
   // 2. Merge shared files (JSON/YAML/TOML)
@@ -665,6 +669,7 @@ export function generate(answers: WizardAnswers, options: GenerateOptions = {}):
 const APPLY_FILE_PATTERNS = [
   "AGENTS.md",
   "CLAUDE.md",
+  ".agents/",
   ".claude/",
   ".amazonq/",
   ".clinerules/",

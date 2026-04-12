@@ -85,7 +85,7 @@ export const fastapiPreset: Preset = {
         content: "mypy-api",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content:
@@ -97,7 +97,7 @@ export const fastapiPreset: Preset = {
           "## 型チェック（API）\n\n- 変更ファイルに `api/` 配下の Python を含む場合は `cd api && uv run mypy .` も実行する",
       },
     ],
-    ".claude/skills/test/SKILL.md": [
+    ".agents/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
         content: "1. `cd api && uv run pytest` で API テスト実行",

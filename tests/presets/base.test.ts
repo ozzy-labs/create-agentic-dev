@@ -121,7 +121,7 @@ describe("generate (base only)", () => {
   });
 
   it("generates test skill without preset-specific steps", () => {
-    const skill = result.readText(".claude/skills/test/SKILL.md");
+    const skill = result.readText(".agents/skills/test/SKILL.md");
     expect(skill).not.toContain("<!-- SECTION:");
     expect(skill).not.toContain("vitest");
     expect(skill).not.toContain("pytest");

@@ -111,13 +111,13 @@ export const cdkPreset: Preset = {
         content: "typecheck-infra",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content: "| CloudFormation テンプレート | `cfn-lint <files>` |",
       },
     ],
-    ".claude/skills/test/SKILL.md": [
+    ".agents/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
         content: "1. `cd infra && pnpm test` で CDK インフラテスト実行",

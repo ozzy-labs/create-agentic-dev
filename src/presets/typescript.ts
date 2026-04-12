@@ -122,7 +122,7 @@ export const typescriptPreset: Preset = {
         content: "- Lefthook `pre-push` runs TypeScript typecheck (`tsc --noEmit`)",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content:
@@ -134,7 +134,7 @@ export const typescriptPreset: Preset = {
           "## 型チェック\n\n- 変更ファイルに TypeScript/JavaScript を含む場合は `tsc --noEmit` も実行する",
       },
     ],
-    ".claude/skills/test/SKILL.md": [
+    ".agents/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
         content: "1. `pnpm test` で TypeScript テスト実行（vitest）",

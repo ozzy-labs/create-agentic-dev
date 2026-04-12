@@ -43,7 +43,7 @@ export const cloudformationPreset: Preset = {
         content: "- CloudFormation: must pass cfn-lint",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content: "| CloudFormation テンプレート | `cfn-lint <files>` |",

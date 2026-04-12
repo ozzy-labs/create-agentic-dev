@@ -102,7 +102,7 @@ describe("generate (typescript)", () => {
   });
 
   it("expands test skill with vitest step only", () => {
-    const skill = result.readText(".claude/skills/test/SKILL.md");
+    const skill = result.readText(".agents/skills/test/SKILL.md");
     expect(skill).toContain("pnpm test");
     expect(skill).not.toContain("pytest");
     expect(skill).not.toContain("infra");

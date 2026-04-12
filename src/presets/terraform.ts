@@ -52,7 +52,7 @@ export const terraformPreset: Preset = {
         content: "- Terraform: must pass `terraform fmt` and tflint",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content: "| `*.tf` | `terraform fmt <files>` → `tflint` |",

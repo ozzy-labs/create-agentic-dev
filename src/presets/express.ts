@@ -73,7 +73,7 @@ export const expressPreset: Preset = {
         content: "typecheck-api",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content: "| `api/**/*.ts` | `biome check --fix <files>` (root biome.json) |",
@@ -84,7 +84,7 @@ export const expressPreset: Preset = {
           "## 型チェック（API）\n\n- 変更ファイルに `api/` 配下の TypeScript を含む場合は `cd api && tsc --noEmit` も実行する",
       },
     ],
-    ".claude/skills/test/SKILL.md": [
+    ".agents/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
         content: "1. `cd api && pnpm test` で API テスト実行",

@@ -4,19 +4,18 @@ disable-model-invocation: true
 allowed-tools: Bash, Read, AskUserQuestion
 ---
 
-# lint - 全リンターの実行
+# lint
 
-全リンター・フォーマッターを自動修正付きで実行し、結果をレポートする。
+`.agents/skills/lint/SKILL.md` を Read し、ワークフローに従う。
 
-## 手順
+## Claude 固有ルール
 
-1. `git status` で変更ファイルを特定する。変更がなければプロジェクト全体を対象とする
-2. `.claude/skills/lint-rules/SKILL.md` を Read し、コマンド表と型チェックルールに従って対象ファイルの lint・フォーマット・型チェックを実行する
-3. 全結果のサマリーを報告する
+- lint-rules は `.claude/skills/lint-rules/SKILL.md` を Read する（Claude overlay 版を使用）
+- サマリー報告の直後に AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない
 
 ## 次のアクション提案（スキル完了後）
 
-サマリー報告の直後に AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない。以下は基本選択肢であり、状況に応じて追加の選択肢を提示してよい:
+以下は基本選択肢であり、状況に応じて追加の選択肢を提示してよい:
 
 **全て通過した場合:**
 

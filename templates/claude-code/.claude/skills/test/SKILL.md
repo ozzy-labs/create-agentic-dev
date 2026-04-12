@@ -4,18 +4,17 @@ disable-model-invocation: true
 allowed-tools: Bash, AskUserQuestion
 ---
 
-# test - 全テストの実行
+# test
 
-全テストを実行し、結果をレポートする。
+`.agents/skills/test/SKILL.md` を Read し、ワークフローに従う。
 
-## 手順
+## Claude 固有ルール
 
-<!-- SECTION:TEST_STEPS -->
-1. 全テスト結果のサマリーを報告する
+- サマリー報告の直後に AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない
 
 ## 次のアクション提案（スキル完了後）
 
-サマリー報告の直後に AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない。以下は基本選択肢であり、状況に応じて追加の選択肢を提示してよい:
+以下は基本選択肢であり、状況に応じて追加の選択肢を提示してよい:
 
 **全て通過した場合:**
 

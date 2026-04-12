@@ -4,16 +4,15 @@ disable-model-invocation: true
 allowed-tools: Bash, AskUserQuestion
 ---
 
-# setup - 開発環境のセットアップ
+# setup
 
-開発環境をゼロからセットアップする。
+`.agents/skills/setup/SKILL.md` を Read し、ワークフローに従う。
 
-## 手順
+## Claude 固有ルール
 
-1. `mise trust && mise install` で全ツールをインストール
-2. `pnpm install` で Node.js 依存関係をインストール（Git フックも自動設定）
-3. `uv sync` で Python 依存関係をインストール
-4. `cd infra && pnpm install` で CDK 依存関係をインストール
-5. 各ステップの状態を報告し、**同じレスポンス内で** AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない:
-   - **「実装を開始する」** → `.claude/skills/implement/SKILL.md` を Read し、その手順に従う
-   - **「lint を実行する」** → `.claude/skills/lint/SKILL.md` を Read し、その手順に従う
+- 各ステップの状態を報告し、**同じレスポンス内で** AskUserQuestion を呼び出す（`answers` パラメータは設定しない）。報告の出力だけでスキルを終了しない
+
+## 次のアクション提案（スキル完了後）
+
+- **「実装を開始する」** → `.claude/skills/implement/SKILL.md` を Read し、その手順に従う
+- **「lint を実行する」** → `.claude/skills/lint/SKILL.md` を Read し、その手順に従う

@@ -71,7 +71,7 @@ export const batchPreset: Preset = {
         content: "typecheck-worker",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content: "| `worker/**/*.ts` | `biome check --fix <files>` (root biome.json) |",
@@ -82,7 +82,7 @@ export const batchPreset: Preset = {
           "## 型チェック（Worker）\n\n- 変更ファイルに `worker/` 配下の TypeScript を含む場合は `cd worker && tsc --noEmit` も実行する",
       },
     ],
-    ".claude/skills/test/SKILL.md": [
+    ".agents/skills/test/SKILL.md": [
       {
         placeholder: "<!-- SECTION:TEST_STEPS -->",
         content: "1. `cd worker && pnpm test` で Worker テスト実行",

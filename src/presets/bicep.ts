@@ -45,7 +45,7 @@ export const bicepPreset: Preset = {
         content: "- Bicep: must pass `az bicep build`",
       },
     ],
-    ".claude/skills/lint-rules/SKILL.md": [
+    ".agents/skills/lint-rules/SKILL.md": [
       {
         placeholder: "<!-- SECTION:LINT_RULES_TABLE -->",
         content: "| Bicep テンプレート | `az bicep build --file <file>` |",
