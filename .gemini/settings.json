@@ -1,0 +1,31 @@
+{
+  "context": {
+    "fileName": "AGENTS.md"
+  },
+  "mcpServers": {
+    "aws-iac": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-iac-mcp@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE:-default}",
+        "AWS_REGION": "${AWS_REGION:-ap-northeast-1}"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ]
+    }
+  }
+}
