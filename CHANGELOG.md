@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.3](https://github.com/ozzy-labs/create-agentic-dev/compare/create-agentic-dev-v0.1.2...create-agentic-dev-v0.1.3) (2026-04-18)
+
+
+### Features
+
+* add multi-agent support to this repository ([#202](https://github.com/ozzy-labs/create-agentic-dev/issues/202)) ([1813701](https://github.com/ozzy-labs/create-agentic-dev/commit/18137013c3fac2e265ef863b561e60cff71d4014))
+* **preset:** add .agents/skills/ cross-tool skills with Claude overlay ([#200](https://github.com/ozzy-labs/create-agentic-dev/issues/200)) ([7a61781](https://github.com/ozzy-labs/create-agentic-dev/commit/7a61781ef9b43f42874cc8c102009439a3401ae4)), closes [#196](https://github.com/ozzy-labs/create-agentic-dev/issues/196)
+* **preset:** install agent CLIs via mise ([#201](https://github.com/ozzy-labs/create-agentic-dev/issues/201)) ([a113982](https://github.com/ozzy-labs/create-agentic-dev/commit/a1139826ede5c5a28223dfa43540b911ab94c070))
+* **preset:** migrate to AGENTS.md SSOT with slim CLAUDE.md ([#198](https://github.com/ozzy-labs/create-agentic-dev/issues/198)) ([3378a87](https://github.com/ozzy-labs/create-agentic-dev/commit/3378a8729e4d7ae8e9fe3d2ecfb0828ef5bb5e95)), closes [#195](https://github.com/ozzy-labs/create-agentic-dev/issues/195)
+
+
+### Bug Fixes
+
+* add Playwright E2E test step to shared skill and fix MCP package name ([#204](https://github.com/ozzy-labs/create-agentic-dev/issues/204)) ([1492c56](https://github.com/ozzy-labs/create-agentic-dev/commit/1492c56d9c9700e5c5e06e35af412c5ada8e8287))
+
 ## [0.1.2](https://github.com/ozzy-labs/create-agentic-dev/compare/create-agentic-dev-v0.1.1...create-agentic-dev-v0.1.2) (2026-04-11)
 
 
