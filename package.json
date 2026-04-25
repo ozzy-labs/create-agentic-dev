@@ -34,7 +34,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "verify": "vitest run tests/smoke.test.ts"
+    "verify": "vitest run tests/smoke.test.ts tests/external-presets.smoke.test.ts"
   },
   "engines": {
     "node": ">=22"
