@@ -6,6 +6,7 @@ import type { GenerateResult, WizardAnswers } from "../src/types.js";
 export function makeAnswers(overrides: Partial<WizardAnswers> = {}): WizardAnswers {
   return {
     projectName: "test-app",
+    projectType: "app",
     frontend: "none",
     backend: "none",
     clouds: [],

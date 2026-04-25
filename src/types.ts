@@ -2,6 +2,8 @@
 
 export interface WizardAnswers {
   projectName: string;
+  /** Top-level project shape. `app` is the default app/web-service flow; `library` scaffolds an npm package. */
+  projectType: "app" | "library";
   frontend: "none" | "react" | "nextjs" | "vue" | "nuxt" | "sveltekit" | "astro";
   backend: "none" | "hono" | "fastapi" | "express" | "batch";
   clouds: Array<"aws" | "azure" | "gcp">;

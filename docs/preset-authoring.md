@@ -644,3 +644,4 @@ Study these files as examples:
 | `fastapi` | `src/presets/fastapi.ts` | Requires + Merge + CI + Markdown + setupExtra |
 | `express` | `src/presets/express.ts` | Requires + Merge + CI + Markdown |
 | `cdk` | `src/presets/cdk.ts` | Requires + CD workflow + Markdown |
+| `library` | `src/presets/library.ts` | Project-type preset (npm package): adds release-please, dist build, MIT LICENSE |

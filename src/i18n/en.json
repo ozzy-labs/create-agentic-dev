@@ -8,6 +8,15 @@
       "required": "Project name is required.",
       "invalid": "Invalid project name. Use alphanumeric characters, hyphens, dots, or underscores."
     },
+    "projectType": {
+      "message": "Project type",
+      "hint": "What kind of project are you scaffolding?",
+      "app": { "label": "App", "hint": "web app, API, batch — default scaffold" },
+      "library": {
+        "label": "Library (npm package)",
+        "hint": "publishable to npm — adds release-please, dist build"
+      }
+    },
     "languages": {
       "message": "Language toolchains",
       "hint": "Each selection adds linters, formatters, and test setup",

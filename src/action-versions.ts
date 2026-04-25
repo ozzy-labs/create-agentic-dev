@@ -11,4 +11,5 @@ export const ACTIONS = {
   awsCredentials: "aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722", // v4
   azureLogin: "azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5", // v2
   gcpAuth: "google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193", // v2
+  releasePlease: "googleapis/release-please-action@8b8fd2cc23b2e18957157a9d923d75aa0c6f6ad5", // v4
 };

@@ -8,6 +8,15 @@
       "required": "プロジェクト名は必須です。",
       "invalid": "プロジェクト名が無効です。英数字、ハイフン、ドット、アンダースコアのみ使用できます。"
     },
+    "projectType": {
+      "message": "プロジェクト種別",
+      "hint": "どんな種類のプロジェクトを生成しますか？",
+      "app": { "label": "アプリ", "hint": "Web アプリ・API・バッチなど（デフォルト）" },
+      "library": {
+        "label": "ライブラリ (npm package)",
+        "hint": "npm 公開向け — release-please・dist ビルドを追加"
+      }
+    },
     "languages": {
       "message": "言語ツールチェイン",
       "hint": "選択ごとにリンター・フォーマッター・テスト環境を追加",

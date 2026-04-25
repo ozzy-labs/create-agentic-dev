@@ -14,20 +14,22 @@ bash scripts/setup.sh
 
 ## Wizard
 
-The interactive wizard asks 8 questions in an app-first flow:
+The interactive wizard asks up to 9 questions in an app-first flow (some are
+skipped when **Project type → Library** is chosen):
 
 1. **Project name**
-2. **Frontend** — None / React + Vite / Next.js / Vue / Nuxt / SvelteKit / Astro
-3. **Backend** — None / Hono / FastAPI / Express / Batch
-4. **Cloud providers** — AWS / Azure / Google Cloud (multi-select)
-5. **Infrastructure as Code** — CDK / CloudFormation / Terraform / Bicep (filtered by cloud)
-6. **Language toolchains** — TypeScript / Python (excluding auto-resolved)
-7. **Testing tools** — Playwright (multi-select)
-8. **AI Agent tools** — Claude Code / Codex CLI / Gemini CLI / Amazon Q Developer / GitHub Copilot / Cline / Cursor (multi-select)
+2. **Project type** — App (default) / Library (npm package)
+3. **Frontend** — None / React + Vite / Next.js / Vue / Nuxt / SvelteKit / Astro
+4. **Backend** — None / Hono / FastAPI / Express / Batch
+5. **Cloud providers** — AWS / Azure / Google Cloud (multi-select)
+6. **Infrastructure as Code** — CDK / CloudFormation / Terraform / Bicep (filtered by cloud)
+7. **Language toolchains** — TypeScript / Python (excluding auto-resolved)
+8. **Testing tools** — Playwright (multi-select)
+9. **AI Agent tools** — Claude Code / Codex CLI / Gemini CLI / Amazon Q Developer / GitHub Copilot / Cline / Cursor (multi-select)
 
 ## Presets
 
-28 composable presets across 8 layers. Each provides owned files + merge contributions
+29 composable presets across 9 layers. Each provides owned files + merge contributions
 to shared files (package.json, .mise.toml, lefthook.yaml, VSCode, devcontainer,
 README.md, CI workflow).
 
@@ -36,6 +38,7 @@ README.md, CI workflow).
 | Base | Always included (git hooks, linters, devcontainer) |
 | Frontend | React + Vite, Next.js, Vue, Nuxt, SvelteKit, Astro |
 | Backend | Hono, FastAPI, Express, Batch |
+| App | Library (npm package — release-please, dist build, MIT LICENSE) |
 | Cloud | AWS, Azure, Google Cloud |
 | IaC | CDK, CloudFormation, Terraform, Bicep |
 | Language | TypeScript, Python |
