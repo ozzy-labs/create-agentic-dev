@@ -525,6 +525,111 @@ A minimal reference implementation lives at
 [`examples/preset-example`](../examples/preset-example) — it demonstrates the
 package layout, exporting a default `Preset`, and bundling template files.
 
+## Migrating from built-in to external `@ozzylabs/preset-*`
+
+The `@ozzylabs/preset-*` family (handbook
+[ADR-0017](https://github.com/ozzy-labs/handbook/blob/main/adr/0017-presets-initial-composition.md))
+ships the canonical presets as standalone npm packages so they can evolve and
+release on their own cadence, independently of the CLI. The built-in presets
+remain in place during the transition; external presets are additive today and
+will become the default surface as the package set stabilizes.
+
+### Available external presets
+
+| Package | Layer | Replaces / extends | Summary |
+|---------|-------|--------------------|---------|
+| `@ozzylabs/preset-base` | Base | Built-in `base` | Foundational tooling: lefthook, commitlint, gitleaks, markdownlint, yamllint, mise, devcontainer, biome, agent instruction skeletons. Required by the rest of the family. |
+| `@ozzylabs/preset-web` | Frontend | Built-in `react` (and adjacent web stacks) | Vite + React + TypeScript scaffold layered on top of `preset-base`. Brings web-specific scripts, VSCode settings, and CI lint/build steps. |
+| `@ozzylabs/preset-cli` | App | (new — no built-in equivalent) | TypeScript CLI scaffold (`bin`, `tsdown` build, `vitest`) layered on top of `preset-base` for tools published to npm. |
+
+Each external preset declares `requires: ["base"]` (or equivalent) so that
+loading e.g. `@ozzylabs/preset-web` alone is rejected with a clear error if
+`@ozzylabs/preset-base` is not also supplied.
+
+> The package surface is intentionally narrow at v0.1.0. Future packages
+> (`preset-aws`, `preset-mcp-server`, `preset-claude-code`, …) are tracked in
+> handbook ADR-0017 and will be added once the v0.1.0 set is stable.
+
+### Using external presets in a new project
+
+1. Install the packages you want:
+
+   ```bash
+   pnpm add -D @ozzylabs/preset-base @ozzylabs/preset-web
+   ```
+
+2. Reference them from `agentic-app.config.json` in the project root:
+
+   ```json
+   {
+     "presets": [
+       "@ozzylabs/preset-base",
+       "@ozzylabs/preset-web"
+     ]
+   }
+   ```
+
+   Or pass `--preset` on the CLI (repeatable):
+
+   ```bash
+   npm create @ozzylabs/agentic-app my-app -- \
+     --preset @ozzylabs/preset-base \
+     --preset @ozzylabs/preset-web
+   ```
+
+3. Re-run `create-agentic-app` (or `--apply`) — built-in presets resolve first
+   in canonical order, then external presets are layered on top in the order
+   they were declared. Later contributions win on the same field, so external
+   presets can refine built-in choices without forking the CLI.
+
+### Built-in ↔ external mapping
+
+| Built-in preset | External equivalent | Notes |
+|-----------------|---------------------|-------|
+| `base` | `@ozzylabs/preset-base` | Direct replacement once the external package matches feature parity. Until then both can coexist — duplicate `merge` keys deep-merge in the order presets are applied. |
+| `typescript` | folded into `@ozzylabs/preset-base` / `-web` / `-cli` | The external presets bundle TypeScript tooling where it is needed rather than exposing it as a separate layer. |
+| `react` | `@ozzylabs/preset-web` | `preset-web` is opinionated about Vite + React; if you need other frontends, keep using built-in presets until per-stack external presets ship. |
+| `cdk` / `cloudformation` / `terraform` / `bicep` | _no external equivalent yet_ | Continue using the built-in IaC presets. |
+| `aws` / `azure` / `gcp` | _no external equivalent yet_ | Continue using the built-in cloud presets. |
+| `claude-code` / `codex` / `gemini` / `amazon-q` / `copilot` / `cline` / `cursor` | _no external equivalent yet_ | Continue using the built-in agent presets. |
+
+### Migrating an existing project
+
+In most cases **no migration is needed**. Presets only run at scaffold time —
+once a project is generated, the preset selection is "baked in" as concrete
+files. Switching from built-in to external presets does not retroactively
+modify an already-generated project.
+
+You only need to switch when:
+
+- You re-run the wizard (`--apply`) to refresh agent / cloud configs and want
+  the refresh to come from external presets.
+- You scaffold a new sibling project and want the external presets there.
+
+Recommended flow when you do switch:
+
+1. `pnpm add -D @ozzylabs/preset-base …` (and any siblings).
+2. Add the `presets` array to `agentic-app.config.json`.
+3. Run `npx @ozzylabs/create-agentic-app --apply` and review the diff before
+   committing — external presets win on shared fields, so existing tweaks may
+   be re-asserted.
+4. Drop any wizard answers that are now covered by an external preset (e.g.
+   you can leave `frontend: "react"` unchecked once `preset-web` is installed).
+
+### Deprecation timeline for built-in presets
+
+No deprecation is in effect yet. Built-in presets will only be retired once:
+
+1. The matching external `@ozzylabs/preset-*` package has had at least one
+   stable release covering the same surface area.
+2. The smoke suite (`pnpm run verify`) exercises the external package end to
+   end (see `tests/external-presets.smoke.test.ts`).
+3. A migration release of `create-agentic-app` is published with the swap
+   documented in `CHANGELOG.md`.
+
+Until those conditions are met, both surfaces stay supported and external
+presets are strictly additive.
+
 ## Reference: Existing Presets
 
 Study these files as examples:
