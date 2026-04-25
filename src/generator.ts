@@ -116,6 +116,10 @@ export function resolvePresets(answers: WizardAnswers, extraPresets: Preset[] = 
     selected.add(agent);
   }
 
+  if (answers.projectType === "library") {
+    selected.add("library");
+  }
+
   // External presets are always selected (loading them implies opt-in)
   for (const preset of extraPresets) {
     selected.add(preset.name);
@@ -724,6 +728,7 @@ export function generateApply(
   // Build full WizardAnswers with agent + cloud selections only
   const fullAnswers: WizardAnswers = {
     projectName: path.basename(process.cwd()),
+    projectType: "app",
     frontend: "none",
     backend: "none",
     clouds: answers.clouds,

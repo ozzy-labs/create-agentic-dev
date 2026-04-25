@@ -825,6 +825,36 @@ const patterns: PatternDef[] = [
       scriptsMustExclude: ["lint:bicep"],
     },
   },
+  {
+    name: "library (npm package)",
+    answers: { projectType: "library" },
+    vscodeSettings: {
+      mustInclude: ["biomejs.biome"],
+      mustExclude: ["charliermarsh.ruff", "cdk.out"],
+    },
+    vscodeExtensions: {
+      mustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      mustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+    },
+    devcontainer: {
+      extensionsMustInclude: [...COMMON_EXTENSIONS, "biomejs.biome"],
+      extensionsMustExclude: [
+        "charliermarsh.ruff",
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-bicep",
+      ],
+      mountsMustInclude: ["pnpm-store"],
+      mountsMustExclude: [".aws", ".azure", ".config/gcloud", "uv-cache"],
+    },
+    packageJson: {
+      scriptsMustInclude: ["lint", "typecheck", "test", "build", "prepublishOnly"],
+      scriptsMustExclude: ["lint:python", "lint:cfn", "lint:tf", "lint:bicep"],
+    },
+  },
 ];
 
 describe("smoke: shared file composition", () => {

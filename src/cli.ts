@@ -87,8 +87,26 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
             }
           },
         }),
-      frontend: () =>
+      projectType: () =>
         p.select({
+          message: `${t("wizard.projectType.message")} ${pc.dim(t("wizard.projectType.hint"))}`,
+          options: [
+            {
+              value: "app" as const,
+              label: t("wizard.projectType.app.label"),
+              hint: t("wizard.projectType.app.hint"),
+            },
+            {
+              value: "library" as const,
+              label: t("wizard.projectType.library.label"),
+              hint: t("wizard.projectType.library.hint"),
+            },
+          ],
+          initialValue: "app" as const,
+        }),
+      frontend: ({ results }) => {
+        if (results.projectType === "library") return undefined;
+        return p.select({
           message: `${t("wizard.frontend.message")} ${pc.dim(t("wizard.frontend.hint"))}`,
           options: [
             { value: "none" as const, label: t("wizard.frontend.none.label") },
@@ -123,9 +141,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               hint: t("wizard.frontend.astro.hint"),
             },
           ],
-        }),
-      backend: () =>
-        p.select({
+        });
+      },
+      backend: ({ results }) => {
+        if (results.projectType === "library") return undefined;
+        return p.select({
           message: `${t("wizard.backend.message")} ${pc.dim(t("wizard.backend.hint"))}`,
           options: [
             { value: "none" as const, label: t("wizard.backend.none.label") },
@@ -150,9 +170,11 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
               hint: t("wizard.backend.batch.hint"),
             },
           ],
-        }),
-      clouds: () =>
-        p.multiselect({
+        });
+      },
+      clouds: ({ results }) => {
+        if (results.projectType === "library") return undefined;
+        return p.multiselect({
           message: `${t("wizard.clouds.message")} ${pc.dim(t("wizard.clouds.hint"))}`,
           options: [
             { value: "aws" as const, label: t("wizard.clouds.aws.label") },
@@ -160,8 +182,10 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
             { value: "gcp" as const, label: t("wizard.clouds.gcp.label") },
           ],
           required: false,
-        }),
+        });
+      },
       iac: ({ results }) => {
+        if (results.projectType === "library") return undefined;
         const clouds = (results.clouds ?? []) as WizardAnswers["clouds"];
         if (clouds.length === 0) return undefined;
 
@@ -175,6 +199,7 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
         });
       },
       languages: ({ results }) => {
+        if (results.projectType === "library") return undefined;
         const frontend = (results.frontend ?? "none") as WizardAnswers["frontend"];
         const backend = (results.backend ?? "none") as WizardAnswers["backend"];
         const iac = (results.iac ?? []) as WizardAnswers["iac"];
@@ -210,8 +235,9 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
           required: false,
         });
       },
-      testing: () =>
-        p.multiselect({
+      testing: ({ results }) => {
+        if (results.projectType === "library") return undefined;
+        return p.multiselect({
           message: `${t("wizard.testing.message")} ${pc.dim(t("wizard.testing.hint"))}`,
           options: [
             {
@@ -221,7 +247,8 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
             },
           ],
           required: false,
-        }),
+        });
+      },
       agents: () =>
         p.multiselect({
           message: `${t("wizard.agents.message")} ${pc.dim(t("wizard.agents.hint"))}`,
@@ -273,13 +300,21 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
     },
   );
 
+  const projectType = (answers.projectType ?? "app") as WizardAnswers["projectType"];
+  // Library projects auto-resolve to TypeScript and skip frontend/backend/clouds/iac.
+  const isLibrary = projectType === "library";
+  const languages = isLibrary
+    ? (["typescript"] as WizardAnswers["languages"])
+    : ((answers.languages ?? []) as WizardAnswers["languages"]);
+
   return {
     projectName: (answers.projectName as string).trim(),
+    projectType,
     frontend: (answers.frontend ?? "none") as WizardAnswers["frontend"],
     backend: (answers.backend ?? "none") as WizardAnswers["backend"],
     clouds: (answers.clouds ?? []) as WizardAnswers["clouds"],
     iac: (answers.iac ?? []) as WizardAnswers["iac"],
-    languages: (answers.languages ?? []) as WizardAnswers["languages"],
+    languages,
     testing: (answers.testing ?? []) as WizardAnswers["testing"],
     agents: (answers.agents ?? []) as WizardAnswers["agents"],
   };

@@ -18,6 +18,7 @@ import { fastapiPreset } from "./fastapi.js";
 import { gcpPreset } from "./gcp.js";
 import { geminiPreset } from "./gemini.js";
 import { honoPreset } from "./hono.js";
+import { libraryPreset } from "./library.js";
 import { nextjsPreset } from "./nextjs.js";
 import { nuxtPreset } from "./nuxt.js";
 import { playwrightPreset } from "./playwright.js";
@@ -46,6 +47,7 @@ const PRESET_ENTRIES: ReadonlyArray<readonly [string, Preset]> = [
   ["fastapi", fastapiPreset],
   ["express", expressPreset],
   ["batch", batchPreset],
+  ["library", libraryPreset],
   ["aws", awsPreset],
   ["azure", azurePreset],
   ["gcp", gcpPreset],

@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 interface MockAnswers {
   projectName?: string;
+  projectType?: "app" | "library";
   frontend?: "none" | "react" | "nextjs" | "vue" | "nuxt" | "sveltekit" | "astro";
   backend?: "none" | "hono" | "fastapi" | "express" | "batch";
   clouds?: Array<"aws" | "azure" | "gcp">;
@@ -65,30 +66,37 @@ function setupMock(answers: MockAnswers): void {
   const textMock = vi.mocked(p.text);
   textMock.mockResolvedValue(answers.projectName ?? "my-app");
 
-  // select is called twice: frontend then backend
+  // select call order: projectType, then (if app) frontend, backend
   const selectMock = vi.mocked(p.select);
-  selectMock
-    .mockResolvedValueOnce(answers.frontend ?? "none")
-    .mockResolvedValueOnce(answers.backend ?? "none");
+  selectMock.mockReset();
+  const projectType = answers.projectType ?? "app";
+  selectMock.mockResolvedValueOnce(projectType);
+  if (projectType === "app") {
+    selectMock
+      .mockResolvedValueOnce(answers.frontend ?? "none")
+      .mockResolvedValueOnce(answers.backend ?? "none");
+  }
 
-  // multiselect call order: clouds, (iac if clouds), (languages if needed), agents
+  // multiselect call order: (if app) clouds, (iac if clouds), (languages if needed), testing, then agents
   const multiselectMock = vi.mocked(p.multiselect);
   const multiselectReturns: unknown[] = [];
 
-  // 1. clouds
-  multiselectReturns.push(answers.clouds ?? []);
-  // 2. iac (only called if clouds.length > 0)
-  if ((answers.clouds ?? []).length > 0) {
-    multiselectReturns.push(answers.iac ?? []);
+  if (projectType === "app") {
+    // 1. clouds
+    multiselectReturns.push(answers.clouds ?? []);
+    // 2. iac (only called if clouds.length > 0)
+    if ((answers.clouds ?? []).length > 0) {
+      multiselectReturns.push(answers.iac ?? []);
+    }
+    // 3. languages (only called if not all auto-resolved)
+    const needsLanguagePrompt = shouldShowLanguagePrompt(answers);
+    if (needsLanguagePrompt) {
+      multiselectReturns.push(answers.languages ?? []);
+    }
+    // 4. testing
+    multiselectReturns.push(answers.testing ?? []);
   }
-  // 3. languages (only called if not all auto-resolved)
-  const needsLanguagePrompt = shouldShowLanguagePrompt(answers);
-  if (needsLanguagePrompt) {
-    multiselectReturns.push(answers.languages ?? []);
-  }
-  // 4. testing
-  multiselectReturns.push(answers.testing ?? []);
-  // 5. agents
+  // agents (always shown)
   multiselectReturns.push(answers.agents ?? ["claude-code"]);
 
   multiselectMock.mockReset();
@@ -131,6 +139,7 @@ describe("CLI Wizard E2E", () => {
 
       expect(result).toEqual({
         projectName: "test-project",
+        projectType: "app",
         frontend: "none",
         backend: "none",
         clouds: [],
@@ -380,6 +389,7 @@ describe("CLI Wizard E2E", () => {
 
       expect(result).toEqual({
         projectName: "full-stack-app",
+        projectType: "app",
         frontend: "react",
         backend: "express",
         clouds: ["aws"],
@@ -403,6 +413,7 @@ describe("CLI Wizard E2E", () => {
 
       expect(result).toEqual({
         projectName: "multi-cloud",
+        projectType: "app",
         frontend: "none",
         backend: "none",
         clouds: ["aws", "azure", "gcp"],
