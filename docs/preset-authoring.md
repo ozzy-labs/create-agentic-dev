@@ -443,6 +443,88 @@ describe("generate (TypeScript)", () => {
 });
 ```
 
+## External Preset Packages
+
+Presets can also live in their own npm packages and be loaded at scaffold time
+without modifying `create-agentic-app`. This is the mechanism that the
+`@ozzylabs/preset-*` family uses to ship presets independently of the CLI.
+
+### Loading external presets
+
+Two equivalent ways to opt into an external preset:
+
+1. **CLI flag** (repeatable): `--preset @ozzylabs/preset-foo` or `--preset ./local/preset`
+2. **Project config file** (`agentic-app.config.json` in the working directory):
+
+   ```json
+   {
+     "presets": ["@ozzylabs/preset-foo", "./local/preset"]
+   }
+   ```
+
+CLI flags and config-file entries are merged (config first, CLI flags second);
+duplicate names produce an error. Specifiers are resolved with Node's standard
+resolver anchored at the working directory, so both bare specifiers (looked up
+in the local `node_modules`) and relative paths work.
+
+### Authoring an external preset
+
+An external preset is an ESM module whose default export satisfies the `Preset`
+interface. The package can import the type and helpers from the public API
+entry of `@ozzylabs/create-agentic-app`:
+
+```typescript
+// @ozzylabs/preset-foo/src/index.ts
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { readTemplateFiles, type Preset } from "@ozzylabs/create-agentic-app";
+
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
+
+const preset: Preset = {
+  name: "foo",
+  requires: ["typescript"],
+  files: readTemplateFiles({ rootDir, subPath: "../templates" }),
+  merge: {
+    "package.json": {
+      scripts: { "foo:hello": "echo hi" },
+    },
+  },
+};
+
+export default preset;
+```
+
+Suggested package shape:
+
+```text
+@ozzylabs/preset-foo/
+├── package.json
+├── dist/                  # built ESM output
+└── templates/             # bundled template files
+```
+
+`package.json` should set `"main": "./dist/index.mjs"` (or use `"exports"`),
+include both `dist` and `templates` in `"files"`, and depend on
+`@ozzylabs/create-agentic-app` only via `peerDependencies` so the CLI version
+is not duplicated.
+
+### Constraints
+
+- External preset names cannot collide with built-in preset names — built-ins
+  are reserved and will reject any external preset that tries to use them.
+- External presets are always selected (loading them implies opt-in); they are
+  not toggled by wizard answers.
+- Built-in presets are applied first (in canonical `PRESET_ORDER`), then
+  external presets in the order they were supplied — later contributions win
+  on the same field.
+- External presets may declare `requires` against built-in or other external
+  presets; unknown names raise a clear error at generation time.
+
+A minimal reference implementation lives at
+[`examples/preset-example`](../examples/preset-example) — it demonstrates the
+package layout, exporting a default `Preset`, and bundling template files.
+
 ## Reference: Existing Presets
 
 Study these files as examples:

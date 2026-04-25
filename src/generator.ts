@@ -79,8 +79,13 @@ function collapseCdSection(sections: MarkdownSection[]): MarkdownSection[] {
   return remaining;
 }
 
-/** Resolve which presets to apply based on wizard answers, including dependency chains. */
-export function resolvePresets(answers: WizardAnswers): string[] {
+/**
+ * Resolve which presets to apply based on wizard answers, including dependency chains.
+ * Built-in presets are sorted by PRESET_ORDER. External presets (provided via
+ * extraPresets) are always selected and appended after built-ins in the order they
+ * were supplied. External presets may reference built-in presets via `requires`.
+ */
+export function resolvePresets(answers: WizardAnswers, extraPresets: Preset[] = []): string[] {
   const selected = new Set<string>(["base"]);
 
   for (const lang of answers.languages) {
@@ -111,6 +116,13 @@ export function resolvePresets(answers: WizardAnswers): string[] {
     selected.add(agent);
   }
 
+  // External presets are always selected (loading them implies opt-in)
+  for (const preset of extraPresets) {
+    selected.add(preset.name);
+  }
+
+  const externalByName = new Map(extraPresets.map((p) => [p.name, p] as const));
+
   // Resolve `requires` chains (with guard against circular dependencies)
   const MAX_RESOLVE_ITERATIONS = 100;
   let changed = true;
@@ -121,9 +133,14 @@ export function resolvePresets(answers: WizardAnswers): string[] {
     }
     changed = false;
     for (const name of [...selected]) {
-      const preset = ALL_PRESETS[name];
+      const preset = ALL_PRESETS[name] ?? externalByName.get(name);
       if (preset?.requires) {
         for (const req of preset.requires) {
+          if (!ALL_PRESETS[req] && !externalByName.has(req)) {
+            throw new Error(
+              `Preset "${name}" requires unknown preset "${req}" (not built-in nor external)`,
+            );
+          }
           if (!selected.has(req)) {
             selected.add(req);
             changed = true;
@@ -133,8 +150,10 @@ export function resolvePresets(answers: WizardAnswers): string[] {
     }
   }
 
-  // Sort by canonical order
-  return PRESET_ORDER.filter((p) => selected.has(p));
+  // Built-ins sorted by canonical order, then externals in supplied order
+  const builtIn = PRESET_ORDER.filter((p) => selected.has(p));
+  const external = extraPresets.filter((p) => selected.has(p.name)).map((p) => p.name);
+  return [...builtIn, ...external];
 }
 
 /** Resolve the primary dev server port based on frontend selection. */
@@ -524,13 +543,20 @@ function generateTerraformCd(
 
 export interface GenerateOptions {
   writer?: FileWriter;
+  /**
+   * External presets loaded via dynamic import (e.g. `@ozzylabs/preset-*`).
+   * Applied after all built-in presets, in the order supplied.
+   */
+  extraPresets?: Preset[];
 }
 
 /** Main composition engine: resolve presets, merge files, write output. */
 export function generate(answers: WizardAnswers, options: GenerateOptions = {}): GenerateResult {
-  const presetNames = resolvePresets(answers);
+  const extraPresets = options.extraPresets ?? [];
+  const presetNames = resolvePresets(answers, extraPresets);
+  const externalByName = new Map(extraPresets.map((p) => [p.name, p] as const));
   const presets = presetNames.map((name) => {
-    const preset = ALL_PRESETS[name];
+    const preset = ALL_PRESETS[name] ?? externalByName.get(name);
     if (!preset) throw new Error(`Unknown preset: ${name}`);
     return preset;
   });
@@ -691,7 +717,10 @@ function isApplyFile(filePath: string): boolean {
  * Generate agent-related files only (for --apply mode).
  * Uses the full generator internally, then filters to agent output.
  */
-export function generateApply(answers: ApplyAnswers): GenerateResult {
+export function generateApply(
+  answers: ApplyAnswers,
+  options: GenerateOptions = {},
+): GenerateResult {
   // Build full WizardAnswers with agent + cloud selections only
   const fullAnswers: WizardAnswers = {
     projectName: path.basename(process.cwd()),
@@ -704,7 +733,7 @@ export function generateApply(answers: ApplyAnswers): GenerateResult {
     agents: answers.agents,
   };
 
-  const result = generate(fullAnswers);
+  const result = generate(fullAnswers, options);
 
   // Filter to agent-related files only
   const filteredFiles = new Map<string, string>();

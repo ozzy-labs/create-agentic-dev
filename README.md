@@ -67,6 +67,25 @@ See [docs/development.md](docs/development.md) for setup instructions, commands,
 
 See [docs/design.md](docs/design.md) for the full design document.
 
+## External Presets
+
+Beyond the 28 built-in presets, `create-agentic-app` can load external preset
+packages (e.g. `@ozzylabs/preset-*`) without modifying the CLI:
+
+```bash
+npm create @ozzylabs/agentic-app my-app -- --preset @ozzylabs/preset-foo
+```
+
+Or list them in `agentic-app.config.json` next to your project:
+
+```json
+{ "presets": ["@ozzylabs/preset-foo", "./local/preset"] }
+```
+
+See [docs/preset-authoring.md § External Preset Packages](docs/preset-authoring.md#external-preset-packages)
+for the authoring guide and [`examples/preset-example`](examples/preset-example)
+for a reference implementation.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

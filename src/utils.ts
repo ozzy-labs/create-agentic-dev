@@ -14,9 +14,21 @@ export const PKG_ROOT = path.resolve(__dirname, "..");
 /** Directory containing preset templates. */
 export const TEMPLATES_DIR = path.join(PKG_ROOT, "templates");
 
-/** Recursively read all files under templates/{presetName}/ into a Record<relativePath, content>. */
-export function readTemplateFiles(presetName: string): Record<string, string> {
-  const dir = path.join(TEMPLATES_DIR, presetName);
+/**
+ * Recursively read all files under a directory into a Record<relativePath, content>.
+ * - `presetName` (string): reads from this package's bundled `templates/{presetName}/`
+ *   (used by built-in presets).
+ * - `{ rootDir, subPath? }`: reads from `rootDir/subPath` — for external presets that
+ *   bundle their own template files. Pair with `import.meta.url` + `fileURLToPath`
+ *   to anchor at the consuming package's directory.
+ */
+export function readTemplateFiles(
+  presetNameOrOpts: string | { rootDir: string; subPath?: string },
+): Record<string, string> {
+  const dir =
+    typeof presetNameOrOpts === "string"
+      ? path.join(TEMPLATES_DIR, presetNameOrOpts)
+      : path.join(presetNameOrOpts.rootDir, presetNameOrOpts.subPath ?? "");
   const result: Record<string, string> = {};
 
   function walk(currentDir: string): void {

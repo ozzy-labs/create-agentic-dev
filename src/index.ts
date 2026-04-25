@@ -8,7 +8,9 @@ import pc from "picocolors";
 import { runApplyWizard, runWizard } from "./cli.js";
 import { generate, generateApply, validateAnswers } from "./generator.js";
 import { detectLocale, setLocale, t } from "./i18n/index.js";
+import { loadExternalPresets, readConfigFile } from "./loader.js";
 import { buildFileTree } from "./tree.js";
+import type { Preset } from "./types.js";
 import { createDiskWriter } from "./utils.js";
 
 /** Run a shell command and return stdout. Rejects on non-zero exit. */
@@ -24,11 +26,11 @@ function run(cmd: string, args: string[], cwd: string): Promise<string> {
   });
 }
 
-async function runApplyMode(dryRun: boolean): Promise<void> {
+async function runApplyMode(dryRun: boolean, extraPresets: Preset[]): Promise<void> {
   const outDir = process.cwd();
   const answers = await runApplyWizard();
 
-  const result = generateApply(answers);
+  const result = generateApply(answers, { extraPresets });
   const fileList = result.fileList();
 
   if (fileList.length === 0) {
@@ -66,6 +68,7 @@ async function main(): Promise<void> {
       apply: { type: "boolean", default: false },
       "dry-run": { type: "boolean", default: false },
       "no-install": { type: "boolean", default: false },
+      preset: { type: "string", multiple: true },
     },
     allowPositionals: true,
     strict: false,
@@ -78,9 +81,15 @@ async function main(): Promise<void> {
   const dryRun = values["dry-run"] === true;
   const noInstall = values["no-install"] === true;
 
+  // --- Load external presets (CLI flag + project config file) ---
+  const cliPresets = (values.preset as string[] | undefined) ?? [];
+  const configPresets = readConfigFile(process.cwd());
+  const presetSpecs = [...configPresets, ...cliPresets];
+  const extraPresets = await loadExternalPresets(presetSpecs, process.cwd());
+
   // --- Apply mode: add agent config to existing project ---
   if (applyMode) {
-    await runApplyMode(dryRun);
+    await runApplyMode(dryRun, extraPresets);
     return;
   }
 
@@ -101,7 +110,7 @@ async function main(): Promise<void> {
 
   // --- Dry-run mode: preview only, no disk writes ---
   if (dryRun) {
-    const result = generate(answers);
+    const result = generate(answers, { extraPresets });
     const fileList = result.fileList();
     const tree = buildFileTree(fileList);
     p.log.info(
@@ -126,7 +135,7 @@ async function main(): Promise<void> {
   s.start(t("spinner.start"));
 
   const writer = createDiskWriter(outDir);
-  const result = generate(answers, { writer });
+  const result = generate(answers, { writer, extraPresets });
 
   s.stop(t("spinner.stop", { count: result.fileList().length }));
 
