@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/ozzy-labs/create-agentic-app/compare/create-agentic-app-v0.2.2...create-agentic-app-v0.2.3) (2026-04-26)
+
+
+### Bug Fixes
+
+* update pinned action versions to match project workflows ([#235](https://github.com/ozzy-labs/create-agentic-app/issues/235)) ([40b19fb](https://github.com/ozzy-labs/create-agentic-app/commit/40b19fb8d041052650e33de0007f94119e14cc36))
+
 ## [0.2.2](https://github.com/ozzy-labs/create-agentic-app/compare/create-agentic-app-v0.2.1...create-agentic-app-v0.2.2) (2026-04-26)
 
 
