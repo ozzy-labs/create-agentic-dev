@@ -1,0 +1,29 @@
+{
+  "name": "@ozzylabs/create-agentic-dev",
+  "version": "1.0.0",
+  "description": "Renamed to @ozzylabs/create-agentic-app. This package is deprecated.",
+  "bin": {
+    "create-agentic-dev": "bin/notice.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "ozzy-labs",
+  "homepage": "https://github.com/ozzy-labs/create-agentic-app#readme",
+  "bugs": "https://github.com/ozzy-labs/create-agentic-app/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ozzy-labs/create-agentic-app.git"
+  },
+  "keywords": [
+    "deprecated"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

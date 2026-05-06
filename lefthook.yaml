@@ -8,7 +8,7 @@ pre-commit:
   commands:
     biome:
       glob: "*.{ts,tsx,js,jsx,json,jsonc}"
-      exclude: "{templates,.devcontainer,.copilot,.gemini,.codex,.agents}/**"
+      exclude: "{templates,.devcontainer,.copilot,.gemini,.codex,.agents,legacy-stub}/**"
       run: biome check --write {staged_files}
       stage_fixed: true
     shellcheck:
