@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.4](https://github.com/ozzy-labs/create-agentic-app/compare/create-agentic-app-v0.2.3...create-agentic-app-v0.2.4) (2026-05-06)
+
+
+### Bug Fixes
+
+* align inline comments in .mise.toml to satisfy taplo format ([#247](https://github.com/ozzy-labs/create-agentic-app/issues/247)) ([100b674](https://github.com/ozzy-labs/create-agentic-app/commit/100b674af49cc680d704fba19461f33159772192))
+* **skills:** add missing skills_commit and skills_adapters to sync.yaml ([#243](https://github.com/ozzy-labs/create-agentic-app/issues/243)) ([4ab91a0](https://github.com/ozzy-labs/create-agentic-app/commit/4ab91a02234827494e5b8ca928173cc202d3254a))
+
 ## [0.2.3](https://github.com/ozzy-labs/create-agentic-app/compare/create-agentic-app-v0.2.2...create-agentic-app-v0.2.3) (2026-04-26)
 
 

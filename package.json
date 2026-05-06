@@ -1,6 +1,6 @@
 {
   "name": "@ozzylabs/create-agentic-app",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Scaffold an AI-agent-native development environment with interactive presets",
   "type": "module",
   "main": "./dist/lib.mjs",
