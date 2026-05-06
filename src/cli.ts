@@ -81,7 +81,7 @@ export async function runWizard(defaultName?: string): Promise<WizardAnswers> {
           placeholder: t("wizard.projectName.placeholder"),
           initialValue: defaultName ?? "",
           validate(value) {
-            if (!value.trim()) return t("wizard.projectName.required");
+            if (!value?.trim()) return t("wizard.projectName.required");
             if (!/^[a-z0-9][a-z0-9._-]*$/i.test(value.trim())) {
               return t("wizard.projectName.invalid");
             }
